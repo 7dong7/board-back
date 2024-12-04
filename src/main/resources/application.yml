@@ -20,7 +20,6 @@ spring:
       hibernate:
         # show_sql : 내가 작성한 쿼리문을 볼 수 있음
         # show_sql: true
-        
         # format_sql : 내가 작성한 쿼리를 예쁘게( 포맷팅 ) 볼 수 있음 - system.out으로 출력 됨 / 위의 show_sql 버림
         format_sql: true
         # use_sql_comments : 내가 날린 쿼리를 /* */ 주석을 상용해서 어떻게 작성되고 날렸는지 확인 가능

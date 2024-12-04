@@ -24,18 +24,18 @@ repositories {
 }
 
 dependencies {
+	// JPA
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
+	// Web
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	
+	// 롬복
 	compileOnly 'org.projectlombok:lombok'
+	
+	// 개발 편의 기능 리부트 톰캣 리부트 안하고
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
-	// @NotEmpty 사용
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
-
-	// H2 db 사용
-	runtimeOnly 'com.h2database:h2'
-	
 	// MySql db 사용 
 	runtimeOnly 'com.mysql:mysql-connector-j'
 
@@ -47,10 +47,14 @@ dependencies {
 	// 쿼리 파라미터 남기기 스프링부트3.XX 이상
 	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0'
 
-	//JUnit4 추가
-	testImplementation("org.junit.vintage:junit-vintage-engine") {
-		exclude group: "org.hamcrest", module: "hamcrest-core"
-	}
+// 설정만 추가 아직 쓴적 없음
+
+	// @NotEmpty 사용
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+	// H2 db 사용
+	runtimeOnly 'com.h2database:h2'
+
 
 	// Spring Security
 	implementation 'org.springframework.boot:spring-boot-starter-security'
@@ -62,7 +66,8 @@ dependencies {
 	// thymeleaf-extras-springsecurity6 - Spring Security 6와 Thymeleaf 통합 설정 - Thymeleaf에서 Spring Security 기능을 활용
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6:3.1.2.RELEASE'
 
-// 설정만 추가 아직 쓴적 없음
+	// 타임 리프
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
 	// JWT
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
