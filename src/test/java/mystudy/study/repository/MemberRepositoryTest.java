@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -23,7 +24,7 @@ class MemberRepositoryTest {
 
     @Autowired
     MemberRepository memberRepository;
-    
+
     @BeforeEach
     void setUp() {
         // 데이터 입력
@@ -40,8 +41,7 @@ class MemberRepositoryTest {
     
     @Test
     public void basicTest() throws Exception{
-
-
+        
         // 컬렉션 전체 조회
         List<Member> members = memberRepository.findAll();
 
@@ -50,5 +50,23 @@ class MemberRepositoryTest {
         }
 
         assertThat(members.size()).isEqualTo(4);
+    }
+    
+    @Test
+    public void optionalTest() throws Exception{
+
+        // 이메일로 사용자 찾기 
+            // 이메일에 해당하는 사용자가 있을수도 없을수도 있음
+        Optional<Member> findMember = memberRepository.findByUsername("member1");
+        Optional<Member> findMember2 = memberRepository.findByUsername("memb");
+
+        System.out.println("findMember = " + findMember);
+
+        Member member = findMember.orElseGet(() -> null);
+//        Member nonMember = findMember2.orElseThrow(() -> new IllegalArgumentException("사용자 없음")); // 오류를 발생시킴
+
+        System.out.println("member = " + member);
+//        System.out.println("nonMember = " + nonMember);
+        
     }
 }
