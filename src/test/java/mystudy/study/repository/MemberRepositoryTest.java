@@ -39,6 +39,7 @@ class MemberRepositoryTest {
         memberRepository.save(member4);
     }
     
+    // 기본 테스트
     @Test
     public void basicTest() throws Exception{
         
@@ -52,6 +53,7 @@ class MemberRepositoryTest {
         assertThat(members.size()).isEqualTo(4);
     }
     
+    // optional 테스트
     @Test
     public void optionalTest() throws Exception{
 
@@ -67,6 +69,7 @@ class MemberRepositoryTest {
 
         System.out.println("member = " + member);
 //        System.out.println("nonMember = " + nonMember);
-        
     }
+
+
 }
