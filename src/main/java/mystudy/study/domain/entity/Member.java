@@ -1,12 +1,12 @@
-package mystudy.study.domain;
+package mystudy.study.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import mystudy.study.domain.JpaBaseEntity;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
@@ -14,8 +14,8 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 @ToString
-@EntityListeners(AuditingEntityListener.class)
-public class Member {
+//@EntityListeners(AuditingEntityListener.class)
+public class Member extends JpaBaseEntity {
 
     @Id @GeneratedValue
     @Column(name= "member_id")
@@ -27,15 +27,20 @@ public class Member {
     private int age;
     private String email;
 
-    @CreatedDate
-    private LocalDateTime created_at;
-
-    @LastModifiedDate
-    private LocalDateTime updated_at;
+    // 어노테이션 사용 @EntityListeners(AuditingEntityListener.class)
+//    @CreatedDate
+//    private LocalDateTime created_at;
+//    @LastModifiedDate
+//    private LocalDateTime updated_at;
 
     public Member(String username, int age, String email) {
         this.username = username;
         this.age = age;
         this.email = email;
+    }
+    
+    // 변경 메소드
+    public void updateUsername(String username) {
+        this.username = username;
     }
 }

@@ -1,6 +1,6 @@
 package mystudy.study.repository;
 
-import mystudy.study.domain.Member;
+import mystudy.study.domain.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
