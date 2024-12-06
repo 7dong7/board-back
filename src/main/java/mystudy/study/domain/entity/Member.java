@@ -8,6 +8,7 @@ import mystudy.study.domain.BaseTimeEntity;
 import mystudy.study.domain.JpaBaseEntity;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 @ToString
-//@EntityListeners(AuditingEntityListener.class)
+@EntityListeners(AuditingEntityListener.class)
 //public class Member extends JpaBaseEntity { // 순수 JPA 상속
 public class Member extends BaseTimeEntity {
 
@@ -45,4 +46,5 @@ public class Member extends BaseTimeEntity {
     public void updateUsername(String username) {
         this.username = username;
     }
+
 }
