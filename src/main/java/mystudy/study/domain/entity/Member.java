@@ -5,12 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import mystudy.study.domain.BaseTimeEntity;
-import mystudy.study.domain.JpaBaseEntity;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -29,12 +25,6 @@ public class Member extends BaseTimeEntity {
 
     private int age;
     private String email;
-
-    // 어노테이션 사용 @EntityListeners(AuditingEntityListener.class)
-//    @CreatedDate
-//    private LocalDateTime created_at;
-//    @LastModifiedDate
-//    private LocalDateTime updated_at;
 
     public Member(String username, int age, String email) {
         this.username = username;

@@ -1,6 +1,7 @@
 package mystudy.study.repository;
 
 import jakarta.persistence.EntityManager;
+import mystudy.study.domain.dto.MemberSearchCondition;
 import mystudy.study.domain.entity.Member;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,11 +30,17 @@ class MemberRepositoryTest {
         Member member2 = new Member("member2", 20, "member2@naver.com");
         Member member3 = new Member("member3", 30, "member3@naver.com");
         Member member4 = new Member("member4", 40, "member4@naver.com");
+        Member user1 = new Member("user1", 10, "user1@naver.com");
+        Member user2 = new Member("user2", 20, "user2@naver.com");
+        Member user3 = new Member("user3", 30, "user3@naver.com");
 
         memberRepository.save(member1);
         memberRepository.save(member2);
         memberRepository.save(member3);
         memberRepository.save(member4);
+        memberRepository.save(user1);
+        memberRepository.save(user2);
+        memberRepository.save(user3);
     }
 
     // 기본 테스트
@@ -148,4 +155,22 @@ class MemberRepositoryTest {
                 .doesNotContainValue(40);
     }
 
+    @Test
+    public void memberSearchConditionTest() throws Exception{
+
+        MemberSearchCondition condition = new MemberSearchCondition();
+        condition.setUsername("member1");
+        condition.setEmail("member1");
+
+        List<Member> conditionMember = memberRepository.searchMember(condition);
+
+        for (Member member : conditionMember) {
+            System.out.println("member = " + member);
+            System.out.println("member.getCreatedAt() = " + member.getCreatedAt());
+            System.out.println("member.getUpdatedAt() = " + member.getUpdatedAt());
+        }
+
+        assertThat(conditionMember).extracting("username").contains("member1");
+    }
+    
 }
