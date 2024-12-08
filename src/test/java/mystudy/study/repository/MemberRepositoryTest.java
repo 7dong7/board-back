@@ -174,5 +174,41 @@ class MemberRepositoryTest {
                 .allMatch(m -> m.getUsername().toLowerCase().contains("member"));
 //        assertThat(conditionMember).extracting("username").contains("member1");
     }
-    
+
+    @Test
+    public void assertFilteredTest() throws Exception {
+
+        List<Member> members = memberRepository.findAll();
+
+        for (Member member : members) {
+            System.out.println("member = " + member);
+        }
+
+        assertThat(members).hasSize(7); // 전체 사용자 수 7
+
+        assertThat(members)
+                .filteredOn(member -> member.getUsername().toLowerCase().contains("member"))
+                .hasSize(4); // 7명 중 username 이 member 가 포함되는 사용자는 4명
+    }
+
+    @Test
+    public void assertAllMatchTest() throws Exception{
+
+        List<Member> members = memberRepository.findAll();
+
+        for (Member member : members) {
+            System.out.println("member = " + member);
+        }
+
+        assertThat(members).hasSize(7); // 전체 사용자 수 7
+
+        assertThat(members)
+                .filteredOn(member -> member.getUsername().toLowerCase().contains("member"))
+                .allMatch(member -> member.getUsername().toLowerCase().contains("member"));
+
+//        assertThat(members)
+//                .as("리스트안의 모든 username에 member가 포함되지 않습니다.")
+//                .allMatch(member -> member.getUsername().toLowerCase().contains("member"));
+
+    }
 }
