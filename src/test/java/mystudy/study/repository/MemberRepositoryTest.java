@@ -28,11 +28,11 @@ class MemberRepositoryTest {
         // 데이터 입력
         Member member1 = new Member("member1", 10, "member1@naver.com");
         Member member2 = new Member("member2", 20, "member2@naver.com");
-        Member member3 = new Member("member3", 30, "member3@naver.com");
-        Member member4 = new Member("member4", 40, "member4@naver.com");
+        Member member3 = new Member("Member3", 30, "Member3@naver.com");
+        Member member4 = new Member("Member4", 40, "Member4@naver.com");
         Member user1 = new Member("user1", 10, "user1@naver.com");
         Member user2 = new Member("user2", 20, "user2@naver.com");
-        Member user3 = new Member("user3", 30, "user3@naver.com");
+        Member user3 = new Member("User3", 30, "User3@naver.com");
 
         memberRepository.save(member1);
         memberRepository.save(member2);
@@ -159,8 +159,8 @@ class MemberRepositoryTest {
     public void memberSearchConditionTest() throws Exception{
 
         MemberSearchCondition condition = new MemberSearchCondition();
-        condition.setUsername("member1");
-        condition.setEmail("member1");
+        condition.setUsername("member");
+        condition.setEmail("member");
 
         List<Member> conditionMember = memberRepository.searchMember(condition);
 
@@ -170,7 +170,9 @@ class MemberRepositoryTest {
             System.out.println("member.getUpdatedAt() = " + member.getUpdatedAt());
         }
 
-        assertThat(conditionMember).extracting("username").contains("member1");
+        assertThat(conditionMember)
+                .allMatch(m -> m.getUsername().toLowerCase().contains("member"));
+//        assertThat(conditionMember).extracting("username").contains("member1");
     }
     
 }

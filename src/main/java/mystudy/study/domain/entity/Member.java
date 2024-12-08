@@ -13,7 +13,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @NoArgsConstructor
 @ToString
 @EntityListeners(AuditingEntityListener.class)
-//public class Member extends JpaBaseEntity { // 순수 JPA 상속
 public class Member extends BaseTimeEntity {
 
     @Id @GeneratedValue
