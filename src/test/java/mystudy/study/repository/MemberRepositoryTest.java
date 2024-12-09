@@ -3,6 +3,7 @@ package mystudy.study.repository;
 import jakarta.persistence.EntityManager;
 import mystudy.study.domain.dto.MemberSearchCondition;
 import mystudy.study.domain.entity.Member;
+import mystudy.study.domain.entity.Post;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +23,12 @@ class MemberRepositoryTest {
 
     @Autowired
     MemberRepository memberRepository;
+    @Autowired
+    PostRepository postRepository;
 
     @BeforeEach
     void setUp() {
-        // 데이터 입력
+        // 사용자 등록
         Member member1 = new Member("member1", 10, "member1@naver.com");
         Member member2 = new Member("member2", 20, "member2@naver.com");
         Member member3 = new Member("Member3", 30, "Member3@naver.com");
@@ -41,6 +44,12 @@ class MemberRepositoryTest {
         memberRepository.save(user1);
         memberRepository.save(user2);
         memberRepository.save(user3);
+        
+        // 글 작성
+        Post post1 = new Post("새로운 글작성", "새로운 글이 작성되었습니다.", member1);
+
+        postRepository.save(post1);
+
     }
 
     // 기본 테스트
@@ -211,4 +220,5 @@ class MemberRepositoryTest {
 //                .allMatch(member -> member.getUsername().toLowerCase().contains("member"));
 
     }
+    
 }
