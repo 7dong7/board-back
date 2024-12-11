@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -35,17 +36,30 @@ class PostRepositoryTest {
         memberRepository.save(member2);
 
         // 글 작성
-        Post post1 = new Post("새로운 글작성", "새로운 글이 작성되었습니다.", member1);
+        Post post1 = new Post("새로운 글작성1", "새로운 글이 작성되었습니다1.", member1);
+        Post post2 = new Post("새로운 글작성2", "새로운 글이 작성되었습니다2.", member1);
+
+        member1.addPost(post1);
+        member1.addPost(post2);
 
         postRepository.save(post1);
+        postRepository.save(post2);
     }
 
     @Test
     public void postBasicTest() throws Exception{
-        List<Post> posts = postRepository.findAll();
+
+        Optional<Member> findMember = memberRepository.findByUsername("member1");
+
+        Member member = findMember.orElseThrow(() -> new IllegalArgumentException("member not found"));
+
+        System.out.println("member = " + member);
+
+        List<Post> posts = member.getPosts();
 
         for (Post post : posts) {
             System.out.println("post = " + post);
         }
+
     }
 }

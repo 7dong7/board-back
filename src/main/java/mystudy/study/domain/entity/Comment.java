@@ -10,7 +10,7 @@ import mystudy.study.domain.BaseEntity;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Entity
 @Getter
 @NoArgsConstructor
 @ToString
