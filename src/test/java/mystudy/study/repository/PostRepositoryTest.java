@@ -32,34 +32,20 @@ class PostRepositoryTest {
         Member member1 = new Member("member1", 10, "member1@naver.com");
         Member member2 = new Member("member2", 20, "member2@naver.com");
 
-        memberRepository.save(member1);
-        memberRepository.save(member2);
-
         // 글 작성
         Post post1 = new Post("새로운 글작성1", "새로운 글이 작성되었습니다1.", member1);
         Post post2 = new Post("새로운 글작성2", "새로운 글이 작성되었습니다2.", member1);
 
         member1.addPost(post1);
         member1.addPost(post2);
-
         postRepository.save(post1);
         postRepository.save(post2);
+
     }
 
     @Test
     public void postBasicTest() throws Exception{
-
-        Optional<Member> findMember = memberRepository.findByUsername("member1");
-
-        Member member = findMember.orElseThrow(() -> new IllegalArgumentException("member not found"));
-
-        System.out.println("member = " + member);
-
-        List<Post> posts = member.getPosts();
-
-        for (Post post : posts) {
-            System.out.println("post = " + post);
-        }
+        // member 찾아보기
 
     }
 }

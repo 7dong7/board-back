@@ -18,8 +18,6 @@ import java.util.List;
 @ToString
 @EntityListeners(AuditingEntityListener.class)
 public class Member extends BaseTimeEntity {
-
-    @Id @GeneratedValue
     /**
      *  updatable
      *      작성 이후 해당 필드가 데이터베이스에서 업데이트 되는것을 허용하지 않는다는 것
@@ -35,7 +33,7 @@ public class Member extends BaseTimeEntity {
      *      @OneToMany @OneToOne 에서 사용
      *      기본값 true
      */
-
+    @Id @GeneratedValue
     @Column(name= "member_id", updatable = false)
     private Long id;
 
