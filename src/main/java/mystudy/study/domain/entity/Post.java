@@ -41,6 +41,8 @@ public class Post extends BaseEntity {
     }
 
     // 작성자
-
+    public void plusViewCount() {
+        viewCount++;
+    }
     
 }
