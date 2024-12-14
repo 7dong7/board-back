@@ -32,20 +32,27 @@ public class InitMember {
         @Transactional
         public void init() {
             Member member1 = new Member("member1", 10, "member1@naver.com");
-            Member member2 = new Member("member2", 20, "member2@naver.com");
-
-            for ( int i = 0; i < 10; i++ ) {
+//            Member member2 = new Member("member2", 20, "member2@naver.com");
+            
+            // member1의 게시글 작성
+            for ( int i = 0; i < 103; i++ ) {
                 Post post = new Post("새로운 글작성"+i, "새로운 글이 작성되었습니다"+i, member1);
                 member1.addPost(post);
             }
 
-            for ( int i = 0; i < 5; i++ ) {
-                Post post = new Post("새로운 글작성"+i, "새로운 글이 작성되었습니다"+i, member2);
-                member2.addPost(post);
-            }
+//            for ( int i = 0; i < 24; i++ ) {
+//                Post post = new Post("새로운 글작성"+i, "새로운 글이 작성되었습니다"+i, member2);
+//                member2.addPost(post);
+//            }
 
             em.persist(member1);
-            em.persist(member2);
+//            em.persist(member2);
+
+            // 새로운 사용자 추가
+            for (int i = 2; i < 102; i++) {
+                Member member = new Member("member" + i, i, "member" + i + "@naver.com");
+                em.persist(member);
+            }
         }
     }
 
