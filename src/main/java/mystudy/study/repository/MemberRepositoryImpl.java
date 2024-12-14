@@ -46,7 +46,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
 
     // 사용자 조건 검색 (페이징)
     @Override
-    public Page<Member> searchPage(MemberSearchCondition condition, Pageable pageable) {
+    public Page<Member> searchMemberPage(MemberSearchCondition condition, Pageable pageable) {
 
         List<Member> content = queryFactory.select(member)
                 .from(member)

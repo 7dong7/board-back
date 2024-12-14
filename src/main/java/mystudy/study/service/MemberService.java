@@ -1,7 +1,11 @@
 package mystudy.study.service;
 
 import lombok.RequiredArgsConstructor;
+import mystudy.study.domain.dto.MemberSearchCondition;
+import mystudy.study.domain.entity.Member;
 import mystudy.study.repository.MemberRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,4 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+
+
+    @Transactional
+    public Page<Member> searchMemberPage(MemberSearchCondition condition, Pageable pageable) {
+        return memberRepository.searchMemberPage(condition, pageable);
+    }
 }

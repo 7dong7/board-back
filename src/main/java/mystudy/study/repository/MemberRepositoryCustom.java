@@ -11,5 +11,5 @@ public interface MemberRepositoryCustom {
 
     List<Member> searchMember(MemberSearchCondition condition);
 
-    Page<Member> searchPage(MemberSearchCondition condition, Pageable pageable);
+    Page<Member> searchMemberPage(MemberSearchCondition condition, Pageable pageable);
 }
