@@ -18,7 +18,7 @@ public class MemberService {
 
 
     @Transactional
-    public Page<Member> searchMemberPage(MemberSearchCondition condition, Pageable pageable) {
-        return memberRepository.searchMemberPage(condition, pageable);
+    public Page<Member> searchMembers(MemberSearchCondition condition, Pageable pageable) {
+        return memberRepository.searchMembers(condition, pageable);
     }
 }

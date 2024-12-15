@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -19,20 +20,32 @@ public class MemberController {
     private final MemberService memberService;
 
 
+    // 사용자 검색
     @GetMapping("/members/search")
-    public Page<Member> searchMemberPage(
+    public String searchMember(
             @RequestParam(required = false, defaultValue = "") String keyword,
-            @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size,
-            @RequestParam(value = "sort", defaultValue = "id") String sortBy,
-            @RequestParam(value = "direction", defaultValue = "asc") String direction) {
+            Model model,
+            Pageable clPageable) {
 
-        Sort.Direction sortDirection = direction.equalsIgnoreCase("desc") ?
-                Sort.Direction.DESC : Sort.Direction.ASC;
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, sortBy));
+        // pageable 생성
+        Pageable pageable = PageRequest.of(
+                clPageable.getPageNumber(),
+                clPageable.getPageSize() > 0 && clPageable.getPageSize() < 50 ? clPageable.getPageSize() : 20,
+                clPageable.getSort().isSorted() ? clPageable.getSort() : Sort.by("member_id").descending()
+        );
 
-        MemberSearchCondition condition = new MemberSearchCondition();
+        System.out.println("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        System.out.println("pageable.getPageNumber() = " + pageable.getPageNumber());
+        System.out.println("pageable.getPageSize() = " + pageable.getPageSize());
+        System.out.println("pageable.getOffset() = " + pageable.getOffset());
+        System.out.println("pageable.getSort() = " + pageable.getSort());
 
-        return memberService.searchMemberPage(condition, pageable);
+//
+//        MemberSearchCondition condition = new MemberSearchCondition();
+//
+//        memberService.searchMembers(condition, pageable);
+
+        return "member/members";
     }
+
 }
