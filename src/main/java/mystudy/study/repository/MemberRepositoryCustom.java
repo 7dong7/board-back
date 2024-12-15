@@ -1,6 +1,7 @@
 package mystudy.study.repository;
 
 import mystudy.study.domain.dto.MemberSearchCondition;
+import mystudy.study.domain.dto.SearchMemberDto;
 import mystudy.study.domain.entity.Member;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,5 +12,5 @@ public interface MemberRepositoryCustom {
 
     List<Member> searchMember(MemberSearchCondition condition);
 
-    Page<Member> searchMembers(MemberSearchCondition condition, Pageable pageable);
+    Page<SearchMemberDto> searchMembers(MemberSearchCondition condition, Pageable pageable);
 }

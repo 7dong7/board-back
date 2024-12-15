@@ -8,6 +8,8 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import mystudy.study.domain.dto.MemberSearchCondition;
+import mystudy.study.domain.dto.QSearchMemberDto;
+import mystudy.study.domain.dto.SearchMemberDto;
 import mystudy.study.domain.entity.Member;
 import mystudy.study.domain.entity.QMember;
 import org.springframework.data.domain.Page;
@@ -46,15 +48,26 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
 
     // 사용자 조건 검색 (페이징)
     @Override
-    public Page<Member> searchMembers(MemberSearchCondition condition, Pageable pageable) {
+    public Page<SearchMemberDto> searchMembers(MemberSearchCondition condition, Pageable pageable) {
 
-        List<Member> content = queryFactory.select(member)
+        OrderSpecifier<?> orderSpecifier = memberSort(pageable);
+
+        List<SearchMemberDto> content = queryFactory
+                .select(
+                        new QSearchMemberDto(
+                                member.id.as("member_id"),
+                                member.username,
+                                member.email,
+                                member.createdAt)
+                )
                 .from(member)
                 .where(
                         usernameEq(condition.getUsername()),
                         emailEq(condition.getEmail())
                 )
-                .orderBy(member.username.asc())
+                .orderBy(
+                        orderSpecifier
+                )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -67,7 +80,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
 
     private OrderSpecifier<?> memberSort(Pageable page) {
 
-        if (!page.getSort().isEmpty()) {
+        if (page.getSort().isSorted()) {
 
             for (Sort.Order order : page.getSort()) {
 
@@ -78,9 +91,8 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
                         return new OrderSpecifier<>(direction, member.username);
                     case "email" :
                         return new OrderSpecifier<>(direction, member.email);
-                    case "age":
-                        return new OrderSpecifier<>(direction, member.age);
-
+                    case "id":
+                        return new OrderSpecifier<>(direction, member.id);
                 }
             }
         }
@@ -101,10 +113,10 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
     }
 
     private BooleanExpression usernameEq(String username) {
-        return hasText(username) ? member.username.contains(username) : null;
+        return hasText(username) ? member.username.containsIgnoreCase(username) : null;
     }
 
     private Predicate emailEq(String email) {
-        return hasText(email) ? member.email.contains(email) : null;
+        return hasText(email) ? member.email.containsIgnoreCase(email) : null;
     }
 }

@@ -2,6 +2,7 @@ package mystudy.study.controller;
 
 import lombok.RequiredArgsConstructor;
 import mystudy.study.domain.dto.MemberSearchCondition;
+import mystudy.study.domain.dto.SearchMemberDto;
 import mystudy.study.domain.entity.Member;
 import mystudy.study.service.MemberService;
 import org.springframework.data.domain.Page;
@@ -10,8 +11,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import static org.springframework.util.StringUtils.hasText;
 
 @Controller
 @RequiredArgsConstructor
@@ -23,7 +27,8 @@ public class MemberController {
     // 사용자 검색
     @GetMapping("/members/search")
     public String searchMember(
-            @RequestParam(required = false, defaultValue = "") String keyword,
+            @RequestParam(required = false, defaultValue = "") String username,
+            @RequestParam(required = false, defaultValue = "") String email,
             Model model,
             Pageable clPageable) {
 
@@ -31,19 +36,29 @@ public class MemberController {
         Pageable pageable = PageRequest.of(
                 clPageable.getPageNumber(),
                 clPageable.getPageSize() > 0 && clPageable.getPageSize() < 50 ? clPageable.getPageSize() : 20,
-                clPageable.getSort().isSorted() ? clPageable.getSort() : Sort.by("member_id").descending()
+                clPageable.getSort().isSorted() ? clPageable.getSort() : Sort.by("id").descending()
         );
 
-        System.out.println("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-        System.out.println("pageable.getPageNumber() = " + pageable.getPageNumber());
-        System.out.println("pageable.getPageSize() = " + pageable.getPageSize());
-        System.out.println("pageable.getOffset() = " + pageable.getOffset());
-        System.out.println("pageable.getSort() = " + pageable.getSort());
+//        System.out.println("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+//        System.out.println("pageable.getPageNumber() = " + pageable.getPageNumber());
+//        System.out.println("pageable.getPageSize() = " + pageable.getPageSize());
+//        System.out.println("pageable.getOffset() = " + pageable.getOffset());
+//        System.out.println("pageable.getSort() = " + pageable.getSort());
 
-//
-//        MemberSearchCondition condition = new MemberSearchCondition();
-//
-//        memberService.searchMembers(condition, pageable);
+        // 사용자 검색 조건
+        MemberSearchCondition condition = new MemberSearchCondition();
+        condition.setUsername(username);
+        condition.setEmail(email);
+
+        // 사용자 검색
+        Page<SearchMemberDto> memberList = memberService.searchMembers(condition, pageable);
+
+//        for (SearchMemberDto memberDto : memberList) {
+//            System.out.println("memberDto = " + memberDto);
+//        }
+
+        // model 속성 추가
+        model.addAttribute("memberList", memberList);
 
         return "member/members";
     }
