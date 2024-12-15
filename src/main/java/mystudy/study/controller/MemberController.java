@@ -35,9 +35,10 @@ public class MemberController {
         // pageable 생성
         Pageable pageable = PageRequest.of(
                 clPageable.getPageNumber(),
-                clPageable.getPageSize() > 0 && clPageable.getPageSize() < 50 ? clPageable.getPageSize() : 20,
-                clPageable.getSort().isSorted() ? clPageable.getSort() : Sort.by("id").descending()
+                Math.max(1, Math.min(clPageable.getPageSize(), 50)), // 1 이상, 50 이하로 페이지 크기 제한
+                clPageable.getSort().isSorted() ? clPageable.getSort() : Sort.by("id").descending() // 정렬 조건 처리
         );
+
 
 //        System.out.println("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 //        System.out.println("pageable.getPageNumber() = " + pageable.getPageNumber());
