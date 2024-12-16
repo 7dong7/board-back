@@ -40,8 +40,8 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
                 .select(member)
                 .from(member)
                 .where(
-                        usernameEq(condition.getUsername()),
-                        emailEq(condition.getEmail())
+//                        usernameEq(condition.getUsername()),
+//                        emailEq(condition.getEmail())
                 )
                 .fetch();
     }
@@ -49,8 +49,6 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
     // 사용자 조건 검색 (페이징)
     @Override
     public Page<SearchMemberDto> searchMembers(MemberSearchCondition condition, Pageable pageable) {
-
-        OrderSpecifier<?> orderSpecifier = memberSort(pageable);
 
         List<SearchMemberDto> content = queryFactory
                 .select(
@@ -62,11 +60,10 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
                 )
                 .from(member)
                 .where(
-                        usernameEq(condition.getUsername()),
-                        emailEq(condition.getEmail())
+                        transformSearchCondition(condition)
                 )
                 .orderBy(
-                        orderSpecifier
+                        memberSort(pageable)
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -76,13 +73,13 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
     }
+    
+    // 정렬 조건 변환
+    private OrderSpecifier<?> memberSort(Pageable pageable) {
 
+        if (pageable.getSort().isSorted()) {
 
-    private OrderSpecifier<?> memberSort(Pageable page) {
-
-        if (page.getSort().isSorted()) {
-
-            for (Sort.Order order : page.getSort()) {
+            for (Sort.Order order : pageable.getSort()) {
 
                 Order direction = order.getDirection().isAscending() ? Order.ASC : Order.DESC;
 
@@ -99,18 +96,34 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
         return null;
     }
 
-
-    // 검색 조건에 해당하는 총 사용자 수
+    // 조건에 맞는 사용자 수
     private JPAQuery<Long> countQuery(MemberSearchCondition condition) {
 
         return queryFactory
                 .select(member.count())
                 .from(member)
                 .where(
-                        usernameEq(condition.getUsername()),
-                        emailEq(condition.getEmail())
+                        transformSearchCondition(condition)
                 );
     }
+
+    // 검색 조건 변환
+    private BooleanExpression transformSearchCondition(MemberSearchCondition condition) {
+
+        if (hasText(condition.getSearchType())) {
+            String searchType = condition.getSearchType();
+            String searchWord = condition.getSearchWord();
+
+            return switch (searchType) {
+                case "username" -> member.username.containsIgnoreCase(searchWord);
+                case "email" -> member.email.containsIgnoreCase(searchWord);
+                default -> throw new IllegalArgumentException("잘못된 검색 조건: " + searchType);
+            };
+        } else {
+            return null;
+        }
+    }
+
 
     private BooleanExpression usernameEq(String username) {
         return hasText(username) ? member.username.containsIgnoreCase(username) : null;

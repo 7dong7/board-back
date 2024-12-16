@@ -5,7 +5,6 @@ import lombok.Data;
 @Data
 public class MemberSearchCondition {
 
-    private String username;
-    private String email;
-
+    private String searchType; // 검색 조건 username, email
+    private String searchWord; // 검색어
 }

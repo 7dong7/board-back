@@ -12,5 +12,6 @@ public interface MemberRepositoryCustom {
 
     List<Member> searchMember(MemberSearchCondition condition);
 
+    // 사용자 페이징, 조건 검색, 정렬
     Page<SearchMemberDto> searchMembers(MemberSearchCondition condition, Pageable pageable);
 }

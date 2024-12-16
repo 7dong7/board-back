@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -27,16 +28,16 @@ public class MemberController {
     // 사용자 검색
     @GetMapping("/members/search")
     public String searchMember(
-            @RequestParam(required = false, defaultValue = "") String username,
-            @RequestParam(required = false, defaultValue = "") String email,
+            @RequestParam(value = "searchType", required = false) String searchType,
+            @RequestParam(value = "searchWord", required = false) String searchWord,
             Model model,
-            Pageable clPageable) {
+            @PageableDefault(size = 15, page = 0, sort = "id", direction = Sort.Direction.DESC) Pageable clPageable) {
 
         // pageable 생성
         Pageable pageable = PageRequest.of(
                 clPageable.getPageNumber(),
                 Math.max(1, Math.min(clPageable.getPageSize(), 50)), // 1 이상, 50 이하로 페이지 크기 제한
-                clPageable.getSort().isSorted() ? clPageable.getSort() : Sort.by("id").descending() // 정렬 조건 처리
+                clPageable.getSort() // default 정렬 @PageableDefault 어노테이션으로 설정
         );
 
 
@@ -45,11 +46,13 @@ public class MemberController {
 //        System.out.println("pageable.getPageSize() = " + pageable.getPageSize());
 //        System.out.println("pageable.getOffset() = " + pageable.getOffset());
 //        System.out.println("pageable.getSort() = " + pageable.getSort());
+//        System.out.println("searchType = " + searchType);
+//        System.out.println("searchWord = " + searchWord);
 
         // 사용자 검색 조건
         MemberSearchCondition condition = new MemberSearchCondition();
-        condition.setUsername(username);
-        condition.setEmail(email);
+        condition.setSearchType(searchType);
+        condition.setSearchWord(searchWord);
 
         // 사용자 검색
         Page<SearchMemberDto> memberList = memberService.searchMembers(condition, pageable);
