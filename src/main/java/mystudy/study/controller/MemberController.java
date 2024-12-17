@@ -28,7 +28,7 @@ public class MemberController {
 
 
     // 사용자 검색
-    @GetMapping("/search")
+    @GetMapping
     public String searchMember(
             @RequestParam(value = "searchType", required = false) String searchType,
             @RequestParam(value = "searchWord", required = false) String searchWord,
@@ -43,13 +43,13 @@ public class MemberController {
         );
 
 
-//        System.out.println("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-//        System.out.println("pageable.getPageNumber() = " + pageable.getPageNumber());
-//        System.out.println("pageable.getPageSize() = " + pageable.getPageSize());
-//        System.out.println("pageable.getOffset() = " + pageable.getOffset());
-//        System.out.println("pageable.getSort() = " + pageable.getSort());
-//        System.out.println("searchType = " + searchType);
-//        System.out.println("searchWord = " + searchWord);
+        System.out.println("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        System.out.println("pageable.getPageNumber() = " + pageable.getPageNumber());
+        System.out.println("pageable.getPageSize() = " + pageable.getPageSize());
+        System.out.println("pageable.getOffset() = " + pageable.getOffset());
+        System.out.println("pageable.getSort() = " + pageable.getSort());
+        System.out.println("searchType = " + searchType);
+        System.out.println("searchWord = " + searchWord);
 
         // 사용자 검색 조건
         MemberSearchCondition condition = new MemberSearchCondition();
@@ -59,9 +59,9 @@ public class MemberController {
         // 사용자 검색
         Page<SearchMemberDto> memberList = memberService.searchMembers(condition, pageable);
 
-//        for (SearchMemberDto memberDto : memberList) {
-//            System.out.println("memberDto = " + memberDto);
-//        }
+        for (SearchMemberDto memberDto : memberList) {
+            System.out.println("memberDto = " + memberDto);
+        }
 
         // model 속성 추가
         model.addAttribute("memberList", memberList);

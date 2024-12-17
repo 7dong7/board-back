@@ -1,11 +1,80 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
-    <head>
-        <meta charset="UTF-8">
-        <title>타이틀</title>
-    </head>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/html">
 
-    </body>
+<head>
+    <meta charset="UTF-8">
+    <title>회원 목록</title>
+    <style>
+        /* 테이블 스타일 */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+        th {
+            background-color: #f0f0f0;
+        }
+        .pagination {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .pagination a {
+            margin: 0 5px;
+            text-decoration: none;
+            color: #333;
+        }
+    </style>
+</head>
 
-    </body>
+<body>
+    <!-- user/userList.html -->
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>이름</th>
+            <th>이메일</th>
+            <th>생성일</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- memberList.content는 페이지의 데이터 목록 -->
+        <tr th:each="member : ${memberList.content}">
+            <td th:text="${member.id}"></td>
+            <td th:text="${member.username}"></td>
+            <td th:text="${member.email}"></td>
+            <td th:text="${#temporals.format(member.createdAt, 'yyyy-MM-dd HH:mm:ss')}">2024-06-17 15:30:45</td>
+        </tr>
+        <tr th:if="${memberList.totalElements == 0}">
+            <td colspan="4">등록된 회원이 없습니다.</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- 페이지네이션 -->
+    <div class="pagination">
+        <!-- 처음 페이지 이동 -->
+        <a th:href="@{/members(page=0)}" th:if="${!memberList.first}">처음</a>
+
+        <!-- 이전 페이지 -->
+        <a th:href="@{/members(page=${memberList.number - 1})}" th:if="${memberList.hasPrevious()}">이전</a>
+
+        <!-- 현재 페이지 / 전체 페이지 -->
+        <span th:text="${memberList.number + 1}">1</span> /
+        <span th:text="${memberList.totalPages}">10</span>
+
+        <!-- 다음 페이지 -->
+        <a th:href="@{/members(page=${memberList.number + 1})}" th:if="${memberList.hasNext()}">다음</a>
+
+        <!-- 마지막 페이지 -->
+        <a th:href="@{/members(page=${memberList.totalPages - 1})}" th:if="${!memberList.last}">마지막</a>
+    </div>
+
+</body>
 </html>
