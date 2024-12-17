@@ -1,39 +1,32 @@
 <!DOCTYPE html>
 <html lang="ko"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns="http://www.w3.org/1999/html">
+      xmlns:th="http://www.thymeleaf.org">
+
+<link rel="stylesheet" href="/css/member/members.css"/> <!-- css -->
 
 <head>
     <meta charset="UTF-8">
     <title>회원 목록</title>
-    <style>
-        /* 테이블 스타일 */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            padding: 10px;
-            border: 1px solid #ddd;
-            text-align: center;
-        }
-        th {
-            background-color: #f0f0f0;
-        }
-        .pagination {
-            text-align: center;
-            margin-top: 20px;
-        }
-        .pagination a {
-            margin: 0 5px;
-            text-decoration: none;
-            color: #333;
-        }
-    </style>
 </head>
 
 <body>
-    <!-- user/userList.html -->
+
+    <!-- 검색창 -->
+    <div class="search-container">
+        <form th:action="@{/members}" method="get">
+            <!-- 검색 타입 선택 -->
+            <select name="searchType">
+                <option value="username">사용자명</option>
+                <option value="email">이메일</option>
+            </select>
+            <!-- 검색어 입력 -->
+            <input type="text" name="searchWord" placeholder="검색어를 입력하세요" required>
+            <!-- 검색 버튼 -->
+            <button type="submit">찾기</button>
+        </form>
+    </div>
+
+    <!-- 검색된 사용자 표시 -->
     <table>
         <thead>
         <tr>
@@ -44,7 +37,6 @@
         </tr>
         </thead>
         <tbody>
-        <!-- memberList.content는 페이지의 데이터 목록 -->
         <tr th:each="member : ${memberList.content}">
             <td th:text="${member.id}"></td>
             <td th:text="${member.username}"></td>
@@ -60,20 +52,24 @@
     <!-- 페이지네이션 -->
     <div class="pagination">
         <!-- 처음 페이지 이동 -->
-        <a th:href="@{/members(page=0)}" th:if="${!memberList.first}">처음</a>
+        <a th:href="@{/members(page=0, searchType=${param.searchType}, searchWord=${param.searchWord})}"
+           th:if="${!memberList.first}">처음</a>
 
         <!-- 이전 페이지 -->
-        <a th:href="@{/members(page=${memberList.number - 1})}" th:if="${memberList.hasPrevious()}">이전</a>
+        <a th:href="@{/members(page=${memberList.number - 1}, searchType=${param.searchType}, searchWord=${param.searchWord})}"
+           th:if="${memberList.hasPrevious()}">이전</a>
 
         <!-- 현재 페이지 / 전체 페이지 -->
         <span th:text="${memberList.number + 1}">1</span> /
         <span th:text="${memberList.totalPages}">10</span>
 
         <!-- 다음 페이지 -->
-        <a th:href="@{/members(page=${memberList.number + 1})}" th:if="${memberList.hasNext()}">다음</a>
+        <a th:href="@{/members(page=${memberList.number + 1}, searchType=${param.searchType}, searchWord=${param.searchWord})}"
+           th:if="${memberList.hasNext()}">다음</a>
 
         <!-- 마지막 페이지 -->
-        <a th:href="@{/members(page=${memberList.totalPages - 1})}" th:if="${!memberList.last}">마지막</a>
+        <a th:href="@{/members(page=${memberList.totalPages - 1}, searchType=${param.searchType}, searchWord=${param.searchWord})}"
+           th:if="${!memberList.last}">마지막</a>
     </div>
 
 </body>

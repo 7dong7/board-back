@@ -38,10 +38,19 @@ public class InitMember {
 //            Member member2 = new Member("member2", 20, "member2@naver.com");
             em.persist(member1);
 
-
             // 새로운 사용자 추가
-            for (int i = 2; i < 103; i++) {
+            for (int i = 2; i < 51; i++) {
                 Member member = new Member("member" + i, i, "member" + i + "@naver.com");
+                em.persist(member);
+            }
+
+            for (int i = 51; i < 101; i++) {
+                Member member = new Member("user" + i, i, "user" + i + "@gmail.com");
+                em.persist(member);
+            }
+
+            for (int i = 101; i < 124; i++) {
+                Member member = new Member("postuser" + i, i, "postuser" + i + "@daum.net");
                 em.persist(member);
             }
 

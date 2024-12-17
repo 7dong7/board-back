@@ -59,9 +59,9 @@ public class MemberController {
         // 사용자 검색
         Page<SearchMemberDto> memberList = memberService.searchMembers(condition, pageable);
 
-        for (SearchMemberDto memberDto : memberList) {
-            System.out.println("memberDto = " + memberDto);
-        }
+//        for (SearchMemberDto memberDto : memberList) {
+//            System.out.println("memberDto = " + memberDto);
+//        }
 
         // model 속성 추가
         model.addAttribute("memberList", memberList);
