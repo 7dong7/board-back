@@ -13,9 +13,13 @@ h1 {
     font-size: 24px;
 }
 
-/* 검색창 스타일 */
+/* 검색창 */
 div.search-container {
     margin: 5rem 0 1rem 0;
+}
+
+#searchForm {
+    display:flex;
 }
 
 .search-container select,
@@ -53,6 +57,11 @@ div.search-container {
 
 .search-container button:active {
     transform: scale(0.95);
+}
+
+select.page-size-container {
+    margin-left:auto;
+    margin-right:0;
 }
 
 /* 테이블 스타일 */
@@ -136,70 +145,3 @@ tr td:nth-child(4) {
     color: #777;
     margin-top: 20px;
 }
-
-/* 검색창 스타일 */
-div.search-container {
-    display: flex; /* 플렉스박스로 정렬 관리 */
-    align-items: center; /* 세로 정렬 */
-    justify-content: space-between; /* 양쪽 끝으로 요소 정렬 */
-    margin: 5rem 0 1rem 0;
-}
-
-/* 검색 타입, 검색어 입력 필드, 버튼 */
-.search-container select:not([name="size"]),
-.search-container input[type="text"] {
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    margin-right: 10px;
-    width: 200px;
-    transition: border-color 0.3s, box-shadow 0.3s;
-}
-
-/* 페이지 크기 선택 */
-.search-container select[name="size"] {
-    margin-left: auto; /* 자동 여백으로 오른쪽으로 이동 */
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    width: auto; /* 페이지 크기 선택의 폭 자동 조정 */
-    transition: border-color 0.3s, box-shadow 0.3s;
-}
-
-/* 검색 타입과 검색어 입력 필드에 포커스 효과 */
-.search-container input[type="text"]:focus,
-.search-container select:not([name="size"]):focus {
-    border-color: #555;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-    outline: none;
-}
-
-/* 버튼 스타일 */
-.search-container button {
-    padding: 10px 20px;
-    font-size: 16px;
-    background-color: #333;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
-}
-
-.search-container button:hover {
-    background-color: #555;
-}
-
-.search-container button:active {
-    transform: scale(0.95);
-}
-
-
-
-
-
-
-
-
