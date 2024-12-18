@@ -46,7 +46,6 @@ public class MemberController {
                 clPageable.getSort() // default 정렬 @PageableDefault 어노테이션으로 설정
         );
 
-
         System.out.println("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
         System.out.println("pageable.getPageNumber() = " + pageable.getPageNumber());
         System.out.println("pageable.getPageSize() = " + pageable.getPageSize());
@@ -54,7 +53,6 @@ public class MemberController {
         System.out.println("pageable.getSort() = " + pageable.getSort());
         System.out.println("searchType = " + searchType);
         System.out.println("searchWord = " + searchWord);
-
 
         // 사용자 검색 조건
         MemberSearchCondition condition = new MemberSearchCondition();
