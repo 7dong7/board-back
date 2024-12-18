@@ -17,6 +17,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+
 import static org.springframework.util.StringUtils.hasText;
 
 @Controller
@@ -51,6 +55,7 @@ public class MemberController {
         System.out.println("searchType = " + searchType);
         System.out.println("searchWord = " + searchWord);
 
+
         // 사용자 검색 조건
         MemberSearchCondition condition = new MemberSearchCondition();
         condition.setSearchType(searchType);
@@ -63,9 +68,13 @@ public class MemberController {
 //            System.out.println("memberDto = " + memberDto);
 //        }
 
+        Map<String, Object> map = new HashMap<>();
+        map.put("searchType", searchType);
+        map.put("searchWord", searchWord);
+
         // model 속성 추가
         model.addAttribute("memberList", memberList);
-
+        model.addAttribute("searchParam", map);
         return "member/members";
     }
 

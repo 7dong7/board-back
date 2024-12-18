@@ -9,22 +9,37 @@
     <title>회원 목록</title>
 </head>
 
-<body>
+<script>
+    // 폼 자동 제출 함수
+    function submitForm() {
+        document.getElementById("searchForm").submit();
+    }
+</script>
 
+<body>
     <!-- 검색창 -->
     <div class="search-container">
-        <form th:action="@{/members}" method="get">
-            <!-- 검색 타입 선택 -->
+        <form id="searchForm" th:action="@{/members}" method="get">
+            <!-- 검색 타입-->
             <select name="searchType">
-                <option value="username">사용자명</option>
-                <option value="email">이메일</option>
+                <option value="username" th:selected="${searchParam.searchType == 'username'}">사용자명</option>
+                <option value="email" th:selected="${searchParam.searchType == 'email'}">이메일</option>
             </select>
-            <!-- 검색어 입력 -->
-            <input type="text" name="searchWord" placeholder="검색어를 입력하세요" required>
-            <!-- 검색 버튼 -->
+
+            <!-- 검색어 -->
+            <input type="text" name="searchWord" placeholder="검색어를 입력하세요" th:value="${param.searchWord}" required>
             <button type="submit">찾기</button>
+
+            <!-- 페이지 크기 선택 -->
+            <select name="size" onchange="submitForm()">
+                <option value="5" th:selected="${memberList.size} == '5'">5개씩 보기</option>s
+                <option value="10" th:selected="${memberList.size} == '10'">10개씩 보기</option>
+                <option value="20" th:selected="${memberList.size} == '20'">20개씩 보기</option>
+            </select>
         </form>
     </div>
+
+
 
     <!-- 검색된 사용자 표시 -->
     <table>
@@ -52,11 +67,11 @@
     <!-- 페이지네이션 -->
     <div class="pagination">
         <!-- 처음 페이지 이동 -->
-        <a th:href="@{/members(page=0, searchType=${param.searchType}, searchWord=${param.searchWord})}"
+        <a th:href="@{/members(page=0, size=${memberList.size}, searchType=${param.searchType}, searchWord=${param.searchWord})}"
            th:if="${!memberList.first}">처음</a>
 
         <!-- 이전 페이지 -->
-        <a th:href="@{/members(page=${memberList.number - 1}, searchType=${param.searchType}, searchWord=${param.searchWord})}"
+        <a th:href="@{/members(page=${memberList.number - 1}, size=${memberList.size}, searchType=${param.searchType}, searchWord=${param.searchWord})}"
            th:if="${memberList.hasPrevious()}">이전</a>
 
         <!-- 현재 페이지 / 전체 페이지 -->
@@ -64,11 +79,11 @@
         <span th:text="${memberList.totalPages}">10</span>
 
         <!-- 다음 페이지 -->
-        <a th:href="@{/members(page=${memberList.number + 1}, searchType=${param.searchType}, searchWord=${param.searchWord})}"
+        <a th:href="@{/members(page=${memberList.number + 1}, size=${memberList.size}, searchType=${param.searchType}, searchWord=${param.searchWord})}"
            th:if="${memberList.hasNext()}">다음</a>
 
         <!-- 마지막 페이지 -->
-        <a th:href="@{/members(page=${memberList.totalPages - 1}, searchType=${param.searchType}, searchWord=${param.searchWord})}"
+        <a th:href="@{/members(page=${memberList.totalPages - 1}, size=${memberList.size}, searchType=${param.searchType}, searchWord=${param.searchWord})}"
            th:if="${!memberList.last}">마지막</a>
     </div>
 
