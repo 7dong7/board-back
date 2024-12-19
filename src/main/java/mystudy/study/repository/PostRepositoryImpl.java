@@ -54,19 +54,19 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
 
     // 검색 조건 변환
     private BooleanExpression transformPostSearchCondition(PostSearchCondition condition) {
-        String searchType = condition.getSearchType(); // 검색 조건
 
-        if (hasText(searchType)) { // 검색 조건이 존재하면
+        if (hasText(condition.getSearchType())) { // 검색 조건이 존재하면
+            String searchType = condition.getSearchType(); // 검색 조건
             String searchWord = condition.getSearchWord(); // 검색어
 
             // 검색 조건에 따른 데이터베이스 조회 쿼리
             return switch (searchType) {
-                case "username" -> member.username.containsIgnoreCase(searchWord); // username 검색
-                case "title" -> post.title.containsIgnoreCase(searchWord);  // title 검색
-                case "content" -> post.content.containsIgnoreCase(searchWord); // content 검색
+                case "username" -> member.username.containsIgnoreCase(searchWord);
+                case "title" -> post.title.containsIgnoreCase(searchWord);
+                case "content" -> post.content.containsIgnoreCase(searchWord);
                 case "title_content" -> post.title.containsIgnoreCase(searchWord)
                                                 .and(post.content.containsIgnoreCase(searchWord)); // 제목 + 내용 검색
-                default -> throw new IllegalArgumentException("잘못된 검색 조건" + searchType);
+                default -> null; // 검색 조건이 있으나 사전에 정의된 조건이 아닌 경우
             };
         } else {
             return null;

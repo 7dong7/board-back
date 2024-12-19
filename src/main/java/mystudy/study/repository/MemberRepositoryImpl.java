@@ -11,12 +11,10 @@ import mystudy.study.domain.dto.MemberSearchCondition;
 import mystudy.study.domain.dto.QSearchMemberDto;
 import mystudy.study.domain.dto.SearchMemberDto;
 import mystudy.study.domain.entity.Member;
-import mystudy.study.domain.entity.QMember;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.support.PageableExecutionUtils;
-import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -47,7 +45,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
 
     // 사용자 조건 검색 (페이징)
     @Override
-    public Page<SearchMemberDto> searchMembers(MemberSearchCondition condition, Pageable pageable) {
+    public Page<SearchMemberDto> getMemberPage(MemberSearchCondition condition, Pageable pageable) {
 
         List<SearchMemberDto> content = queryFactory
                 .select(
@@ -59,7 +57,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
                 )
                 .from(member)
                 .where(
-                        transformSearchCondition(condition)
+                        transformMemberSearchCondition(condition)
                 )
                 .orderBy(
                         memberSort(pageable)
@@ -102,31 +100,32 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
                 .select(member.count())
                 .from(member)
                 .where(
-                        transformSearchCondition(condition)
+                        transformMemberSearchCondition(condition)
                 );
     }
 
     // 검색 조건 변환
-    private BooleanExpression transformSearchCondition(MemberSearchCondition condition) {
+    private BooleanExpression transformMemberSearchCondition(MemberSearchCondition condition) {
 
         if (hasText(condition.getSearchType())) {
-            String searchType = condition.getSearchType();
-            String searchWord = condition.getSearchWord();
+            String searchType = condition.getSearchType(); // 검색 조건
+            String searchWord = condition.getSearchWord(); // 검색어
 
-            System.out.println("searchType = " + searchType);
-            System.out.println("searchWord = " + searchWord);
+//            System.out.println("searchType = " + searchType);
+//            System.out.println("searchWord = " + searchWord);
 
             return switch (searchType) {
                 case "username" -> member.username.containsIgnoreCase(searchWord);
                 case "email" -> member.email.containsIgnoreCase(searchWord);
-                default -> throw new IllegalArgumentException("잘못된 검색 조건: " + searchType); // 잘못된 요청
+                default -> null; // 검색 조건이 있으나 사전에 정의된 조건이 아닌 경우
             };
         } else {
             return null;
         }
     }
 
-
+    
+    // ---
     private BooleanExpression usernameEq(String username) {
         return hasText(username) ? member.username.containsIgnoreCase(username) : null;
     }
@@ -134,4 +133,5 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
     private Predicate emailEq(String email) {
         return hasText(email) ? member.email.containsIgnoreCase(email) : null;
     }
+    
 }

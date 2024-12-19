@@ -33,7 +33,7 @@ public class MemberController {
 
     // 사용자 검색
     @GetMapping
-    public String searchMember(
+    public String getMemberPage(
             @RequestParam(value = "searchType", required = false) String searchType,
             @RequestParam(value = "searchWord", required = false) String searchWord,
             Model model,
@@ -60,7 +60,7 @@ public class MemberController {
         condition.setSearchWord(searchWord);
 
         // 사용자 검색
-        Page<SearchMemberDto> memberList = memberService.searchMembers(condition, pageable);
+        Page<SearchMemberDto> memberList = memberService.getMemberPage(condition, pageable);
 
 //        for (SearchMemberDto memberDto : memberList) {
 //            System.out.println("memberDto = " + memberDto);
