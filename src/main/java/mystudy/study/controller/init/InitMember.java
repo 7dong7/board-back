@@ -31,7 +31,6 @@ public class InitMember {
         @PersistenceContext
         EntityManager em;
 
-
         @Transactional
         public void init() {
             Member member1 = new Member("member1", 10, "member1@naver.com");
@@ -54,6 +53,7 @@ public class InitMember {
                 em.persist(member);
             }
 
+
             // member1의 게시글 작성
             for ( int i = 0; i < 103; i++ ) {
                 Post post = new Post("새로운 글작성"+i, "새로운 글이 작성되었습니다"+i, member1);
@@ -66,7 +66,6 @@ public class InitMember {
 //            }
 
 //            em.persist(member2);
-
 
         }
     }

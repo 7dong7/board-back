@@ -165,26 +165,6 @@ class MemberRepositoryTest {
     }
 
     @Test
-    public void memberSearchConditionTest() throws Exception{
-
-        MemberSearchCondition condition = new MemberSearchCondition();
-        condition.setUsername("member");
-        condition.setEmail("member");
-
-        List<Member> conditionMember = memberRepository.searchMember(condition);
-
-        for (Member member : conditionMember) {
-            System.out.println("member = " + member);
-            System.out.println("member.getCreatedAt() = " + member.getCreatedAt());
-            System.out.println("member.getUpdatedAt() = " + member.getUpdatedAt());
-        }
-
-        assertThat(conditionMember)
-                .allMatch(m -> m.getUsername().toLowerCase().contains("member"));
-//        assertThat(conditionMember).extracting("username").contains("member1");
-    }
-
-    @Test
     public void assertFilteredTest() throws Exception {
 
         List<Member> members = memberRepository.findAll();

@@ -16,6 +16,10 @@ spring:
       ddl-auto: create
               # create : 애플리케이션 로딩 시점에 테이블을 드랍하고 다시 만듬 (공부할 때 사용)
               # create-drop : 애플리케이션 로딩시에 테이블을 만들고 애플리케이션을 종료하면 테이블을 드랍함
+              # update : 엔티티로 등록된 클래스와 매핑되는 테이블이 없으면 새로 생성하
+              #           기존의 컬럼은 건들지 않고 새로 추가되는 컬럼의 변경사항만 변경
+              #           언떤 필드가 int -> String 으로 변경되더라도 update 되지 않는다
+              
     properties:
       hibernate:
         # show_sql : 내가 작성한 쿼리문을 볼 수 있음

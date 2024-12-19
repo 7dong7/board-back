@@ -1,12 +1,19 @@
 package mystudy.study.repository;
 
 import jakarta.persistence.EntityManager;
+import mystudy.study.domain.dto.PostDto;
+import mystudy.study.domain.dto.PostSearchCondition;
 import mystudy.study.domain.entity.Member;
 import mystudy.study.domain.entity.Post;
+import mystudy.study.domain.entity.QPost;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -72,5 +79,32 @@ class PostRepositoryTest {
             System.out.println("post.getCreatedBy() = " + post.getCreatedBy());
             System.out.println("post.getUpdatedBy() = " + post.getUpdatedBy());
         }
+    }
+    
+    @Test
+    public void getPostPageTest() throws Exception{
+        // pageable 생성
+        Pageable pageable = PageRequest.of(
+                0, // 페이지 숫자 0
+                10, // 페이지 크기
+                Sort.by(Sort.Order.desc("id")) // 기본 id 최신순 정렬
+        ); 
+        
+        // 검색 조건 세팅
+        PostSearchCondition condition = new PostSearchCondition();
+        condition.setSearchType("title");
+        condition.setSearchWord("1");
+
+        // 게시글 검색
+        Page<PostDto> postDtoPage = postRepository.getPostPage(pageable, condition);
+
+        // 결과 확인
+        System.out.println("postDtoPage.getTotalPages() = " + postDtoPage.getTotalPages());
+        System.out.println("postDtoPage.getTotalElements() = " + postDtoPage.getTotalElements());
+        List<PostDto> content = postDtoPage.getContent();
+        for (PostDto postDto : content) {
+            System.out.println("postDto = " + postDto);
+        }
+
     }
 }

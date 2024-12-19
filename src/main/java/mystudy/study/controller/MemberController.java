@@ -37,7 +37,7 @@ public class MemberController {
             @RequestParam(value = "searchType", required = false) String searchType,
             @RequestParam(value = "searchWord", required = false) String searchWord,
             Model model,
-            @PageableDefault(size = 15, page = 0, sort = "id", direction = Sort.Direction.DESC) Pageable clPageable) {
+            @PageableDefault(size = 5, page = 0, sort = "id", direction = Sort.Direction.DESC) Pageable clPageable) {
 
         // pageable 생성
         Pageable pageable = PageRequest.of(
@@ -46,13 +46,13 @@ public class MemberController {
                 clPageable.getSort() // default 정렬 @PageableDefault 어노테이션으로 설정
         );
 
-        System.out.println("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-        System.out.println("pageable.getPageNumber() = " + pageable.getPageNumber());
-        System.out.println("pageable.getPageSize() = " + pageable.getPageSize());
-        System.out.println("pageable.getOffset() = " + pageable.getOffset());
-        System.out.println("pageable.getSort() = " + pageable.getSort());
-        System.out.println("searchType = " + searchType);
-        System.out.println("searchWord = " + searchWord);
+//        System.out.println("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+//        System.out.println("pageable.getPageNumber() = " + pageable.getPageNumber());
+//        System.out.println("pageable.getPageSize() = " + pageable.getPageSize());
+//        System.out.println("pageable.getOffset() = " + pageable.getOffset());
+//        System.out.println("pageable.getSort() = " + pageable.getSort());
+//        System.out.println("searchType = " + searchType);
+//        System.out.println("searchWord = " + searchWord);
 
         // 사용자 검색 조건
         MemberSearchCondition condition = new MemberSearchCondition();
