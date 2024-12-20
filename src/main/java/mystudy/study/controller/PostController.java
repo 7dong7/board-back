@@ -45,7 +45,12 @@ public class PostController {
         PostSearchCondition condition = PostSearchCondition.builder()
                 .searchType(searchType)
                 .searchWord(searchWord)
-                .build();
+                .build(); // builder 패턴으로 만들어봄
+        /*
+            필드의 개수가 4개보다 적고,
+            필드의 변경 가능성이 없는 경우라면
+            생성자, 정적 팩토리 메소드가 좋을 수 있다
+        * */
 
         // 페이징 요청
         Page<PostDto> postPage = postService.getPostPage(pageable, condition);
@@ -55,21 +60,15 @@ public class PostController {
         map.put("searchType", searchType);
         map.put("searchWord", searchWord);
         
-
         // 확인
-        System.out.println("postPage.getTotalPages() = " + postPage.getTotalPages());
-        System.out.println("postPage.getTotalElements() = " + postPage.getTotalElements());
-        
-        List<PostDto> postDtoList = postPage.getContent();
-        System.out.println("postDtoList.size() = " + postDtoList.size());
-
-        for (PostDto postDto : postDtoList) {
-            System.out.println("postDto = " + postDto);
-        }
+//        List<PostDto> postDtoList = postPage.getContent();
+//
+//        for (PostDto postDto : postDtoList) {
+//            System.out.println("postDto = " + postDto);
+//        }
 
         model.addAttribute("postPage", postPage);
         model.addAttribute("searchParam", map);
-
         return "post/posts";
     }
 }

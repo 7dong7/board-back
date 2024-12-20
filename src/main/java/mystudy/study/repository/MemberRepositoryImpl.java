@@ -111,9 +111,6 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
             String searchType = condition.getSearchType(); // 검색 조건
             String searchWord = condition.getSearchWord(); // 검색어
 
-//            System.out.println("searchType = " + searchType);
-//            System.out.println("searchWord = " + searchWord);
-
             return switch (searchType) {
                 case "username" -> member.username.containsIgnoreCase(searchWord);
                 case "email" -> member.email.containsIgnoreCase(searchWord);
