@@ -55,9 +55,10 @@ public class MemberController {
 //        System.out.println("searchWord = " + searchWord);
 
         // 사용자 검색 조건
-        MemberSearchCondition condition = new MemberSearchCondition();
-        condition.setSearchType(searchType);
-        condition.setSearchWord(searchWord);
+        MemberSearchCondition condition = MemberSearchCondition.builder()
+                .searchType(searchType)
+                .searchWord(searchWord)
+                .build();
 
         // 사용자 검색
         Page<SearchMemberDto> memberList = memberService.getMemberPage(condition, pageable);

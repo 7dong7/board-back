@@ -91,9 +91,11 @@ class PostRepositoryTest {
         ); 
         
         // 검색 조건 세팅
-        PostSearchCondition condition = new PostSearchCondition();
-        condition.setSearchType("title");
-        condition.setSearchWord("1");
+        // 게시글 검색 조건
+        PostSearchCondition condition = PostSearchCondition.builder()
+                .searchType("title")
+                .searchWord("1")
+                .build();
 
         // 게시글 검색
         Page<PostDto> postDtoPage = postRepository.getPostPage(pageable, condition);
