@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -35,7 +36,7 @@ public class PostController {
 
         // pageable 생성
         Pageable pageable = PageRequest.of(
-                clPageable.getPageSize(),
+                clPageable.getPageNumber(),
                 Math.max(1, Math.min(clPageable.getPageSize(), 50)), // 1 이상, 50 이하로 페이지 크기 제한
                 clPageable.getSort()
         );
@@ -49,9 +50,22 @@ public class PostController {
         // 페이징 요청
         Page<PostDto> postPage = postService.getPostPage(pageable, condition);
 
+        // 검색 조건
         Map<String, Object> map = new HashMap<>();
         map.put("searchType", searchType);
         map.put("searchWord", searchWord);
+        
+
+        // 확인
+        System.out.println("postPage.getTotalPages() = " + postPage.getTotalPages());
+        System.out.println("postPage.getTotalElements() = " + postPage.getTotalElements());
+        
+        List<PostDto> postDtoList = postPage.getContent();
+        System.out.println("postDtoList.size() = " + postDtoList.size());
+
+        for (PostDto postDto : postDtoList) {
+            System.out.println("postDto = " + postDto);
+        }
 
         model.addAttribute("postPage", postPage);
         model.addAttribute("searchParam", map);

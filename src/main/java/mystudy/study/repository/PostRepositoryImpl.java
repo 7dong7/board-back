@@ -7,6 +7,7 @@ import jakarta.persistence.EntityManager;
 import mystudy.study.domain.dto.PostDto;
 import mystudy.study.domain.dto.PostSearchCondition;
 import mystudy.study.domain.dto.QPostDto;
+import mystudy.study.domain.entity.QMember;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
@@ -37,7 +38,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                         post.createdAt,
                         post.viewCount,
                         member.id.as("memberId"),
-                        member.username.as("username"))) // 검색 결과 Dto 변환
+                        member.username)) // 검색 결과 Dto 변환
                 .from(post)
                 .leftJoin(post.member, member)
                 .where(
@@ -60,12 +61,14 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
             String searchWord = condition.getSearchWord(); // 검색어
 
             // 검색 조건에 따른 데이터베이스 조회 쿼리
+            System.out.println("searchType = " + searchType);
+            System.out.println("searchWord = " + searchWord);
             return switch (searchType) {
                 case "username" -> member.username.containsIgnoreCase(searchWord);
                 case "title" -> post.title.containsIgnoreCase(searchWord);
                 case "content" -> post.content.containsIgnoreCase(searchWord);
                 case "title_content" -> post.title.containsIgnoreCase(searchWord)
-                                                .and(post.content.containsIgnoreCase(searchWord)); // 제목 + 내용 검색
+                                                .or(post.content.containsIgnoreCase(searchWord)); // 제목 + 내용 검색
                 default -> null; // 검색 조건이 있으나 사전에 정의된 조건이 아닌 경우
             };
         } else {
@@ -79,6 +82,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
         return queryFactory
                 .select(post.count())
                 .from(post)
+                .leftJoin(post.member, member)
                 .where(
                         transformPostSearchCondition(condition)
                 );
