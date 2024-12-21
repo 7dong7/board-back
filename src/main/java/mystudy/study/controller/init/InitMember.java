@@ -63,6 +63,10 @@ public class InitMember {
                 member1.addPost(post);
             }
 
+            // member1 댓글 작성
+
+
+
 //            for ( int i = 0; i < 24; i++ ) {
 //                Post post = new Post("새로운 글작성"+i, "새로운 글이 작성되었습니다"+i, member2);
 //                member2.addPost(post);

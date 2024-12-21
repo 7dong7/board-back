@@ -15,52 +15,60 @@
             <h1>사용자 정보</h1>
             <table>
                 <tr>
-                    <th>ID</th>
-                    <td th:text="${user.id}">1</td>
+                    <th>번호</th>
+                    <td th:text="${memberInfo.id}">1</td>
                 </tr>
                 <tr>
-                    <th>이름</th>
-                    <td th:text="${user.name}">홍길동</td>
+                    <th>닉네임</th>
+                    <td th:text="${memberInfo.username}">닉네임</td>
                 </tr>
                 <tr>
                     <th>이메일</th>
-                    <td th:text="${user.email}">hong@example.com</td>
+                    <td th:text="${memberInfo.email}">hong@example.com</td>
                 </tr>
                 <tr>
                     <th>가입일</th>
-                    <td th:text="${#temporals.format(user.createdDate, 'yyyy-MM-dd')}">2024-06-17</td>
+                    <td th:text="${#temporals.format(memberInfo.createdAt, 'yyyy-MM-dd')}">2024-06-17</td>
+                </tr>
+                <tr>
+                    <th>게시글 수</th>
+                    <td th:text="${memberInfo.postCount}">게시글 수</td>
+                </tr>
+                <tr>
+                    <th>댓글 수</th>
+                    <td th:text="${memberInfo.commentCount}">댓글 수</td>
                 </tr>
             </table>
         </div>
 
-        <!-- 사용자 게시글 목록 -->
-  <!--      <div class="user-posts">
-            <h2>작성한 게시글</h2>
-            <table>
-                <thead>
-                <tr>
-                    <th>게시글 번호</th>
-                    <th>제목</th>
-                    <th>작성일</th>
-                    <th>내용</th>
-                </tr>
-                </thead>
-                <tbody>
-                &lt;!&ndash; 게시글 데이터 반복 출력 &ndash;&gt;
-                <tr th:each="post : ${postPage.content}">
-                    <td th:text="${post.id}">1</td>
-                    <td th:text="${post.title}">게시글 제목</td>
-                    <td th:text="${#temporals.format(post.createdDate, 'yyyy-MM-dd')}">2024-06-17</td>
-                    <td th:text="${post.content}">게시글 내용</td>
-                </tr>
+<!--        &lt;!&ndash; 사용자 게시글 목록 &ndash;&gt;-->
+<!--        <div class="user-posts">-->
+<!--            <h2>작성한 게시글</h2>-->
+<!--            <table>-->
+<!--                <thead>-->
+<!--                <tr>-->
+<!--                    <th>게시글 번호</th>-->
+<!--                    <th>제목</th>-->
+<!--                    <th>작성일</th>-->
+<!--                    <th>내용</th>-->
+<!--                </tr>-->
+<!--                </thead>-->
+<!--                <tbody>-->
+<!--                &lt;!&ndash; 게시글 데이터 반복 출력 &ndash;&gt;-->
+<!--                <tr th:each="post : ${postPage.content}">-->
+<!--                    <td th:text="${post.id}">1</td>-->
+<!--                    <td th:text="${post.title}">게시글 제목</td>-->
+<!--                    <td th:text="${#temporals.format(post.createdDate, 'yyyy-MM-dd')}">2024-06-17</td>-->
+<!--                    <td th:text="${post.content}">게시글 내용</td>-->
+<!--                </tr>-->
 
-                &lt;!&ndash; 게시글이 없을 때 &ndash;&gt;
-                <tr th:if="${postPage.content.isEmpty()}">
-                    <td colspan="4" class="no-posts">작성한 게시글이 없습니다.</td>
-                </tr>
-                </tbody>
-            </table>
-        </div>-->
+<!--                &lt;!&ndash; 게시글이 없을 때 &ndash;&gt;-->
+<!--                <tr th:if="${postPage.content.isEmpty()}">-->
+<!--                    <td colspan="4" class="no-posts">작성한 게시글이 없습니다.</td>-->
+<!--                </tr>-->
+<!--                </tbody>-->
+<!--            </table>-->
+<!--        </div>-->
 
     </div>
 </body>

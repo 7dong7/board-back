@@ -85,7 +85,8 @@ public class MemberController {
         // 사용자 정보
         MemberInfoDto memberInfo = memberService.getMemberInfo(id);
 
-        
+        System.out.println("memberInfo = " + memberInfo);
+
         model.addAttribute("memberInfo", memberInfo);
         return "member/memberAndPosts";
     }
