@@ -101,6 +101,10 @@ tr td:nth-child(2) {
     width: 14rem;
 }
 
+tr td:nth-child(2) > a {
+    text-decoration:none;
+}
+
 tr td:nth-child(4) {
     width: 13rem;
 }

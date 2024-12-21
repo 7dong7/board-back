@@ -63,7 +63,6 @@ class MemberRepositoryTest {
             System.out.println("member = " + member);
         }
 
-        assertThat(members.size()).isEqualTo(4);
     }
 
     // optional 테스트

@@ -57,6 +57,16 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
     }
 
+    // 사용자 id 에 해당하는 게시글 수
+    @Override
+    public Long getPostCountByMemberId(Long id) {
+        return queryFactory
+                .select(post.count())
+                .from(post)
+                .where(post.member.id.eq(id))
+                .fetchOne();
+    }
+
     // 검색 조건 변환
     private BooleanExpression transformPostSearchCondition(PostSearchCondition condition) {
 

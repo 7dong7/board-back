@@ -7,15 +7,14 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
-import mystudy.study.domain.dto.MemberSearchCondition;
-import mystudy.study.domain.dto.QSearchMemberDto;
-import mystudy.study.domain.dto.SearchMemberDto;
+import mystudy.study.domain.dto.*;
 import mystudy.study.domain.entity.Member;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.support.PageableExecutionUtils;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static mystudy.study.domain.entity.QMember.member;
@@ -70,7 +69,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
     }
-    
+
     // 정렬 조건 변환
     private OrderSpecifier<?> memberSort(Pageable pageable) {
 

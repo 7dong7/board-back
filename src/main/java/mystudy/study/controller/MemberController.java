@@ -1,6 +1,7 @@
 package mystudy.study.controller;
 
 import lombok.RequiredArgsConstructor;
+import mystudy.study.domain.dto.MemberInfoDto;
 import mystudy.study.domain.dto.MemberSearchCondition;
 import mystudy.study.domain.dto.SearchMemberDto;
 import mystudy.study.domain.entity.Member;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -75,6 +77,17 @@ public class MemberController {
         model.addAttribute("memberList", memberList);
         model.addAttribute("searchParam", map);
         return "member/members";
+    }
+
+    // 사용자의 정보와 게시글을 확인 페이지
+    @GetMapping("{id}")
+    public String getMemberInfoAndPosts(@PathVariable("id") Long id, Model model) {
+        // 사용자 정보
+        MemberInfoDto memberInfo = memberService.getMemberInfo(id);
+
+        
+        model.addAttribute("memberInfo", memberInfo);
+        return "member/memberAndPosts";
     }
 
 }

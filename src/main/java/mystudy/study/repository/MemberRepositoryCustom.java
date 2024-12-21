@@ -1,5 +1,6 @@
 package mystudy.study.repository;
 
+import mystudy.study.domain.dto.MemberInfoDto;
 import mystudy.study.domain.dto.MemberSearchCondition;
 import mystudy.study.domain.dto.SearchMemberDto;
 import mystudy.study.domain.entity.Member;

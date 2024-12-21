@@ -9,4 +9,6 @@ import org.springframework.data.domain.Pageable;
 public interface PostRepositoryCustom {
 
     Page<PostDto> getPostPage(Pageable pageable, PostSearchCondition condition);
+
+    Long getPostCountByMemberId(Long id);
 }

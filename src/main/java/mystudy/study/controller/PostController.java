@@ -75,7 +75,7 @@ public class PostController {
 
     @GetMapping("/{id}")
     public String getPostPage(@PathVariable Long id, Model model) {
-
+        System.out.println("id = " + id);
         return "post/postView";
     }
 }
