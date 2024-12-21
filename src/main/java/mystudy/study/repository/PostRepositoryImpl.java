@@ -1,5 +1,7 @@
 package mystudy.study.repository;
 
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -7,11 +9,10 @@ import jakarta.persistence.EntityManager;
 import mystudy.study.domain.dto.PostDto;
 import mystudy.study.domain.dto.PostSearchCondition;
 import mystudy.study.domain.dto.QPostDto;
-import mystudy.study.domain.entity.QMember;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.support.PageableExecutionUtils;
-import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -43,6 +44,9 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                 .leftJoin(post.member, member)
                 .where(
                         transformPostSearchCondition(condition) // 검색 조건 변환
+                )
+                .orderBy(
+                        postSort(pageable)
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -86,5 +90,27 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                 .where(
                         transformPostSearchCondition(condition)
                 );
+    }
+
+    // 정렬 조건 변환
+    private OrderSpecifier<?> postSort(Pageable pageable) {
+
+        if (pageable.getSort().isSorted()) {
+
+            for (Sort.Order order : pageable.getSort()) {
+
+                Order direction = order.getDirection().isAscending() ? Order.ASC : Order.DESC;
+
+                switch (order.getProperty()) {
+                    case "username" :
+                        return new OrderSpecifier<>(direction, member.username);
+                    case "viewCount" :
+                        return new OrderSpecifier<>(direction, post.viewCount);
+                    case "id":
+                        return new OrderSpecifier<>(direction, post.id);
+                }
+            }
+        }
+        return null;
     }
 }

@@ -55,7 +55,7 @@ public class InitMember {
 
 
             // member1의 게시글 작성
-            for ( int i = 0; i < 103; i++ ) {
+            for ( int i = 1; i < 103; i++ ) {
                 Post post = new Post("새로운 글작성"+i, "새로운 글이 작성되었습니다"+i, member1);
                 member1.addPost(post);
             }

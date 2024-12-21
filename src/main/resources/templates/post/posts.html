@@ -56,7 +56,9 @@
     <tbody>
     <tr th:each="post : ${postPage.content}">
         <td th:text="${post.postId}">id</td>
-        <td th:text="${post.title}">제목</td>
+        <td>
+            <a th:href="@{/posts/{id}(id=${post.postId})}" th:text="${post.title}"></a>
+        </td>
         <td th:text="${post.viewCount}">조회수</td>
         <td th:text="${post.username}">작성자</td>
         <td th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}">2024-06-17 15:30</td>

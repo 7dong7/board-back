@@ -74,9 +74,13 @@ table {
 }
 
 th, td {
-    padding: 12px;
+    padding: 0.4rem 12px;
     text-align: center;
     border: 1px solid #ddd;
+}
+
+td:nth-child(2) {
+    text-align:left;
 }
 
 th {
@@ -101,9 +105,30 @@ tr td:nth-child(2) {
     width: 14rem;
 }
 
+tr td:nth-child(2) > a {
+    text-decoration:none;
+    color: #519bea;
+}
+
+tr td:nth-child(2) > a:hover {
+    color: #0768d1;
+}
+
+tr td:nth-child(3) {
+    width:5rem;
+    font-size: 10pt;
+    padding:0;
+}
+
 tr td:nth-child(4) {
+    width: 11rem;
+    font-size: 11pt;
+}
+
+tr td:nth-child(5) {
     width: 13rem;
 }
+
 
 /* 페이징 네비게이션 바 */
 .pagination {
