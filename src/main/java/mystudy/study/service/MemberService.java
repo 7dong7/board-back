@@ -1,9 +1,11 @@
 package mystudy.study.service;
 
 import lombok.RequiredArgsConstructor;
+import mystudy.study.domain.dto.comment.CommentDto;
 import mystudy.study.domain.dto.member.MemberInfoDto;
 import mystudy.study.domain.dto.member.MemberSearchCondition;
 import mystudy.study.domain.dto.member.SearchMemberDto;
+import mystudy.study.domain.dto.post.PostDto;
 import mystudy.study.domain.entity.Member;
 import mystudy.study.repository.CommentRepository;
 import mystudy.study.repository.MemberRepository;
@@ -34,16 +36,21 @@ public class MemberService {
 
     // 사용자 하나의 정보와 게시글 댓글 페이징 처리 가져오기
     @Transactional
-    public MemberInfoDto getMemberInfo(Long id) {
+    public MemberInfoDto getMemberInfo(Long id, Pageable pageable) {
         // 사용자 정보
         Optional<Member> memberOpt = memberRepository.findById(id);
         Member member = memberOpt.orElseThrow(() -> new IllegalArgumentException("사용자가 없습니다." + id));
-
         // 게시글 수 가져오기
         Long postCount = postService.getPostCountByMemberId(id);
-
         // 댓글 수 가져오기
         Long commentCount = commentService.getCommentCountByMemberId(id);
+
+        // 게시글 페이징
+        Page<PostDto> postPage = postService.getPostByMemberId(id, pageable);
+
+        // 댓글 페이징
+        Page<CommentDto> commentPage = commentService.getCommentByMemberId(id, pageable);
+
 
         // 사용자 정보 반환
         return MemberInfoDto.builder()
@@ -53,6 +60,8 @@ public class MemberService {
                 .createdAt(member.getCreatedAt())
                 .postCount(postCount)
                 .commentCount(commentCount)
+                .postPage(postPage)
+                .commentPage(commentPage)
                 .build();
     }
 }

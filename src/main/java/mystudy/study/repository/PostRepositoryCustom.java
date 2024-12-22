@@ -10,4 +10,6 @@ public interface PostRepositoryCustom {
     Page<PostDto> getPostPage(Pageable pageable, PostSearchCondition condition);
 
     Long getPostCountByMemberId(Long id);
+
+    Page<PostDto> getPostByMemberId(Long id, Pageable pageable);
 }

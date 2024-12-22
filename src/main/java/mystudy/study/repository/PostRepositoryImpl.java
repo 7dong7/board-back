@@ -67,6 +67,41 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                 .fetchOne();
     }
 
+    // 사용자 id에 해당하는 게시글 페이징
+    @Override
+    public Page<PostDto> getPostByMemberId(Long id, Pageable pageable) {
+
+        List<PostDto> content = queryFactory
+                .select(new QPostDto(
+                        post.id,
+                        post.title,
+                        post.createdAt,
+                        post.viewCount,
+                        member.id.as("memberId"),
+                        member.username)) // 검색 결과 Dto 변환
+                .from(post)
+                .leftJoin(post.member, member)
+                .where(
+                        post.member.id.eq(id)
+                )
+                .orderBy(
+                        postSort(pageable)
+                )
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        JPAQuery<Long> countQuery = queryFactory
+                .select(post.count())
+                .from(post)
+                .leftJoin(post.member, member)
+                .where(
+                        post.member.id.eq(id)
+                );
+
+        return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
+    }
+
     // 검색 조건 변환
     private BooleanExpression transformPostSearchCondition(PostSearchCondition condition) {
 

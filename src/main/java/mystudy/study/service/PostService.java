@@ -26,5 +26,10 @@ public class PostService {
     public Long getPostCountByMemberId(Long id) {
         return postRepository.getPostCountByMemberId(id);
     }
+    
+    // 사용자가 작성한 게시글 가져오기
+    public Page<PostDto> getPostByMemberId(Long id, Pageable pageable) {
+        return postRepository.getPostByMemberId(id, pageable);
+    }
 
 }

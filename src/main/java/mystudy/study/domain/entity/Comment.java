@@ -22,7 +22,6 @@ public class Comment extends BaseEntity {
 
     private String content;
 
-
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", nullable = false)

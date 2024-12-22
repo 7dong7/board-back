@@ -1,7 +1,10 @@
 package mystudy.study.service;
 
 import lombok.RequiredArgsConstructor;
+import mystudy.study.domain.dto.comment.CommentDto;
 import mystudy.study.repository.CommentRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,4 +19,9 @@ public class CommentService {
     public Long getCommentCountByMemberId(Long id) {
         return commentRepository.getCommentCountByMemberId(id);
     }
+
+    // 사용자가 작성한 댓글 가져오기
+    public Page<CommentDto> getCommentByMemberId(Long id, Pageable pageable) {
+        return commentRepository.getCommentByMemberId(id, pageable);
+    };
 }

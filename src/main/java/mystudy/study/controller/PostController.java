@@ -89,7 +89,7 @@ public class PostController {
 
 
         // 작성한 게시글 가져오기
-//        postRepository.getPostsByMeberId(condition, pageable);
+//        postRepository.getPostsByMemberId(condition, pageable);
         System.out.println("id = " + id);
         return "post/postView";
     }

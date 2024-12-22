@@ -46,14 +46,6 @@ public class MemberController {
                 clPageable.getSort() // default 정렬 @PageableDefault 어노테이션으로 설정
         );
 
-//        System.out.println("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-//        System.out.println("pageable.getPageNumber() = " + pageable.getPageNumber());
-//        System.out.println("pageable.getPageSize() = " + pageable.getPageSize());
-//        System.out.println("pageable.getOffset() = " + pageable.getOffset());
-//        System.out.println("pageable.getSort() = " + pageable.getSort());
-//        System.out.println("searchType = " + searchType);
-//        System.out.println("searchWord = " + searchWord);
-
         // 사용자 검색 조건
         MemberSearchCondition condition = MemberSearchCondition.builder()
                 .searchType(searchType)
@@ -62,10 +54,6 @@ public class MemberController {
 
         // 사용자 검색
         Page<SearchMemberDto> memberList = memberService.getMemberPage(condition, pageable);
-
-//        for (SearchMemberDto memberDto : memberList) {
-//            System.out.println("memberDto = " + memberDto);
-//        }
 
         Map<String, Object> map = new HashMap<>();
         map.put("searchType", searchType);
@@ -77,11 +65,23 @@ public class MemberController {
         return "member/members";
     }
 
+
     // 사용자의 정보와 게시글을 확인 페이지
     @GetMapping("{id}")
-    public String getMemberInfoAndPosts(@PathVariable("id") Long id, Model model) {
+    public String getMemberInfoAndPosts(@PathVariable("id") Long id,
+            String SearchType,
+            @PageableDefault(size = 5, page = 0, sort = "id", direction = Sort.Direction.DESC) Pageable clPageable,
+            Model model) {
+
+        // pageable 생성
+        Pageable pageable = PageRequest.of(
+                clPageable.getPageNumber(),
+                Math.max(1, Math.min(clPageable.getPageSize(), 50)),
+                clPageable.getSort()
+        );
+
         // 사용자 정보 / 게시글 수 / 댓글 수 / 게시글 페이징 / 댓글 페이징 가져오기
-        MemberInfoDto memberInfo = memberService.getMemberInfo(id);
+        MemberInfoDto memberInfo = memberService.getMemberInfo(id, clPageable);
 
 
         System.out.println("memberInfo = " + memberInfo);
