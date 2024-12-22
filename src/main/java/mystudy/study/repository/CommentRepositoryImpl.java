@@ -16,6 +16,7 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
     }
 
 
+    // 사용자가 작성한 댓글 수 가져오기
     @Override
     public Long getCommentCountByMemberId(Long id) {
 

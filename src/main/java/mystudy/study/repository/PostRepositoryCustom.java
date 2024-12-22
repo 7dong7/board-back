@@ -1,8 +1,7 @@
 package mystudy.study.repository;
 
-import mystudy.study.domain.dto.PostDto;
-import mystudy.study.domain.dto.PostSearchCondition;
-import mystudy.study.domain.entity.Post;
+import mystudy.study.domain.dto.post.PostDto;
+import mystudy.study.domain.dto.post.PostSearchCondition;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

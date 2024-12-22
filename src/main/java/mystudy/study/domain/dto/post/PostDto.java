@@ -1,12 +1,14 @@
-package mystudy.study.domain.dto;
+package mystudy.study.domain.dto.post;
 
 import com.querydsl.core.annotations.QueryProjection;
+import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-@Data
+@Getter
 @NoArgsConstructor
 public class PostDto {
 
@@ -19,6 +21,7 @@ public class PostDto {
 
     // queryDsl 생성자 select
     @QueryProjection
+    @Builder
     public PostDto(Long postId, String title, LocalDateTime createdAt, Integer viewCount, Long memberId, String username) {
         this.postId = postId;
         this.title = title;

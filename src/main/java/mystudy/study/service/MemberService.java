@@ -1,9 +1,9 @@
 package mystudy.study.service;
 
 import lombok.RequiredArgsConstructor;
-import mystudy.study.domain.dto.MemberInfoDto;
-import mystudy.study.domain.dto.MemberSearchCondition;
-import mystudy.study.domain.dto.SearchMemberDto;
+import mystudy.study.domain.dto.member.MemberInfoDto;
+import mystudy.study.domain.dto.member.MemberSearchCondition;
+import mystudy.study.domain.dto.member.SearchMemberDto;
 import mystudy.study.domain.entity.Member;
 import mystudy.study.repository.CommentRepository;
 import mystudy.study.repository.MemberRepository;
@@ -13,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -22,25 +21,29 @@ import java.util.Optional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
-    private final PostRepository postRepository;
-    private final CommentRepository commentRepository;
+    
+    // 다른 엔티티 서비스
+    private final PostService postService;
+    private final CommentService commentService;
 
+    // 사용자 페이징
     @Transactional
     public Page<SearchMemberDto> getMemberPage(MemberSearchCondition condition, Pageable pageable) {
         return memberRepository.getMemberPage(condition, pageable);
     }
 
+    // 사용자 하나의 정보와 게시글 댓글 페이징 처리 가져오기
     @Transactional
     public MemberInfoDto getMemberInfo(Long id) {
         // 사용자 정보
         Optional<Member> memberOpt = memberRepository.findById(id);
         Member member = memberOpt.orElseThrow(() -> new IllegalArgumentException("사용자가 없습니다." + id));
 
-        // 게시글 수
-        Long postCount = postRepository.getPostCountByMemberId(id);
+        // 게시글 수 가져오기
+        Long postCount = postService.getPostCountByMemberId(id);
 
-        // 댓글 수
-        Long commentCount = commentRepository.getCommentCountByMemberId(id);
+        // 댓글 수 가져오기
+        Long commentCount = commentService.getCommentCountByMemberId(id);
 
         // 사용자 정보 반환
         return MemberInfoDto.builder()

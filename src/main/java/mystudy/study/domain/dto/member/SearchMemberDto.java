@@ -1,4 +1,4 @@
-package mystudy.study.domain.dto;
+package mystudy.study.domain.dto.member;
 
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Data;

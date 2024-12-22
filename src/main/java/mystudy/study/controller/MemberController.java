@@ -1,10 +1,10 @@
 package mystudy.study.controller;
 
 import lombok.RequiredArgsConstructor;
-import mystudy.study.domain.dto.MemberInfoDto;
-import mystudy.study.domain.dto.MemberSearchCondition;
-import mystudy.study.domain.dto.SearchMemberDto;
-import mystudy.study.domain.entity.Member;
+import mystudy.study.domain.dto.member.MemberInfoDto;
+import mystudy.study.domain.dto.member.MemberSearchCondition;
+import mystudy.study.domain.dto.member.SearchMemberDto;
+import mystudy.study.repository.PostRepository;
 import mystudy.study.service.MemberService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,7 +13,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 import static org.springframework.util.StringUtils.hasText;
 
@@ -82,8 +80,9 @@ public class MemberController {
     // 사용자의 정보와 게시글을 확인 페이지
     @GetMapping("{id}")
     public String getMemberInfoAndPosts(@PathVariable("id") Long id, Model model) {
-        // 사용자 정보
+        // 사용자 정보 / 게시글 수 / 댓글 수 / 게시글 페이징 / 댓글 페이징 가져오기
         MemberInfoDto memberInfo = memberService.getMemberInfo(id);
+
 
         System.out.println("memberInfo = " + memberInfo);
 

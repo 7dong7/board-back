@@ -1,7 +1,6 @@
-package mystudy.study.domain.dto;
+package mystudy.study.domain.dto.post;
 
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 
 @Getter

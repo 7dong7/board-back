@@ -1,7 +1,6 @@
 package mystudy.study.repository;
 
 import jakarta.persistence.EntityManager;
-import mystudy.study.domain.dto.MemberSearchCondition;
 import mystudy.study.domain.entity.Member;
 import mystudy.study.domain.entity.Post;
 import org.junit.jupiter.api.BeforeEach;

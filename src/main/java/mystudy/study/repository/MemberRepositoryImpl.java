@@ -7,14 +7,15 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
-import mystudy.study.domain.dto.*;
+import mystudy.study.domain.dto.member.MemberSearchCondition;
+import mystudy.study.domain.dto.member.QSearchMemberDto;
+import mystudy.study.domain.dto.member.SearchMemberDto;
 import mystudy.study.domain.entity.Member;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.support.PageableExecutionUtils;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static mystudy.study.domain.entity.QMember.member;

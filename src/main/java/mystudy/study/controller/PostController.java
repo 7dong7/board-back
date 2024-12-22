@@ -1,8 +1,9 @@
 package mystudy.study.controller;
 
 import lombok.RequiredArgsConstructor;
-import mystudy.study.domain.dto.PostDto;
-import mystudy.study.domain.dto.PostSearchCondition;
+import mystudy.study.domain.dto.post.PostDto;
+import mystudy.study.domain.dto.post.PostSearchCondition;
+import mystudy.study.repository.PostRepository;
 import mystudy.study.service.PostService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -74,7 +74,22 @@ public class PostController {
     }
 
     @GetMapping("/{id}")
-    public String getPostPage(@PathVariable Long id, Model model) {
+    public String getMemberInfoAndPosts(@PathVariable Long id,
+                                        @RequestParam(value = "searchType", required = false) String searchType,
+                                        @RequestParam(value = "searchWord", required = false) String searchWord,
+                                        @PageableDefault(size = 20, page = 0, sort = "id", direction = Sort.Direction.DESC) Pageable clPageable,
+                                        Model model) {
+        // 조건 생성 -> 내 id 제목 + 내용
+        
+        // pageable 생성
+        Pageable pageable = PageRequest.of(
+                clPageable.getPageNumber(),
+                Math.max(1, Math.min(clPageable.getPageSize(), 50)),
+                clPageable.getSort());
+
+
+        // 작성한 게시글 가져오기
+//        postRepository.getPostsByMeberId(condition, pageable);
         System.out.println("id = " + id);
         return "post/postView";
     }

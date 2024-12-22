@@ -1,7 +1,9 @@
-package mystudy.study.domain.dto;
+package mystudy.study.domain.dto.member;
 
-import com.querydsl.core.annotations.QueryProjection;
 import lombok.*;
+import mystudy.study.domain.dto.comment.CommentDto;
+import mystudy.study.domain.dto.post.PostDto;
+import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
 
@@ -18,4 +20,10 @@ public class MemberInfoDto {
     private Long postCount; // 게시글 수
     // comment 엔티티
     private Long commentCount; // 댓글 수
+
+    // 사용자의 게시글
+    private Page<PostDto> postPage;
+    // 사용자의 댓글
+    private Page<CommentDto> commentPage;
+
 }

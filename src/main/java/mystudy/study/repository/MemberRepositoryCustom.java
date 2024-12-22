@@ -1,8 +1,7 @@
 package mystudy.study.repository;
 
-import mystudy.study.domain.dto.MemberInfoDto;
-import mystudy.study.domain.dto.MemberSearchCondition;
-import mystudy.study.domain.dto.SearchMemberDto;
+import mystudy.study.domain.dto.member.MemberSearchCondition;
+import mystudy.study.domain.dto.member.SearchMemberDto;
 import mystudy.study.domain.entity.Member;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

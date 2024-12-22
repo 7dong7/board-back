@@ -1,11 +1,10 @@
 package mystudy.study.repository;
 
 import jakarta.persistence.EntityManager;
-import mystudy.study.domain.dto.PostDto;
-import mystudy.study.domain.dto.PostSearchCondition;
+import mystudy.study.domain.dto.post.PostDto;
+import mystudy.study.domain.dto.post.PostSearchCondition;
 import mystudy.study.domain.entity.Member;
 import mystudy.study.domain.entity.Post;
-import mystudy.study.domain.entity.QPost;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
