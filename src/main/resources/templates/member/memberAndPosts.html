@@ -16,7 +16,7 @@
             <table>
                 <tr>
                     <th>번호</th>
-                    <td th:text="${memberInfo.id}">1</td>
+                    <td th:text="${memberInfo.id}">0</td>
                 </tr>
                 <tr>
                     <th>닉네임</th>
@@ -41,34 +41,126 @@
             </table>
         </div>
 
-<!--        &lt;!&ndash; 사용자 게시글 목록 &ndash;&gt;-->
-<!--        <div class="user-posts">-->
-<!--            <h2>작성한 게시글</h2>-->
-<!--            <table>-->
-<!--                <thead>-->
-<!--                <tr>-->
-<!--                    <th>게시글 번호</th>-->
-<!--                    <th>제목</th>-->
-<!--                    <th>작성일</th>-->
-<!--                    <th>내용</th>-->
-<!--                </tr>-->
-<!--                </thead>-->
-<!--                <tbody>-->
-<!--                &lt;!&ndash; 게시글 데이터 반복 출력 &ndash;&gt;-->
-<!--                <tr th:each="post : ${postPage.content}">-->
-<!--                    <td th:text="${post.id}">1</td>-->
-<!--                    <td th:text="${post.title}">게시글 제목</td>-->
-<!--                    <td th:text="${#temporals.format(post.createdDate, 'yyyy-MM-dd')}">2024-06-17</td>-->
-<!--                    <td th:text="${post.content}">게시글 내용</td>-->
-<!--                </tr>-->
+        <!-- 사용자 게시글 목록 -->
+        <div class="user-posts">
+            <h2>작성한 게시글</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>게시글 번호</th>
+                    <th>제목</th>
+                    <th>조회수</th>
+                    <th>작성자</th>
+                    <th>작성일</th>
+                </tr>
+                </thead>
+                <tbody>
 
-<!--                &lt;!&ndash; 게시글이 없을 때 &ndash;&gt;-->
-<!--                <tr th:if="${postPage.content.isEmpty()}">-->
-<!--                    <td colspan="4" class="no-posts">작성한 게시글이 없습니다.</td>-->
-<!--                </tr>-->
-<!--                </tbody>-->
-<!--            </table>-->
-<!--        </div>-->
+                <!-- 게시글 데이터 반복 출력 -->
+                <tr th:each="post : ${memberInfo.postPage.content}">
+                    <td th:text="${post.postId}">id</td>
+                    <td>
+                        <a th:href="@{/posts/{id}(id=${post.postId})}" th:text="${post.title}"></a>
+                    </td>
+                    <td th:text="${post.viewCount}">조회수</td>
+                    <td th:text="${post.username}">작성자</td>
+                    <td th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}">2024-06-17 15:30</td>
+                </tr>
+
+                <!-- 게시글이 없을 때 -->
+                <tr th:if="${memberInfo.postPage.content.isEmpty()}">
+                    <td colspan="4" class="no-posts">작성한 게시글이 없습니다.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 게시글 페이지네이션 -->
+        <div th:if="${!memberInfo.postPage.content.isEmpty()}" class="pagination">
+            <!-- 처음 페이지 -->
+            <a th:href="@{/members/{id}(id=${memberInfo.id}, page=0, size=${param.size}, searchType=${param.searchType}, searchWord=${param.searchWord})}"
+               th:if="${!memberInfo.postPage.first}">처음</a>
+
+            <!-- 이전 페이지 -->
+            <a th:href="@{/members/{id}(id=${memberInfo.id}, page=${memberInfo.postPage.number - 1}, size=${param.size}, searchType=${param.searchType}, searchWord=${param.searchWord})}"
+               th:if="${memberInfo.postPage.hasPrevious()}">이전</a>
+
+            <!-- 페이지 번호 반복 출력   -->
+            <span th:each="page : ${#numbers.sequence( 0, memberInfo.postPage.totalPages-1)}"
+                  th:if="${page >= memberInfo.postPage.number - 5 and page <= memberInfo.postPage.number + 5}">
+                <a th:href="@{/members/{id}(id=${memberInfo.id}, page=${page}, size=${param.size}, searchType=${param.searchType}, searchWord=${param.searchWord})}"
+                   th:text="${page + 1}"
+                   th:classappend="${page == memberInfo.postPage.number} ? 'active'">1</a>
+            </span>
+
+            <!-- 다음 페이지 -->
+            <a th:href="@{/members/{id}(id=${memberInfo.id}, page=${memberInfo.postPage.number + 1}, size=${param.size}, searchType=${param.searchType}, searchWord=${param.searchWord})}"
+               th:if="${memberInfo.postPage.hasNext()}">다음</a>
+
+            <!-- 마지막 페이지 -->
+            <a th:href="@{/members/{id}(id=${memberInfo.id}, page=${memberInfo.postPage.totalPages - 1}, size=${param.size}, searchType=${param.searchType}, searchWord=${param.searchWord})}"
+               th:if="${!memberInfo.postPage.last}">마지막</a>
+        </div>
+
+        <!-- 사용자 댓글 목록 -->
+        <div class="user-posts">
+            <h2>작성한 댓글</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>댓글 번호</th>
+                    <th>내용</th>
+                    <th>작성자</th>
+                    <th>작성일</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                <!-- 게시글 데이터 반복 출력 -->
+                <tr th:each="comment : ${memberInfo.commentPage.content}">
+                    <td th:text="${comment.commentId}">id</td>
+                    <td>
+                        <a th:href="@{/comments/{id}(id=${comment.commentId})}" th:text="${comment.title}"></a>
+                    </td>
+                    <td th:text="${comment.viewCount}">조회수</td>
+                    <td th:text="${comment.username}">작성자</td>
+                    <td th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm')}">2024-06-17 15:30</td>
+                </tr>
+
+                <!-- 게시글이 없을 때 -->
+                <tr th:if="${memberInfo.commentPage.content.isEmpty()}">
+                    <td colspan="4" class="no-posts">작성한 댓글이 없습니다.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 댓글 페이지네이션 -->
+        <div th:if="${!memberInfo.commentPage.content.isEmpty()}" class="pagination">
+            <!-- 처음 페이지 -->
+            <a th:href="@{/members/{id}(id=${memberInfo.id}, page=0, size=${param.size}, searchType=${param.searchType}, searchWord=${param.searchWord})}"
+               th:if="${!memberInfo.commentPage.first}">처음</a>
+
+            <!-- 이전 페이지 -->
+            <a th:href="@{/members/{id}(id=${memberInfo.id}, page=${memberInfo.postPage.number - 1}, size=${param.size}, searchType=${param.searchType}, searchWord=${param.searchWord})}"
+               th:if="${memberInfo.commentPage.hasPrevious()}">이전</a>
+
+            <!-- 페이지 번호 반복 출력  -->
+            <span th:each="page : ${#numbers.sequence( 0, memberInfo.commentPage.totalPages-1)}"
+                  th:if="${page >= memberInfo.commentPage.number - 5 and page <= memberInfo.commentPage.number + 5}">
+                <a th:href="@{/members/{id}(id=${memberInfo.id}, page=${page}, size=${param.size}, searchType=${param.searchType}, searchWord=${param.searchWord})}"
+                   th:text="${page + 1}"
+                   th:classappend="${page == memberInfo.commentPage.number} ? 'active'">1</a>
+            </span>
+
+            <!-- 다음 페이지 -->
+            <a th:href="@{/members/{id}(id=${memberInfo.id}, page=${memberInfo.commentPage.number + 1}, size=${param.size}, searchType=${param.searchType}, searchWord=${param.searchWord})}"
+               th:if="${memberInfo.commentPage.hasNext()}">다음</a>
+
+            <!-- 마지막 페이지 -->
+            <a th:href="@{/members/{id}(id=${memberInfo.id}, page=${memberInfo.commentPage.totalPages - 1}, size=${param.size}, searchType=${param.searchType}, searchWord=${param.searchWord})}"
+               th:if="${!memberInfo.commentPage.last}">마지막</a>
+        </div>
 
     </div>
 </body>

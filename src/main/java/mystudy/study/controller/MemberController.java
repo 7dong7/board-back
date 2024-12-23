@@ -70,8 +70,9 @@ public class MemberController {
     @GetMapping("{id}")
     public String getMemberInfoAndPosts(@PathVariable("id") Long id,
             String SearchType,
-            @PageableDefault(size = 5, page = 0, sort = "id", direction = Sort.Direction.DESC) Pageable clPageable,
+            @PageableDefault(size = 10, page = 0, sort = "id", direction = Sort.Direction.DESC) Pageable clPageable,
             Model model) {
+        System.out.println("PathVariableId = " + id);
 
         // pageable 생성
         Pageable pageable = PageRequest.of(
@@ -82,7 +83,6 @@ public class MemberController {
 
         // 사용자 정보 / 게시글 수 / 댓글 수 / 게시글 페이징 / 댓글 페이징 가져오기
         MemberInfoDto memberInfo = memberService.getMemberInfo(id, clPageable);
-
 
         System.out.println("memberInfo = " + memberInfo);
 
