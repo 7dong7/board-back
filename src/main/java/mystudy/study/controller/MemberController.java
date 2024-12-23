@@ -1,6 +1,7 @@
 package mystudy.study.controller;
 
 import lombok.RequiredArgsConstructor;
+import mystudy.study.domain.dto.comment.CommentDto;
 import mystudy.study.domain.dto.member.MemberInfoDto;
 import mystudy.study.domain.dto.member.MemberSearchCondition;
 import mystudy.study.domain.dto.member.SearchMemberDto;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.springframework.util.StringUtils.hasText;
@@ -84,7 +86,10 @@ public class MemberController {
         // 사용자 정보 / 게시글 수 / 댓글 수 / 게시글 페이징 / 댓글 페이징 가져오기
         MemberInfoDto memberInfo = memberService.getMemberInfo(id, clPageable);
 
-        System.out.println("memberInfo = " + memberInfo);
+        List<CommentDto> content = memberInfo.getCommentPage().getContent();
+        for (CommentDto commentDto : content) {
+            System.out.println("commentDto = " + commentDto);
+        }
 
         model.addAttribute("memberInfo", memberInfo);
         return "member/memberAndPosts";

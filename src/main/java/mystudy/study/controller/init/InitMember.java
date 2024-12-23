@@ -5,9 +5,11 @@ import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
+import mystudy.study.domain.entity.Comment;
 import mystudy.study.domain.entity.Member;
 import mystudy.study.domain.entity.Post;
 import mystudy.study.repository.MemberRepository;
+import mystudy.study.repository.MemberRepositoryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
@@ -22,6 +24,7 @@ public class InitMember {
 
     private final InitMemberService initMemberService;
     private final MemberRepository memberRepository;
+    private final MemberRepositoryImpl memberRepositoryImpl;
 
     @PostConstruct
     public void init() {
@@ -57,15 +60,28 @@ public class InitMember {
             }
 
 
-            // member1의 게시글 작성
+            // 게시글 작성
             for ( int i = 1; i < 103; i++ ) {
-                Post post = new Post("새로운 글작성"+i, "새로운 글이 작성되었습니다"+i, member1);
+                Post post = new Post("새로운 글작성"+i, "새로운 글이 작성되었습니다. 오늘은 날씨가 좋네요"+i, member1);
                 member1.addPost(post);
             }
 
-            // member1 댓글 작성
+            // 댓글 작성
+                // 작성자
+            Member member = em.createQuery("select m from Member m where m.username = :username", Member.class)
+                    .setParameter("username", "member1")
+                    .getSingleResult();
 
+                // 댓글을 작성할 게시글
+            Post post = em.createQuery("select p from Post p where p.id = :id", Post.class)
+                    .setParameter("id", 102)
+                    .getSingleResult();
 
+                // 댓글
+            for (int i = 1; i < 25; i++) {
+                Comment comment = new Comment("내가작성하는 글"+i, post, member);
+                em.persist(comment);
+            }
 
 //            for ( int i = 0; i < 24; i++ ) {
 //                Post post = new Post("새로운 글작성"+i, "새로운 글이 작성되었습니다"+i, member2);

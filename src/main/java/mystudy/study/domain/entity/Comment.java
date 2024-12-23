@@ -27,7 +27,6 @@ public class Comment extends BaseEntity {
     @JoinColumn(name = "post_id", nullable = false)
     private Post post; // 게시글 ID
 
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member; // 작성자 ID
@@ -41,4 +40,9 @@ public class Comment extends BaseEntity {
     private List<Comment> replies = new ArrayList<>(); // 부모 댓글의 댓글들
 
 
+    public Comment(String content, Post post, Member member) {
+        this.content = content;
+        this.post = post;
+        this.member = member;
+    }
 }

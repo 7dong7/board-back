@@ -23,12 +23,12 @@ public class Post extends BaseEntity {
     private String title;
     private String content;
 
+    private Integer viewCount = 0;
+
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", updatable = false)
     private Member member;
-
-    private Integer viewCount = 0;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
