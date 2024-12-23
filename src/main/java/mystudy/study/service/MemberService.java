@@ -36,25 +36,25 @@ public class MemberService {
 
     // 사용자 하나의 정보와 게시글 댓글 페이징 처리 가져오기
     @Transactional
-    public MemberInfoDto getMemberInfo(Long id, Pageable pageable) {
+    public MemberInfoDto getMemberInfo(Long id, Pageable postPageable, Pageable commentPageable) {
         // 사용자 정보
-        Optional<Member> memberOpt = memberRepository.findById(id);
-        Member member = memberOpt.orElseThrow(() -> new IllegalArgumentException("사용자가 없습니다." + id));
+        Member member = memberRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("사용자가 없습니다." + id));
+
         // 게시글 수 가져오기
         Long postCount = postService.getPostCountByMemberId(id);
         // 댓글 수 가져오기
         Long commentCount = commentService.getCommentCountByMemberId(id);
 
         // 게시글 페이징
-        Page<PostDto> postPage = postService.getPostByMemberId(id, pageable);
-
+        Page<PostDto> postPage = postService.getPostByMemberId(id, postPageable);
         // 댓글 페이징
-        Page<CommentDto> commentPage = commentService.getCommentByMemberId(id, pageable);
-
+        Page<CommentDto> commentPage = commentService.getCommentByMemberId(id, commentPageable);
 
         // 사용자 정보 반환
+        // 반환 dto 채우기
         return MemberInfoDto.builder()
-                .id(member.getId())
+                .id(id)
                 .username(member.getUsername())
                 .email(member.getEmail())
                 .createdAt(member.getCreatedAt())

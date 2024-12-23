@@ -71,25 +71,29 @@ public class MemberController {
     // 사용자의 정보와 게시글을 확인 페이지
     @GetMapping("{id}")
     public String getMemberInfoAndPosts(@PathVariable("id") Long id,
-            String SearchType,
+            @RequestParam(defaultValue = "0") int postPage,
+            @RequestParam(defaultValue = "0") int commentPage,
             @PageableDefault(size = 10, page = 0, sort = "id", direction = Sort.Direction.DESC) Pageable clPageable,
             Model model) {
-        System.out.println("PathVariableId = " + id);
 
-        // pageable 생성
-        Pageable pageable = PageRequest.of(
-                clPageable.getPageNumber(),
+
+
+        // postPageable 생성
+        Pageable postPageable = PageRequest.of(
+                postPage,
+                Math.max(1, Math.min(clPageable.getPageSize(), 50)),
+                clPageable.getSort()
+        );
+
+        // commentPageable 생성
+        Pageable commentPageable = PageRequest.of(
+                commentPage,
                 Math.max(1, Math.min(clPageable.getPageSize(), 50)),
                 clPageable.getSort()
         );
 
         // 사용자 정보 / 게시글 수 / 댓글 수 / 게시글 페이징 / 댓글 페이징 가져오기
-        MemberInfoDto memberInfo = memberService.getMemberInfo(id, clPageable);
-
-        List<CommentDto> content = memberInfo.getCommentPage().getContent();
-        for (CommentDto commentDto : content) {
-            System.out.println("commentDto = " + commentDto);
-        }
+        MemberInfoDto memberInfo = memberService.getMemberInfo(id, postPageable, commentPageable);
 
         model.addAttribute("memberInfo", memberInfo);
         return "member/memberAndPosts";
