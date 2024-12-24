@@ -73,11 +73,17 @@ public class MemberController {
     @GetMapping("{id}")
     public String getMemberInfoAndPosts(@PathVariable("id") Long id,
             @RequestParam(defaultValue = "1") int postPage,
+            @RequestParam(defaultValue = "id") String ps,
+            @RequestParam(defaultValue = "DESC") String pd,
             @RequestParam(defaultValue = "1") int commentPage,
+            @RequestParam(defaultValue = "id") String cs,
+            @RequestParam(defaultValue = "DESC") String cd,
             @PageableDefault(size = 10, page = 0, sort = "id", direction = Sort.Direction.DESC) Pageable clPageable,
             Model model) {
 
-
+        System.out.println("ps = " + ps + ", pd = " + pd + ", cs = " + cs + ", cd = " + cd);
+        model.addAttribute("ps", ps);
+        model.addAttribute("pd", pd);
 
         // postPageable 생성
         Pageable postPageable = PageRequest.of(
@@ -97,8 +103,7 @@ public class MemberController {
         MemberInfoDto memberInfo = memberService.getMemberInfo(id, postPageable, commentPageable);
 
         Page<PostDto> postPage1 = memberInfo.getPostPage();
-        postPage1.isFirst();
-        postPage1.hasPrevious();
+
         model.addAttribute("memberInfo", memberInfo);
         return "member/memberAndPosts";
     }

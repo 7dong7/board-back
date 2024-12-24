@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.support.PageableExecutionUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static mystudy.study.domain.entity.QMember.member;
@@ -102,6 +103,45 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
     }
 
+    // 정렬 조건 변환
+    private OrderSpecifier<?>[] postSort(Pageable pageable) {
+        List<OrderSpecifier<?>> orderSpecifiers = new ArrayList<>();
+
+        if (pageable.getSort().isSorted()) {
+            System.out.println("pageable.getSort() = " + pageable.getSort());
+
+            for (Sort.Order order : pageable.getSort()) {
+                System.out.println("order.getProperty() = " + order.getProperty());
+                System.out.println("order.getDirection() = " + order.getDirection());
+                
+                Order direction = order.getDirection().isAscending() ? Order.ASC : Order.DESC;
+
+                switch (order.getProperty()) {
+                    case "id" -> orderSpecifiers.add(new OrderSpecifier<>(direction, post.id));
+                    case "title" -> orderSpecifiers.add(new OrderSpecifier<>(direction, post.title));
+                    case "createdAt" -> orderSpecifiers.add(new OrderSpecifier<>(direction, post.createdAt));
+                    case "viewCount" -> orderSpecifiers.add(new OrderSpecifier<>(direction, post.viewCount));
+                    default -> orderSpecifiers.add(new OrderSpecifier<>(direction, post.id));
+                }
+            }
+        }
+        
+        // 리스트를 배열로 변환하여 반환
+        return orderSpecifiers.toArray(new OrderSpecifier[0]);  // 리스트의 내용을 OrderSpecifier 타입의 배열로 변환
+    }
+
+    // 조건에 맞는 게시글의 수
+    private JPAQuery<Long> countQuery(PostSearchCondition condition) {
+
+        return queryFactory
+                .select(post.count())
+                .from(post)
+                .leftJoin(post.member, member)
+                .where(
+                        transformPostSearchCondition(condition)
+                );
+    }
+
     // 검색 조건 변환
     private BooleanExpression transformPostSearchCondition(PostSearchCondition condition) {
 
@@ -123,39 +163,5 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
         } else {
             return null;
         }
-    }
-
-    // 조건에 맞는 게시글의 수
-    private JPAQuery<Long> countQuery(PostSearchCondition condition) {
-
-        return queryFactory
-                .select(post.count())
-                .from(post)
-                .leftJoin(post.member, member)
-                .where(
-                        transformPostSearchCondition(condition)
-                );
-    }
-
-    // 정렬 조건 변환
-    private OrderSpecifier<?> postSort(Pageable pageable) {
-
-        if (pageable.getSort().isSorted()) {
-
-            for (Sort.Order order : pageable.getSort()) {
-
-                Order direction = order.getDirection().isAscending() ? Order.ASC : Order.DESC;
-
-                switch (order.getProperty()) {
-                    case "username" :
-                        return new OrderSpecifier<>(direction, member.username);
-                    case "viewCount" :
-                        return new OrderSpecifier<>(direction, post.viewCount);
-                    case "id":
-                        return new OrderSpecifier<>(direction, post.id);
-                }
-            }
-        }
-        return null;
     }
 }
