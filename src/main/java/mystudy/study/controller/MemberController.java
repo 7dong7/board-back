@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static org.springframework.util.StringUtils.hasText;
 
@@ -81,15 +82,19 @@ public class MemberController {
             @PageableDefault(size = 10, page = 0, sort = "id", direction = Sort.Direction.DESC) Pageable clPageable,
             Model model) {
 
-        System.out.println("ps = " + ps + ", pd = " + pd + ", cs = " + cs + ", cd = " + cd);
-        model.addAttribute("ps", ps);
-        model.addAttribute("pd", pd);
+        Set<String> ALLOWED_POST = Set.of("id", "title", "viewCount", "username", "createdAt");
+
+        if(!ALLOWED_POST.contains(ps)) {
+            ps = "id";
+        }
+        System.out.println("ps = " + ps);
 
         // postPageable 생성
         Pageable postPageable = PageRequest.of(
-                Math.max(postPage-1, 0), // 페이지 최소 0 지정  -1->0페이지 0->0페이지, 1->0페이지 2->1페이지
+                Math.max(postPage - 1, 0), // 페이지 최소 0 지정  -1->0페이지 0->0페이지, 1->0페이지 2->1페이지
                 Math.max(1, Math.min(clPageable.getPageSize(), 50)),
-                clPageable.getSort()
+//                clPageable.getSort()
+                pd.equals("ASC") ? Sort.by(ps).ascending() : Sort.by(ps).descending()
         );
 
         // commentPageable 생성
@@ -102,8 +107,8 @@ public class MemberController {
         // 사용자 정보 / 게시글 수 / 댓글 수 / 게시글 페이징 / 댓글 페이징 가져오기
         MemberInfoDto memberInfo = memberService.getMemberInfo(id, postPageable, commentPageable);
 
-        Page<PostDto> postPage1 = memberInfo.getPostPage();
-
+        model.addAttribute("ps", ps);
+        model.addAttribute("pd", pd);
         model.addAttribute("memberInfo", memberInfo);
         return "member/memberAndPosts";
     }

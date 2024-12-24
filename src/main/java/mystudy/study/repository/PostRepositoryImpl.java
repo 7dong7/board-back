@@ -108,7 +108,6 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
         List<OrderSpecifier<?>> orderSpecifiers = new ArrayList<>();
 
         if (pageable.getSort().isSorted()) {
-            System.out.println("pageable.getSort() = " + pageable.getSort());
 
             for (Sort.Order order : pageable.getSort()) {
                 System.out.println("order.getProperty() = " + order.getProperty());
@@ -121,7 +120,6 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                     case "title" -> orderSpecifiers.add(new OrderSpecifier<>(direction, post.title));
                     case "createdAt" -> orderSpecifiers.add(new OrderSpecifier<>(direction, post.createdAt));
                     case "viewCount" -> orderSpecifiers.add(new OrderSpecifier<>(direction, post.viewCount));
-                    default -> orderSpecifiers.add(new OrderSpecifier<>(direction, post.id));
                 }
             }
         }
