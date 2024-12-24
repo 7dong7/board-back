@@ -11,7 +11,7 @@
 <body>
     <div class="container">
         <!-- 사용자 정보 -->
-        <div class="user-info">
+        <div class="member-info">
             <h1>사용자 정보</h1>
             <table>
                 <tr>
@@ -42,7 +42,7 @@
         </div>
 
         <!-- 사용자 게시글 목록 -->
-        <div class="user-posts">
+        <div class="member-post">
             <h2>작성한 게시글</h2>
             <table>
                 <thead>
@@ -82,7 +82,7 @@
         </div>
 
         <!-- 게시글 페이지네이션 -->
-        <div th:if="${!memberInfo.postPage.content.isEmpty()}" class="pagination">
+        <div th:if="${!memberInfo.postPage.content.isEmpty()}" class="pagination pagination-post">
             <!-- 처음 페이지 -->
             <a th:href="@{/members/{id}(id=${memberInfo.id}, postPage=1)}"
                th:if="${!memberInfo.postPage.first}">처음</a>
@@ -109,7 +109,7 @@
         </div>
 
         <!-- 사용자 댓글 목록 -->
-        <div class="user-posts">
+        <div class="member-comment">
             <h2>작성한 댓글</h2>
             <table>
                 <thead>

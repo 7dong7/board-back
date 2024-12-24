@@ -17,80 +17,111 @@ body {
 }
 
 h1, h2 {
-    color: #555;
+    color: #333;
+    margin-bottom: 0.5rem;
 }
 
-.user-info, .user-posts {
-    margin-bottom: 30px;
-}
-
-/* 사용자 정보 스타일 */
-.user-info table {
+/* 공통 테이블 스타일 */
+table {
     width: 100%;
     border-collapse: collapse;
 }
 
-.user-info th, .user-info td {
-    text-align: left;
-    padding: 8px;
+th, td {
+    padding: 0.4rem 12px;
+    text-align: center;
     border: 1px solid #ddd;
 }
 
-.user-info th {
-    background: #007bff;
+
+/* 사용자 정보*/
+.member-info table {
+    margin-bottom: 4rem;
+}
+
+.member-info table th{
+    width:9rem;
+    height:1.6rem;
+    background: #4f98ed;
     color: #fff;
 }
 
-/* 게시글 목록 스타일 */
-.user-posts table {
-    width: 100%;
-    border-collapse: collapse;
-}
 
-.user-posts th, .user-posts td {
-    text-align: left;
-    padding: 8px;
-    border: 1px solid #ddd;
-}
-
-.user-posts th {
+/* 게시글 댓글 공통 */
+.member-post th,
+.member-comment th {
     background: #333;
     color: #fff;
 }
 
-.user-posts tbody tr:hover {
-    background: #f1f1f1;
+.member-post td,
+.member-comment td {
+    color: #666;
 }
 
+.member-post tbody tr:hover,
+.member-comment tbody tr:hover {
+    background: #f9f9f9;
+}
+    /* 내용 필드 좌측 정렬*/
+td:nth-child(2) {
+    text-align:left;
+}
+
+    /* 링크  */
+.member-post table th a,
+.member-comment table th a{
+    text-decoration:none;
+    color:#fff;
+}
+
+.member-post table td a,
+.member-comment table td a{
+    text-decoration:none;
+    color:#000000;
+}
+
+.member-post table td a:visited,
+.member-comment table td a:visited{
+    color:#aeaeae;
+}
+
+
+/* 게시글 */
+
+
+/* 댓글 */
+
+
+/* 데이터가 없을 경우 */
 .no-posts {
     text-align: center;
     color: #777;
-    margin-top: 20px;
+    font-style: italic;
+    padding: 15px 0;
 }
 
+/* 페이지네이션 */
 .pagination {
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 8px;
-    padding: 10px 0;
-    font-family: Arial, sans-serif;
-    font-size: 14px;
-    margin: 1.5rem 0 5rem 0;
+    margin: 15px 0;
 }
 
 .pagination a {
     color: #333;
     text-decoration: none;
-    border: 1px solid #ccc;
-    padding: 5px 10px;
-    border-radius: 3px;
+    border: 1px solid #ddd;
+    padding: 6px 10px;
+    border-radius: 4px;
     transition: background-color 0.3s, color 0.3s;
 }
 
 .pagination a:hover {
-    background-color: #f0f0f0;
-    color: #000;
+    background-color: #007bff;
+    color: #fff;
 }
 
 .pagination a.active {
@@ -98,4 +129,24 @@ h1, h2 {
     color: #fff;
     border-color: #333;
     font-weight: bold;
+}
+
+.pagination-post {
+    margin-bottom:3rem;
+}
+
+/* 반응형 스타일 */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+
+    th, td {
+        padding: 6px;
+    }
+
+    .pagination a {
+        padding: 5px 8px;
+        font-size: 12px;
+    }
 }
