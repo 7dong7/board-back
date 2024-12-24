@@ -5,6 +5,7 @@ import mystudy.study.domain.dto.comment.CommentDto;
 import mystudy.study.domain.dto.member.MemberInfoDto;
 import mystudy.study.domain.dto.member.MemberSearchCondition;
 import mystudy.study.domain.dto.member.SearchMemberDto;
+import mystudy.study.domain.dto.post.PostDto;
 import mystudy.study.repository.PostRepository;
 import mystudy.study.service.MemberService;
 import org.springframework.data.domain.Page;
@@ -39,11 +40,11 @@ public class MemberController {
             @RequestParam(value = "searchType", required = false) String searchType,
             @RequestParam(value = "searchWord", required = false) String searchWord,
             Model model,
-            @PageableDefault(size = 5, page = 0, sort = "id", direction = Sort.Direction.DESC) Pageable clPageable) {
+            @PageableDefault(size = 5, page = 1, sort = "id", direction = Sort.Direction.DESC) Pageable clPageable) {
 
         // pageable 생성
         Pageable pageable = PageRequest.of(
-                clPageable.getPageNumber(),
+                Math.max(clPageable.getPageNumber()-1, 0),
                 Math.max(1, Math.min(clPageable.getPageSize(), 50)), // 1 이상, 50 이하로 페이지 크기 제한
                 clPageable.getSort() // default 정렬 @PageableDefault 어노테이션으로 설정
         );
@@ -71,8 +72,8 @@ public class MemberController {
     // 사용자의 정보와 게시글을 확인 페이지
     @GetMapping("{id}")
     public String getMemberInfoAndPosts(@PathVariable("id") Long id,
-            @RequestParam(defaultValue = "0") int postPage,
-            @RequestParam(defaultValue = "0") int commentPage,
+            @RequestParam(defaultValue = "1") int postPage,
+            @RequestParam(defaultValue = "1") int commentPage,
             @PageableDefault(size = 10, page = 0, sort = "id", direction = Sort.Direction.DESC) Pageable clPageable,
             Model model) {
 
@@ -80,14 +81,14 @@ public class MemberController {
 
         // postPageable 생성
         Pageable postPageable = PageRequest.of(
-                postPage,
+                Math.max(postPage-1, 0), // 페이지 최소 0 지정  -1->0페이지 0->0페이지, 1->0페이지 2->1페이지
                 Math.max(1, Math.min(clPageable.getPageSize(), 50)),
                 clPageable.getSort()
         );
 
         // commentPageable 생성
         Pageable commentPageable = PageRequest.of(
-                commentPage,
+                Math.max(commentPage-1, 0),
                 Math.max(1, Math.min(clPageable.getPageSize(), 50)),
                 clPageable.getSort()
         );
@@ -95,6 +96,9 @@ public class MemberController {
         // 사용자 정보 / 게시글 수 / 댓글 수 / 게시글 페이징 / 댓글 페이징 가져오기
         MemberInfoDto memberInfo = memberService.getMemberInfo(id, postPageable, commentPageable);
 
+        Page<PostDto> postPage1 = memberInfo.getPostPage();
+        postPage1.isFirst();
+        postPage1.hasPrevious();
         model.addAttribute("memberInfo", memberInfo);
         return "member/memberAndPosts";
     }

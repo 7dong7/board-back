@@ -32,12 +32,12 @@ public class PostController {
     public String getPostPage(
             @RequestParam(value = "searchType", required = false) String searchType,
             @RequestParam(value = "searchWord", required = false) String searchWord,
-            @PageableDefault(size = 20, page = 0, sort = "id", direction = Sort.Direction.DESC) Pageable clPageable,
+            @PageableDefault(size = 20, page = 1, sort = "id", direction = Sort.Direction.DESC) Pageable clPageable,
             Model model) {
 
         // pageable 생성
         Pageable pageable = PageRequest.of(
-                clPageable.getPageNumber(),
+                Math.max(clPageable.getPageNumber()-1, 0),
                 Math.max(1, Math.min(clPageable.getPageSize(), 50)), // 1 이상, 50 이하로 페이지 크기 제한
                 clPageable.getSort()
         );
@@ -74,11 +74,11 @@ public class PostController {
     }
 
     @GetMapping("/{id}")
-    public String getMemberInfoAndPosts(@PathVariable Long id,
-                                        @RequestParam(value = "searchType", required = false) String searchType,
-                                        @RequestParam(value = "searchWord", required = false) String searchWord,
-                                        @PageableDefault(size = 20, page = 0, sort = "id", direction = Sort.Direction.DESC) Pageable clPageable,
-                                        Model model) {
+    public String getPost(@PathVariable Long id,
+                            @RequestParam(value = "searchType", required = false) String searchType,
+                            @RequestParam(value = "searchWord", required = false) String searchWord,
+                            @PageableDefault(size = 20, page = 0, sort = "id", direction = Sort.Direction.DESC) Pageable clPageable,
+                            Model model) {
         // 조건 생성 -> 내 id 제목 + 내용
         
         // pageable 생성
@@ -88,8 +88,6 @@ public class PostController {
                 clPageable.getSort());
 
 
-        // 작성한 게시글 가져오기
-//        postRepository.getPostsByMemberId(condition, pageable);
         System.out.println("id = " + id);
         return "post/postView";
     }

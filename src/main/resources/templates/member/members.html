@@ -69,27 +69,27 @@
     <!-- 페이지네이션 -->
     <div class="pagination">
         <!-- 처음 페이지 -->
-        <a th:href="@{/members(page=0, size=${param.size}, searchType=${param.searchType}, searchWord=${param.searchWord})}"
+        <a th:href="@{/members(page=1, size=${param.size}, searchType=${param.searchType}, searchWord=${param.searchWord})}"
            th:if="${!memberList.first}">처음</a>
 
         <!-- 이전 페이지 -->
-        <a th:href="@{/members(page=${memberList.number - 1}, size=${param.size}, searchType=${param.searchType}, searchWord=${param.searchWord})}"
+        <a th:href="@{/members(page=${memberList.number}, size=${param.size}, searchType=${param.searchType}, searchWord=${param.searchWord})}"
            th:if="${memberList.hasPrevious()}">이전</a>
 
         <!-- 페이지 번호 반복 출력   -->
-        <span th:each="page : ${#numbers.sequence( 0, memberList.totalPages-1) }"
-              th:if="${page >= memberList.number - 5 and page <= memberList.number + 5}">
+        <span th:each="page : ${#numbers.sequence(1, memberList.totalPages) }"
+              th:if="${page >= memberList.number + 1 - 5 and page <= memberList.number + 1 + 5}">
             <a th:href="@{/members(page=${page}, size=${param.size}, searchType=${param.searchType}, searchWord=${param.searchWord})}"
-               th:text="${page + 1}"
-               th:classappend="${page == memberList.number} ? 'active'">1</a>
+               th:text="${page}"
+               th:classappend="${page == memberList.number + 1} ? 'active'">1</a>
         </span>
 
         <!-- 다음 페이지 -->
-        <a th:href="@{/members(page=${memberList.number + 1}, size=${param.size}, searchType=${param.searchType}, searchWord=${param.searchWord})}"
+        <a th:href="@{/members(page=${memberList.number + 2}, size=${param.size}, searchType=${param.searchType}, searchWord=${param.searchWord})}"
            th:if="${memberList.hasNext()}">다음</a>
 
         <!-- 마지막 페이지 -->
-        <a th:href="@{/members(page=${memberList.totalPages - 1}, size=${param.size}, searchType=${param.searchType}, searchWord=${param.searchWord})}"
+        <a th:href="@{/members(page=${memberList.totalPages}, size=${param.size}, searchType=${param.searchType}, searchWord=${param.searchWord})}"
            th:if="${!memberList.last}">마지막</a>
     </div>
 

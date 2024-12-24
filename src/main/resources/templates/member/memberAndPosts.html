@@ -78,29 +78,30 @@
         <!-- 게시글 페이지네이션 -->
         <div th:if="${!memberInfo.postPage.content.isEmpty()}" class="pagination">
             <!-- 처음 페이지 -->
-            <a th:href="@{/members/{id}(id=${memberInfo.id}, postPage=0)}"
+            <a th:href="@{/members/{id}(id=${memberInfo.id}, postPage=1)}"
                th:if="${!memberInfo.postPage.first}">처음</a>
 
             <!-- 이전 페이지 -->
-            <a th:href="@{/members/{id}(id=${memberInfo.id})}"
+            <a th:href="@{/members/{id}(id=${memberInfo.id}, postPage=${memberInfo.postPage.number})}"
                th:if="${memberInfo.postPage.hasPrevious()}">이전</a>
 
-            <!-- 페이지 번호 반복 출력   -->
-            <span th:each="page : ${#numbers.sequence( 0, memberInfo.postPage.totalPages-1)}"
-                  th:if="${page >= memberInfo.postPage.number - 5 and page <= memberInfo.postPage.number + 5}">
+            <!-- 페이지 번호 반복 출력 -->
+            <span th:each="page : ${#numbers.sequence(1, memberInfo.postPage.totalPages)}"
+                  th:if="${page >= memberInfo.postPage.number + 1 - 5 and page <= memberInfo.postPage.number + 1 + 5}">
                 <a th:href="@{/members/{id}(id=${memberInfo.id}, postPage=${page})}"
-                   th:text="${page + 1}"
-                   th:classappend="${page == memberInfo.postPage.number} ? 'active'">1</a>
+                   th:text="${page}"
+                   th:classappend="${page == memberInfo.postPage.number + 1} ? 'active'">1</a>
             </span>
 
             <!-- 다음 페이지 -->
-            <a th:href="@{/members/{id}(id=${memberInfo.id}, postPage=${memberInfo.postPage.number + 1})}"
+            <a th:href="@{/members/{id}(id=${memberInfo.id}, postPage=${memberInfo.postPage.number + 2})}"
                th:if="${memberInfo.postPage.hasNext()}">다음</a>
 
             <!-- 마지막 페이지 -->
-            <a th:href="@{/members/{id}(id=${memberInfo.id}, postPage=${memberInfo.postPage.totalPages - 1})}"
+            <a th:href="@{/members/{id}(id=${memberInfo.id}, postPage=${memberInfo.postPage.totalPages})}"
                th:if="${!memberInfo.postPage.last}">마지막</a>
         </div>
+
 
         <!-- 사용자 댓글 목록 -->
         <div class="user-posts">
@@ -137,29 +138,30 @@
         <!-- 댓글 페이지네이션 -->
         <div th:if="${!memberInfo.commentPage.content.isEmpty()}" class="pagination">
             <!-- 처음 페이지 -->
-            <a th:href="@{/members/{id}(id=${memberInfo.id}, commentPage=0)}"
+            <a th:href="@{/members/{id}(id=${memberInfo.id}, commentPage=1)}"
                th:if="${!memberInfo.commentPage.first}">처음</a>
 
             <!-- 이전 페이지 -->
-            <a th:href="@{/members/{id}(id=${memberInfo.id}, commentPage=${memberInfo.postPage.number - 1})}"
+            <a th:href="@{/members/{id}(id=${memberInfo.id}, commentPage=${memberInfo.commentPage.number})}"
                th:if="${memberInfo.commentPage.hasPrevious()}">이전</a>
 
-            <!-- 페이지 번호 반복 출력  -->
-            <span th:each="page : ${#numbers.sequence( 0, memberInfo.commentPage.totalPages-1)}"
-                  th:if="${page >= memberInfo.commentPage.number - 5 and page <= memberInfo.commentPage.number + 5}">
+            <!-- 페이지 번호 반복 출력 -->
+            <span th:each="page : ${#numbers.sequence(1, memberInfo.commentPage.totalPages)}"
+                  th:if="${page >= memberInfo.commentPage.number + 1 - 5 and page <= memberInfo.commentPage.number + 1 + 5}">
                 <a th:href="@{/members/{id}(id=${memberInfo.id}, commentPage=${page})}"
-                   th:text="${page + 1}"
-                   th:classappend="${page == memberInfo.commentPage.number} ? 'active'">1</a>
+                   th:text="${page}"
+                   th:classappend="${page == memberInfo.commentPage.number + 1} ? 'active'">1</a>
             </span>
 
             <!-- 다음 페이지 -->
-            <a th:href="@{/members/{id}(id=${memberInfo.id}, commentPage=${memberInfo.commentPage.number + 1})}"
+            <a th:href="@{/members/{id}(id=${memberInfo.id}, commentPage=${memberInfo.commentPage.number + 2})}"
                th:if="${memberInfo.commentPage.hasNext()}">다음</a>
 
             <!-- 마지막 페이지 -->
-            <a th:href="@{/members/{id}(id=${memberInfo.id}, commentPage=${memberInfo.commentPage.totalPages - 1})}"
+            <a th:href="@{/members/{id}(id=${memberInfo.id}, commentPage=${memberInfo.commentPage.totalPages})}"
                th:if="${!memberInfo.commentPage.last}">마지막</a>
         </div>
+
 
     </div>
 </body>

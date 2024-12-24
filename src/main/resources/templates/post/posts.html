@@ -72,27 +72,27 @@
 <!-- 페이지네이션 -->
 <div class="pagination">
     <!-- 처음 페이지 -->
-    <a th:href="@{/posts(page=0, size=${param.size}, searchType=${param.searchType}, searchWord=${param.searchWord})}"
+    <a th:href="@{/posts(page=1, size=${param.size}, searchType=${param.searchType}, searchWord=${param.searchWord})}"
        th:if="${!postPage.first}">처음</a>
 
     <!-- 이전 페이지 -->
-    <a th:href="@{/posts(page=${postPage.number - 1}, size=${param.size}, searchType=${param.searchType}, searchWord=${param.searchWord})}"
+    <a th:href="@{/posts(page=${postPage.number}, size=${param.size}, searchType=${param.searchType}, searchWord=${param.searchWord})}"
        th:if="${postPage.hasPrevious()}">이전</a>
 
-    <!-- 페이지 번호 반복 출력   -->
-    <span th:each="page : ${#numbers.sequence( 0, postPage.totalPages-1) }"
-          th:if="${page >= postPage.number - 5 and page <= postPage.number + 5}">
-            <a th:href="@{/posts(page=${page}, size=${param.size}, searchType=${param.searchType}, searchWord=${param.searchWord})}"
-               th:text="${page + 1}"
-               th:classappend="${page == postPage.number} ? 'active'">1</a>
-        </span>
+    <!-- 페이지 번호 반복 출력 -->
+    <span th:each="page : ${#numbers.sequence(1, postPage.totalPages)}"
+          th:if="${page >= postPage.number + 1 - 5 and page <= postPage.number + 1 + 5}">
+        <a th:href="@{/posts(page=${page}, size=${param.size}, searchType=${param.searchType}, searchWord=${param.searchWord})}"
+           th:text="${page}"
+           th:classappend="${page == postPage.number + 1} ? 'active'">1</a>
+    </span>
 
     <!-- 다음 페이지 -->
-    <a th:href="@{/posts(page=${postPage.number + 1}, size=${param.size}, searchType=${param.searchType}, searchWord=${param.searchWord})}"
+    <a th:href="@{/posts(page=${postPage.number + 2}, size=${param.size}, searchType=${param.searchType}, searchWord=${param.searchWord})}"
        th:if="${postPage.hasNext()}">다음</a>
 
     <!-- 마지막 페이지 -->
-    <a th:href="@{/posts(page=${postPage.totalPages - 1}, size=${param.size}, searchType=${param.searchType}, searchWord=${param.searchWord})}"
+    <a th:href="@{/posts(page=${postPage.totalPages}, size=${param.size}, searchType=${param.searchType}, searchWord=${param.searchWord})}"
        th:if="${!postPage.last}">마지막</a>
 </div>
 
