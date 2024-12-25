@@ -110,9 +110,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
         if (pageable.getSort().isSorted()) {
 
             for (Sort.Order order : pageable.getSort()) {
-                System.out.println("order.getProperty() = " + order.getProperty());
-                System.out.println("order.getDirection() = " + order.getDirection());
-                
+
                 Order direction = order.getDirection().isAscending() ? Order.ASC : Order.DESC;
 
                 switch (order.getProperty()) {

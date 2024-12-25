@@ -82,10 +82,10 @@ public class MemberController {
             @PageableDefault(size = 10, page = 0, sort = "id", direction = Sort.Direction.DESC) Pageable clPageable,
             Model model) {
 
+        // 검색 조건 검증
         Set<String> ALLOWED_POST = Set.of("id", "title", "viewCount", "username", "createdAt");
         Set<String> ALLOWED_Comment = Set.of("id", "content", "username", "createdAt");
-
-
+        
         if(!ALLOWED_POST.contains(ps)) {
             ps = "id";
         }

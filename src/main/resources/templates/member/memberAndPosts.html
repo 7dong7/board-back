@@ -126,8 +126,20 @@
             <table>
                 <thead>
                     <tr>
-                        <th>댓글 번호</th>
-                        <th>내용</th>
+                        <th>
+                            <a th:href="@{/members/{id}(id=${memberInfo.id}, postPage=${memberInfo.postPage.number + 1}, commentPage=1, cs='id', cd=${cd == 'ASC' ? 'DESC': 'ASC'})}">
+                                댓글 번호
+                                <span th:if="${cs == 'id'}"
+                                      th:text="${cd == 'ASC' ? '▲' : '▼'}"></span>
+                            </a>
+                        </th>
+                        <th>
+                            <a th:href="@{/members/{id}(id=${memberInfo.id}, postPage=${memberInfo.postPage.number + 1}, commentPage=1, cs='content', cd=${cd == 'ASC' ? 'DESC': 'ASC'})}">
+                                내용
+                                <span th:if="${cs == 'content'}"
+                                      th:text="${cd == 'ASC' ? '▲' : '▼'}"></span>
+                            </a>
+                        </th>
                         <th>작성자</th>
                         <th>
                             <a th:href="@{/members/{id}(id=${memberInfo.id}, postPage=${memberInfo.postPage.number + 1}, commentPage=1, cs='createdAt', cd=${cd == 'ASC' ? 'DESC': 'ASC'})}">

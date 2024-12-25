@@ -45,10 +45,6 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
 
     @Override
     public Page<CommentDto> getCommentByMemberId(Long id, Pageable pageable) {
-//        private Long id;
-//        private String content;
-//        private String author; // username
-//        private LocalDateTime createdAt;
 
         List<CommentDto> content = queryFactory
                 .select(new QCommentDto(
@@ -63,7 +59,7 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
                         comment.member.id.eq(id)
                 )
                 .orderBy(
-                        new OrderSpecifier<>(Order.DESC, comment.id)
+                        commentSort(pageable)
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -80,25 +76,25 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
     }
 
-    // 정렬 조건 변환
+    // 정렬 조건 변환 (단일 조건)
     private OrderSpecifier<?> commentSort(Pageable pageable) {
 
         if (pageable.getSort().isSorted()) {
 
-            for (Sort.Order order : pageable.getSort()) {
+            Sort.Order order = pageable.getSort().stream().findFirst().orElse(null); // 첫번째 정렬 조건 확인
 
-                Order direction = order.getDirection().isAscending() ? Order.ASC : Order.DESC;
+            if (order != null) { // 정렬 조건이 null 이 아닌경우
+                Order direction = order.getDirection().isAscending() ? Order.ASC : Order.DESC; // 정렬 조건 방향 확인
 
-                switch (order.getProperty()) {
-                    case "username" :
-                        return new OrderSpecifier<>(direction, member.username);
-                    case "viewCount" :
-                        return new OrderSpecifier<>(direction, post.viewCount);
-                    case "id":
-                        return new OrderSpecifier<>(direction, post.id);
-                }
+                return switch (order.getProperty()) { // "id", "content", "username", "createdAt"
+                    case "id" -> new OrderSpecifier<>(direction, comment.id);
+                    case "content" -> new OrderSpecifier<>(direction, comment.content);
+                    case "createdAt" -> new OrderSpecifier<>(direction, comment.createdAt);
+                    default -> new OrderSpecifier<>(direction, comment.id);
+                };
             }
         }
-        return null;
-    }
+
+        return new OrderSpecifier<>(Order.DESC, comment.id);
+    } // private OrderSpecifier<?> commentSort(Pageable pageable)
 }
