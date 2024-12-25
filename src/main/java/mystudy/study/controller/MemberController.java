@@ -74,20 +74,25 @@ public class MemberController {
     @GetMapping("{id}")
     public String getMemberInfoAndPosts(@PathVariable("id") Long id,
             @RequestParam(defaultValue = "1") int postPage,
-            @RequestParam(defaultValue = "id") String ps,
-            @RequestParam(defaultValue = "DESC") String pd,
+            @RequestParam(defaultValue = "id") String ps, // postSort
+            @RequestParam(defaultValue = "DESC") String pd, // postDirection
             @RequestParam(defaultValue = "1") int commentPage,
-            @RequestParam(defaultValue = "id") String cs,
-            @RequestParam(defaultValue = "DESC") String cd,
+            @RequestParam(defaultValue = "id") String cs, // commentSort
+            @RequestParam(defaultValue = "DESC") String cd, // commentDirection
             @PageableDefault(size = 10, page = 0, sort = "id", direction = Sort.Direction.DESC) Pageable clPageable,
             Model model) {
 
         Set<String> ALLOWED_POST = Set.of("id", "title", "viewCount", "username", "createdAt");
+        Set<String> ALLOWED_Comment = Set.of("id", "content", "username", "createdAt");
+
 
         if(!ALLOWED_POST.contains(ps)) {
             ps = "id";
         }
-        System.out.println("ps = " + ps);
+
+        if(!ALLOWED_Comment.contains(cs)) {
+            cs = "id";
+        }
 
         // postPageable 생성
         Pageable postPageable = PageRequest.of(
@@ -101,14 +106,17 @@ public class MemberController {
         Pageable commentPageable = PageRequest.of(
                 Math.max(commentPage-1, 0),
                 Math.max(1, Math.min(clPageable.getPageSize(), 50)),
-                clPageable.getSort()
+//                clPageable.getSort()
+                cd.equals("ASC") ? Sort.by(cs).ascending() : Sort.by(cs).descending()
         );
 
         // 사용자 정보 / 게시글 수 / 댓글 수 / 게시글 페이징 / 댓글 페이징 가져오기
         MemberInfoDto memberInfo = memberService.getMemberInfo(id, postPageable, commentPageable);
 
-        model.addAttribute("ps", ps);
-        model.addAttribute("pd", pd);
+        model.addAttribute("ps", ps); // 게시글 정렬 조건
+        model.addAttribute("pd", pd); // 게시글 저렬 방향
+        model.addAttribute("cs", cs); // 댓글 정렬 조건
+        model.addAttribute("cd", cd); // 댓글 정렬 방향
         model.addAttribute("memberInfo", memberInfo);
         return "member/memberAndPosts";
     }

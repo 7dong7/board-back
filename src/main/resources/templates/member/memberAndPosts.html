@@ -49,15 +49,27 @@
                     <tr>
                         <th>게시글 번호</th>
                         <th>
-                            <a th:href="@{/members/{id}(id=${memberInfo.id}, postPage=1, commentPage=${memberInfo.commentPage.number}, ps='title', pd=${pd == 'ASC' ? 'DESC' : 'ASC'})}">
+                            <a th:href="@{/members/{id}(id=${memberInfo.id}, postPage=1, commentPage=${memberInfo.commentPage.number + 1}, ps='title', pd=${pd == 'ASC' ? 'DESC' : 'ASC'})}">
                                 제목
                                 <span th:if="${ps == 'title'}"
                                       th:text="${pd == 'ASC' ? '▲' : '▼'}"></span>
                             </a>
                         </th>
-                        <th>조회수</th>
+                        <th>
+                            <a th:href="@{/members/{id}(id=${memberInfo.id}, postPage=1, commentPage=${memberInfo.commentPage.number + 1}, ps='viewCount', pd=${pd == 'ASC' ? 'DESC' : 'ASC'})}">
+                                조회수
+                                <span th:if="${ps == 'viewCount'}"
+                                      th:text="${pd == 'ASC' ? '▲' : '▼'}"></span>
+                            </a>
+                        </th>
                         <th>작성자</th>
-                        <th>작성일</th>
+                        <th>
+                            <a th:href="@{/members/{id}(id=${memberInfo.id}, postPage=1, commentPage=${memberInfo.commentPage.number + 1}, ps='createdAt', pd=${pd == 'ASC' ? 'DESC' : 'ASC'})}">
+                                작성일
+                                <span th:if="${ps == 'createdAt'}"
+                                      th:text="${pd == 'ASC' ? '▲' : '▼'}"></span>
+                            </a>
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -84,27 +96,27 @@
         <!-- 게시글 페이지네이션 -->
         <div th:if="${!memberInfo.postPage.content.isEmpty()}" class="pagination pagination-post">
             <!-- 처음 페이지 -->
-            <a th:href="@{/members/{id}(id=${memberInfo.id}, postPage=1)}"
+            <a th:href="@{/members/{id}(id=${memberInfo.id}, postPage=1, commentPage=${memberInfo.commentPage.number + 1}, ps=${ps}, pd=${pd})}"
                th:if="${!memberInfo.postPage.first}">처음</a>
 
             <!-- 이전 페이지 -->
-            <a th:href="@{/members/{id}(id=${memberInfo.id}, postPage=${memberInfo.postPage.number})}"
+            <a th:href="@{/members/{id}(id=${memberInfo.id}, postPage=${memberInfo.postPage.number}, commentPage=${memberInfo.commentPage.number + 1}, ps=${ps}, pd=${pd})}"
                th:if="${memberInfo.postPage.hasPrevious()}">이전</a>
 
             <!-- 페이지 번호 반복 출력 -->
             <span th:each="page : ${#numbers.sequence(1, memberInfo.postPage.totalPages)}"
                   th:if="${page >= memberInfo.postPage.number + 1 - 5 and page <= memberInfo.postPage.number + 1 + 5}">
-                <a th:href="@{/members/{id}(id=${memberInfo.id}, postPage=${page})}"
+                <a th:href="@{/members/{id}(id=${memberInfo.id}, postPage=${page}, commentPage=${memberInfo.commentPage.number + 1}, ps=${ps}, pd=${pd})}"
                    th:text="${page}"
                    th:classappend="${page == memberInfo.postPage.number + 1} ? 'active'">1</a>
             </span>
 
             <!-- 다음 페이지 -->
-            <a th:href="@{/members/{id}(id=${memberInfo.id}, postPage=${memberInfo.postPage.number + 2})}"
+            <a th:href="@{/members/{id}(id=${memberInfo.id}, postPage=${memberInfo.postPage.number + 2}, commentPage=${memberInfo.commentPage.number + 1}, ps=${ps}, pd=${pd})}"
                th:if="${memberInfo.postPage.hasNext()}">다음</a>
 
             <!-- 마지막 페이지 -->
-            <a th:href="@{/members/{id}(id=${memberInfo.id}, postPage=${memberInfo.postPage.totalPages})}"
+            <a th:href="@{/members/{id}(id=${memberInfo.id}, postPage=${memberInfo.postPage.totalPages}, commentPage=${memberInfo.commentPage.number + 1}, ps=${ps}, pd=${pd})}"
                th:if="${!memberInfo.postPage.last}">마지막</a>
         </div>
 
@@ -113,16 +125,22 @@
             <h2>작성한 댓글</h2>
             <table>
                 <thead>
-                <tr>
-                    <th>댓글 번호</th>
-                    <th>내용</th>
-                    <th>작성자</th>
-                    <th>작성일</th>
-                </tr>
+                    <tr>
+                        <th>댓글 번호</th>
+                        <th>내용</th>
+                        <th>작성자</th>
+                        <th>
+                            <a th:href="@{/members/{id}(id=${memberInfo.id}, postPage=${memberInfo.postPage.number + 1}, commentPage=1, cs='createdAt', cd=${cd == 'ASC' ? 'DESC': 'ASC'})}">
+                                작성일
+                                <span th:if="${cs == 'createdAt'}"
+                                      th:text="${cd == 'ASC' ? '▲' : '▼'}"></span>
+                            </a>
+                        </th>
+                    </tr>
                 </thead>
                 <tbody>
 
-                <!-- 게시글 데이터 반복 출력 -->
+                <!-- 댓글 출력 -->
                 <tr th:each="comment : ${memberInfo.commentPage.content}">
                     <td th:text="${comment.commentId}">id</td>
                     <td th:text="${comment.content}">
@@ -132,7 +150,7 @@
                     <td th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm')}">2024-06-17 15:30</td>
                 </tr>
 
-                <!-- 게시글이 없을 때 -->
+                <!-- 댓글 없을 때 -->
                 <tr th:if="${memberInfo.commentPage.content.isEmpty()}">
                     <td colspan="4" class="no-posts">작성한 댓글이 없습니다.</td>
                 </tr>
@@ -143,27 +161,27 @@
         <!-- 댓글 페이지네이션 -->
         <div th:if="${!memberInfo.commentPage.content.isEmpty()}" class="pagination">
             <!-- 처음 페이지 -->
-            <a th:href="@{/members/{id}(id=${memberInfo.id}, commentPage=1)}"
+            <a th:href="@{/members/{id}(id=${memberInfo.id}, postPage=${memberInfo.postPage.number + 1}, commentPage=1, cs=${cs}, cd=${cd})}"
                th:if="${!memberInfo.commentPage.first}">처음</a>
 
             <!-- 이전 페이지 -->
-            <a th:href="@{/members/{id}(id=${memberInfo.id}, commentPage=${memberInfo.commentPage.number})}"
+            <a th:href="@{/members/{id}(id=${memberInfo.id}, postPage=${memberInfo.postPage.number + 1}, commentPage=${memberInfo.commentPage.number}, cs=${cs}, cd=${cd})}"
                th:if="${memberInfo.commentPage.hasPrevious()}">이전</a>
 
             <!-- 페이지 번호 반복 출력 -->
             <span th:each="page : ${#numbers.sequence(1, memberInfo.commentPage.totalPages)}"
                   th:if="${page >= memberInfo.commentPage.number + 1 - 5 and page <= memberInfo.commentPage.number + 1 + 5}">
-                <a th:href="@{/members/{id}(id=${memberInfo.id}, commentPage=${page})}"
+                <a th:href="@{/members/{id}(id=${memberInfo.id}, postPage=${memberInfo.postPage.number + 1}, commentPage=${page}, cs=${cs}, cd=${cd})}"
                    th:text="${page}"
                    th:classappend="${page == memberInfo.commentPage.number + 1} ? 'active'">1</a>
             </span>
 
             <!-- 다음 페이지 -->
-            <a th:href="@{/members/{id}(id=${memberInfo.id}, commentPage=${memberInfo.commentPage.number + 2})}"
+            <a th:href="@{/members/{id}(id=${memberInfo.id}, postPage=${memberInfo.postPage.number + 1}, commentPage=${memberInfo.commentPage.number + 2}, cs=${cs}, cd=${cd})}"
                th:if="${memberInfo.commentPage.hasNext()}">다음</a>
 
             <!-- 마지막 페이지 -->
-            <a th:href="@{/members/{id}(id=${memberInfo.id}, commentPage=${memberInfo.commentPage.totalPages})}"
+            <a th:href="@{/members/{id}(id=${memberInfo.id}, postPage=${memberInfo.postPage.number + 1}, commentPage=${memberInfo.commentPage.totalPages}, cs=${cs}, cd=${cd})}"
                th:if="${!memberInfo.commentPage.last}">마지막</a>
         </div>
 
