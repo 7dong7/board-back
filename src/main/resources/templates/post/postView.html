@@ -6,10 +6,19 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>게시글 내용</title>
 </head>
 
 <body>
-    <span th:text="${id}"></span>
+    <h1 th:text="${post.title}"></h1>
+    <p>
+        <strong>작성자:</strong>
+        <span th:text="${post.username}"></span>
+    </p>
+    <p>
+        <strong>작성일:</strong>
+        <span th:text="${post.createdAt}"></span>
+    </p>
+    <p th:text="${post.content}"></p>
 </body>
 </html>

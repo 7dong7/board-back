@@ -3,6 +3,7 @@ package mystudy.study.controller;
 import lombok.RequiredArgsConstructor;
 import mystudy.study.domain.dto.post.PostDto;
 import mystudy.study.domain.dto.post.PostSearchCondition;
+import mystudy.study.domain.dto.post.PostViewDto;
 import mystudy.study.repository.PostRepository;
 import mystudy.study.service.PostService;
 import org.springframework.data.domain.Page;
@@ -67,21 +68,13 @@ public class PostController {
     }
 
     @GetMapping("/{id}")
-    public String getPost(@PathVariable Long id,
-                            @RequestParam(value = "searchType", required = false) String searchType,
-                            @RequestParam(value = "searchWord", required = false) String searchWord,
-                            @PageableDefault(size = 20, page = 0, sort = "id", direction = Sort.Direction.DESC) Pageable clPageable,
-                            Model model) {
-        // 조건 생성 -> 내 id 제목 + 내용
-        
-        // pageable 생성
-        Pageable pageable = PageRequest.of(
-                clPageable.getPageNumber(),
-                Math.max(1, Math.min(clPageable.getPageSize(), 50)),
-                clPageable.getSort());
+    public String getPostView(@PathVariable Long id,
+                          Model model) {
 
+        // 게시글 내용물 가져오기
+        PostViewDto postViewDto = postService.getPostView(id);
 
-        System.out.println("id = " + id);
+        model.addAttribute("post", postViewDto);
         return "post/postView";
     }
 }

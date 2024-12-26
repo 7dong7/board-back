@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
-public class PostDto {
+public class PostDto { // 게시글을 페이징 처리할 때 사용
 
     private Long postId;
     private String title;

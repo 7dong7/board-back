@@ -6,9 +6,7 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
-import mystudy.study.domain.dto.post.PostDto;
-import mystudy.study.domain.dto.post.PostSearchCondition;
-import mystudy.study.domain.dto.post.QPostDto;
+import mystudy.study.domain.dto.post.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -101,6 +99,20 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                 );
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
+    }
+
+    // 게시글 내용 가져오기
+    @Override
+    public PostViewDto getPostView(Long postId) {
+        
+        return queryFactory
+                .select(new QPostViewDto(post.id, post.title, post.content, post.createdAt, post.viewCount, member.id.as("memberId"), member.username))
+                .from(post)
+                .leftJoin(post.member, member)
+                .where(
+                        post.id.eq(postId)
+                )
+                .fetchOne();
     }
 
     // 정렬 조건 변환

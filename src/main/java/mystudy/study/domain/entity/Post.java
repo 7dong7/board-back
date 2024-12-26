@@ -40,8 +40,8 @@ public class Post extends BaseEntity {
         this.member = member;
     }
 
-    // 작성자
-    public void plusViewCount() {
+    // 게시글 조회수 증가
+    public void increaseViewCount() {
         viewCount++;
     }
     
