@@ -107,11 +107,12 @@ tr td:nth-child(2) {
 
 tr td:nth-child(2) > a {
     text-decoration:none;
-    color: #519bea;
+    color: #000000;
 }
 
-tr td:nth-child(2) > a:hover {
-    color: #0768d1;
+tr td:nth-child(2) > a:visited {
+    text-decoration:none;
+    color: #aeaeae;
 }
 
 tr td:nth-child(3) {

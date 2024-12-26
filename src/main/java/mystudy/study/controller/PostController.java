@@ -61,13 +61,6 @@ public class PostController {
         map.put("searchType", searchType);
         map.put("searchWord", searchWord);
         
-        // 확인
-//        List<PostDto> postDtoList = postPage.getContent();
-//
-//        for (PostDto postDto : postDtoList) {
-//            System.out.println("postDto = " + postDto);
-//        }
-
         model.addAttribute("postPage", postPage);
         model.addAttribute("searchParam", map);
         return "post/posts";

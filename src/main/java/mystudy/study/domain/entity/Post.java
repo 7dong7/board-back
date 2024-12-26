@@ -19,10 +19,10 @@ public class Post extends BaseEntity {
     @Id @GeneratedValue
     @Column(name = "post_id", updatable = false)
     private Long id;
-
     private String title;
-    private String content;
 
+    @Lob
+    private String content;
     private Integer viewCount = 0;
 
     @ToString.Exclude
