@@ -78,14 +78,15 @@ body {
 }
 
 .comments li {
-    margin-bottom: 0.2rem;
-    background-color: #f4f4f4;
-    border-radius: 8px;
+
 }
 
 .comment-info {
-    border-bottom:solid 1.8px #dddddd;
     padding: 0.3rem  0;
+    margin-bottom: 0.2rem;
+    background-color: #f4f4f4;
+    border-radius: 8px;
+
     /* 작성자, 작성일 양끝정렬*/
     display: flex;
     justify-content: space-between;
@@ -105,6 +106,7 @@ body {
 .comment-content {
     padding: 0.3rem 1rem 0.4rem 1rem;
     font-size:11.6pt;
+    margin-bottom:1rem;
 }
 
 .footer {
