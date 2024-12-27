@@ -77,13 +77,37 @@ public class InitMember {
                     .setParameter("id", 1)
                     .getSingleResult();
 
-                // 댓글
+                // 댓글 (comment)
             for (int i = 1; i < 25; i++) {
-                Comment comment = new Comment("내가작성하는 글"+i, post, member);
+                Comment comment = Comment.builder()
+                        .content("내가 작성하는 글 " + i)
+                        .post(post)
+                        .member(member)
+                        .build();
                 em.persist(comment);
             }
 
-//            for ( int i = 0; i < 24; i++ ) {
+                // 대상 comment
+            Comment comment = em.createQuery("select c from Comment c where c.id = :id", Comment.class)
+                    .setParameter("id", 1)
+                    .getSingleResult();
+
+                // 작성 사용자
+            Member member2 = em.createQuery("select m from Member m where m.username = :username", Member.class)
+                    .setParameter("username", "member2")
+                    .getSingleResult();
+            
+                // 대댓글 (reply)
+            for (int i = 1; i < 4; i++) {
+                Comment reply = Comment.builder()
+                        .content("댓글에 대댓글을 작성했다 " + i)
+                        .post(post)
+                        .member(member2)
+                        .parent(comment)
+                        .build();
+                em.persist(reply);
+            }
+
 //                Post post = new Post("새로운 글작성"+i, "새로운 글이 작성되었습니다"+i, member2);
 //                member2.addPost(post);
 //            }

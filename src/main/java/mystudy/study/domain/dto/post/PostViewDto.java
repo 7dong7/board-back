@@ -22,7 +22,7 @@ public class PostViewDto { // 게시글의 내용물을 보여줄 때 사용
     private Long memberId;  // 게시자 id
     private String username; // 게시자 이름
 
-    private Page<CommentDto> commentDtoList;
+    private Page<CommentDto> commentDtoPage;
 
     @QueryProjection
     public PostViewDto(Long postId, String title, String content, LocalDateTime createdAt, Integer viewCount, Long memberId, String username) {
@@ -36,7 +36,7 @@ public class PostViewDto { // 게시글의 내용물을 보여줄 때 사용
     }
 
     // Page<CommentDto> 추가
-    public void addComments(Page<CommentDto> commentDtoList) {
-        this.commentDtoList = commentDtoList;
+    public void addComments(Page<CommentDto> commentDtoPage) {
+        this.commentDtoPage = commentDtoPage;
     }
 }

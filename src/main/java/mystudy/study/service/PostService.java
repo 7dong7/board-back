@@ -59,7 +59,6 @@ public class PostService {
         // 게시글 가져오기
         PostViewDto postView = postRepository.getPostView(postId);
 
-
         // 댓글 가져오기 ( 페이징 )
         Page<CommentDto> commentDto = commentService.getCommentByPostId(postId, commentPageable);
         

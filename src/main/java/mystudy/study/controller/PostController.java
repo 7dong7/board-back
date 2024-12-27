@@ -71,22 +71,29 @@ public class PostController {
 
     @GetMapping("/{id}")
     public String getPostView(@PathVariable Long id,
-                          Model model) {
+                              @PageableDefault(size=20, page=0) Pageable clPageable,
+                              Model model) {
 
         // 댓글 Pageable 생성
         Pageable commentPageable = PageRequest.of(
-                0, // pageNumber
-                10, // pageSize
-                Sort.Direction.DESC, "id"); // pageSort
+                Math.max(clPageable.getPageNumber() - 1, 0),
+                20, // pageSize
+                Sort.by("id").descending()); // pageSort
 
         // 게시글 내용물 가져오기, 댓글 가져오기 (페이징)
         PostViewDto postViewDto = postService.getPostView(id, commentPageable);
 
-        List<CommentDto> content = postViewDto.getCommentDtoList().getContent();
-        for (CommentDto commentDto : content) {
-            System.out.println("commentDto = " + commentDto);
-        }
+        /*
+        private Long postId; // 게시글 번호
+        private String title; // 제목
+        private String content; // 내용
+        private LocalDateTime createdAt; // 작성일
+        private Integer viewCount; // 조회수
+        private Long memberId;  // 게시자 id
+        private String username; // 게시자 이름
 
+        private Page<CommentDto> commentDtoPage;
+        */
         model.addAttribute("post", postViewDto);
         return "post/postView";
     }

@@ -1,10 +1,7 @@
 package mystudy.study.domain.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import mystudy.study.domain.BaseEntity;
 
 import java.util.ArrayList;
@@ -12,8 +9,10 @@ import java.util.List;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor // 기본 생성자 (JPA 요구)
+@AllArgsConstructor // 전체 필드 생성자 (개발 편의)
 @ToString
+@Builder
 public class Comment extends BaseEntity {
 
     @Id @GeneratedValue
@@ -32,17 +31,12 @@ public class Comment extends BaseEntity {
     private Member member; // 작성자 ID
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_comment_id")
-    private Comment parentComment; // 부모 댓글 ID
+    @JoinColumn(name = "parent_id")
+    private Comment parent; // 부모 댓글 ID  // null 이면 부모, 있으면 자식
 
 
-    @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> replies = new ArrayList<>(); // 부모 댓글의 댓글들
 
 
-    public Comment(String content, Post post, Member member) {
-        this.content = content;
-        this.post = post;
-        this.member = member;
-    }
 }
