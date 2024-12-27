@@ -20,8 +20,13 @@ public class CommentService {
         return commentRepository.getCommentCountByMemberId(id);
     }
 
-    // 사용자가 작성한 댓글 가져오기
+    // 사용자가 작성한 댓글 가져오기 (페이징)
     public Page<CommentDto> getCommentByMemberId(Long id, Pageable pageable) {
         return commentRepository.getCommentByMemberId(id, pageable);
     };
+
+    // 게시글에 작성한 댓글 가져오기 (페이징)
+    public Page<CommentDto> getCommentByPostId(Long postId, Pageable commentPageable) {
+        return commentRepository.getCommentByPostId(postId, commentPageable);
+    }
 }

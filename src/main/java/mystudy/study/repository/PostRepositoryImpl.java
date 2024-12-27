@@ -106,7 +106,15 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
     public PostViewDto getPostView(Long postId) {
         
         return queryFactory
-                .select(new QPostViewDto(post.id, post.title, post.content, post.createdAt, post.viewCount, member.id.as("memberId"), member.username))
+                .select(new QPostViewDto(
+                        post.id,
+                        post.title,
+                        post.content,
+                        post.createdAt,
+                        post.viewCount,
+                        member.id.as("memberId"),
+                        member.username)
+                )
                 .from(post)
                 .leftJoin(post.member, member)
                 .where(

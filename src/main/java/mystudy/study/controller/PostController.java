@@ -1,6 +1,7 @@
 package mystudy.study.controller;
 
 import lombok.RequiredArgsConstructor;
+import mystudy.study.domain.dto.comment.CommentDto;
 import mystudy.study.domain.dto.post.PostDto;
 import mystudy.study.domain.dto.post.PostSearchCondition;
 import mystudy.study.domain.dto.post.PostViewDto;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -71,8 +73,19 @@ public class PostController {
     public String getPostView(@PathVariable Long id,
                           Model model) {
 
-        // 게시글 내용물 가져오기
-        PostViewDto postViewDto = postService.getPostView(id);
+        // 댓글 Pageable 생성
+        Pageable commentPageable = PageRequest.of(
+                0, // pageNumber
+                10, // pageSize
+                Sort.Direction.DESC, "id"); // pageSort
+
+        // 게시글 내용물 가져오기, 댓글 가져오기 (페이징)
+        PostViewDto postViewDto = postService.getPostView(id, commentPageable);
+
+        List<CommentDto> content = postViewDto.getCommentDtoList().getContent();
+        for (CommentDto commentDto : content) {
+            System.out.println("commentDto = " + commentDto);
+        }
 
         model.addAttribute("post", postViewDto);
         return "post/postView";

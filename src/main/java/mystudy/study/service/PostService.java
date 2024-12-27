@@ -1,12 +1,15 @@
 package mystudy.study.service;
 
 import lombok.RequiredArgsConstructor;
+import mystudy.study.domain.dto.comment.CommentDto;
 import mystudy.study.domain.dto.post.PostDto;
 import mystudy.study.domain.dto.post.PostSearchCondition;
 import mystudy.study.domain.dto.post.PostViewDto;
 import mystudy.study.domain.entity.Post;
+import mystudy.study.repository.CommentRepository;
 import mystudy.study.repository.PostRepository;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +29,7 @@ public class PostService {
 
 
     private final PostRepository postRepository;
+    private final CommentService commentService;
 
     // 게시글 검색해서 가져오기
     public Page<PostDto> getPostPage(Pageable pageable, PostSearchCondition condition) {
@@ -44,7 +48,7 @@ public class PostService {
 
     // 게시글 조회
     @Transactional // 조회수 증가
-    public PostViewDto getPostView(Long postId) {
+    public PostViewDto getPostView(Long postId, Pageable commentPageable) {
 
         // 조회수 증가
         Post post = postRepository.findById(postId)
@@ -56,7 +60,10 @@ public class PostService {
         PostViewDto postView = postRepository.getPostView(postId);
 
 
-
+        // 댓글 가져오기 ( 페이징 )
+        Page<CommentDto> commentDto = commentService.getCommentByPostId(postId, commentPageable);
+        
+        postView.addComments(commentDto); // comment 추가
 
         return postView;
     }

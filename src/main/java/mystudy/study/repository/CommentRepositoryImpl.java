@@ -76,6 +76,41 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
     }
 
+    // 게시글에 달려있는 댓글 가져오기 (페이징)
+    @Override
+    public Page<CommentDto> getCommentByPostId(Long postId, Pageable commentPageable) {
+
+//        public CommentDto(Long commentId, String content, String author, LocalDateTime createdAt) {
+        List<CommentDto> content = queryFactory
+                .select(new QCommentDto(
+                        comment.id,
+                        comment.content,
+                        comment.member.username.as("author"),
+                        comment.createdAt)
+                )
+                .from(comment)
+                .leftJoin(comment.post, post)
+                .where(
+                        comment.post.id.eq(postId)
+                )
+                .orderBy(
+                        comment.id.desc()
+                )
+                .offset(commentPageable.getOffset()) // page number
+                .limit(commentPageable.getPageSize()) // page size
+                .fetch();
+
+        JPAQuery<Long> countQuery = queryFactory
+                .select(comment.count())
+                .from(comment)
+                .leftJoin(comment.member, member)
+                .where(
+                        comment.post.id.eq(postId)
+                );
+
+        return PageableExecutionUtils.getPage(content, commentPageable, countQuery::fetchOne);
+    }
+
     // 정렬 조건 변환 (단일 조건)
     private OrderSpecifier<?> commentSort(Pageable pageable) {
 

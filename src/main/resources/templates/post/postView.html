@@ -31,10 +31,13 @@
     <hr class="divider">
     <div class="comments">
         <h2>댓글</h2>
-        <ul>
+        <ul class="comment-list">
             <li th:each="comment : ${post.commentDtoList}">
-                <p><strong th:text="${comment.author}"></strong> - <span th:text="${comment.createdAt}"></span></p>
-                <p th:text="${comment.content}"></p>
+                <div class="comment-info">
+                    <span class="comment-author" th:text="${comment.author}">작성자</span>
+                    <span class="comment-date" th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm:ss')}">작성일</span>
+                </div>
+                <div class="comment-content" th:text="${comment.content}"></div>
             </li>
         </ul>
     </div>
