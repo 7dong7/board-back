@@ -53,6 +53,11 @@ public class PostService {
         post.increaseViewCount();
 
         // 게시글 가져오기
-        return postRepository.getPostView(postId);
+        PostViewDto postView = postRepository.getPostView(postId);
+
+
+
+
+        return postView;
     }
 }

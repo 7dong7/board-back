@@ -74,7 +74,7 @@ public class InitMember {
 
                 // 댓글을 작성할 게시글
             Post post = em.createQuery("select p from Post p where p.id = :id", Post.class)
-                    .setParameter("id", 102)
+                    .setParameter("id", 1)
                     .getSingleResult();
 
                 // 댓글
