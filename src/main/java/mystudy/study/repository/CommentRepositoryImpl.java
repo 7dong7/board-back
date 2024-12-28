@@ -91,7 +91,8 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
                 .from(comment)
                 .leftJoin(comment.post, post)
                 .where(
-                        comment.post.id.eq(postId)
+                        comment.post.id.eq(postId),
+                        comment.parent.isNull()
                 )
                 .orderBy(
                         comment.id.desc()
