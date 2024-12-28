@@ -166,8 +166,6 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
             String searchWord = condition.getSearchWord(); // 검색어
 
             // 검색 조건에 따른 데이터베이스 조회 쿼리
-            System.out.println("searchType = " + searchType);
-            System.out.println("searchWord = " + searchWord);
             return switch (searchType) {
                 case "username" -> member.username.containsIgnoreCase(searchWord);
                 case "title" -> post.title.containsIgnoreCase(searchWord);

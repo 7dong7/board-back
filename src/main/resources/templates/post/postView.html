@@ -32,12 +32,24 @@
     <div class="comments">
         <h2>댓글</h2>
         <ul class="comment-list">
+            <!-- 댓글 -->
             <li th:each="comment : ${post.commentDtoPage}">
                 <div class="comment-info">
                     <span class="comment-author" th:text="${comment.author}">작성자</span>
                     <span class="comment-date" th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm:ss')}">작성일</span>
                 </div>
                 <div class="comment-content" th:text="${comment.content}"></div>
+
+                <!-- 대댓글 -->
+                <ul class="reply-list">
+                    <li th:each="reply : ${comment.replies}">
+                        <div class="reply-info">
+                            <span class="reply-author" th:text="${reply.author}">작성자</span>
+                            <span class="reply-date" th:text="${#temporals.format(reply.createdAt, 'yyyy-MM-dd HH:mm:ss')}">작성일</span>
+                        </div>
+                        <div class="reply-content" th:text="${reply.content}"></div>
+                    </li>
+                </ul>
             </li>
         </ul>
     </div>

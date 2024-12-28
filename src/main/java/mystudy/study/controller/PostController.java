@@ -2,6 +2,8 @@ package mystudy.study.controller;
 
 import lombok.RequiredArgsConstructor;
 import mystudy.study.domain.dto.comment.CommentDto;
+import mystudy.study.domain.dto.comment.ParentCommentDto;
+import mystudy.study.domain.dto.comment.ReplyCommentDto;
 import mystudy.study.domain.dto.post.PostDto;
 import mystudy.study.domain.dto.post.PostSearchCondition;
 import mystudy.study.domain.dto.post.PostViewDto;
@@ -94,6 +96,8 @@ public class PostController {
 
         private Page<CommentDto> commentDtoPage;
         */
+        List<ParentCommentDto> content = postViewDto.getCommentDtoPage().getContent();
+
         model.addAttribute("post", postViewDto);
         return "post/postView";
     }

@@ -3,7 +3,10 @@ package mystudy.study.domain.dto.post;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import mystudy.study.domain.dto.comment.CommentDto;
+import mystudy.study.domain.dto.comment.CommentViewDto;
+import mystudy.study.domain.dto.comment.ParentCommentDto;
 import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
@@ -12,6 +15,7 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor
+@ToString
 public class PostViewDto { // 게시글의 내용물을 보여줄 때 사용
 
     private Long postId; // 게시글 번호
@@ -22,7 +26,7 @@ public class PostViewDto { // 게시글의 내용물을 보여줄 때 사용
     private Long memberId;  // 게시자 id
     private String username; // 게시자 이름
 
-    private Page<CommentDto> commentDtoPage;
+    private Page<ParentCommentDto> commentDtoPage;
 
     @QueryProjection
     public PostViewDto(Long postId, String title, String content, LocalDateTime createdAt, Integer viewCount, Long memberId, String username) {
@@ -36,7 +40,7 @@ public class PostViewDto { // 게시글의 내용물을 보여줄 때 사용
     }
 
     // Page<CommentDto> 추가
-    public void addComments(Page<CommentDto> commentDtoPage) {
-        this.commentDtoPage = commentDtoPage;
+    public void addComments(Page<ParentCommentDto> commentDtoPage) {
+        this.commentDtoPage= commentDtoPage;
     }
 }

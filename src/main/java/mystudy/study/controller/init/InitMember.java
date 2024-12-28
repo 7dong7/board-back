@@ -89,7 +89,7 @@ public class InitMember {
 
                 // 대상 comment
             Comment comment = em.createQuery("select c from Comment c where c.id = :id", Comment.class)
-                    .setParameter("id", 1)
+                    .setParameter("id", 23)
                     .getSingleResult();
 
                 // 작성 사용자

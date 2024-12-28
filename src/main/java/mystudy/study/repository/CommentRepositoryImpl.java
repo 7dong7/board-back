@@ -5,8 +5,7 @@ import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
-import mystudy.study.domain.dto.comment.CommentDto;
-import mystudy.study.domain.dto.comment.QCommentDto;
+import mystudy.study.domain.dto.comment.*;
 import mystudy.study.domain.dto.post.PostDto;
 import mystudy.study.domain.dto.post.QPostDto;
 import mystudy.study.domain.entity.QComment;
@@ -43,6 +42,7 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
                 .fetchOne();
     }
 
+    // 사용자가 작성한 댓글 조회 (페이징)
     @Override
     public Page<CommentDto> getCommentByMemberId(Long id, Pageable pageable) {
 
@@ -76,13 +76,12 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
     }
 
-    // 게시글에 달려있는 댓글 가져오기 (페이징)
+    // 게시글 댓글 조회 (페이징)
     @Override
-    public Page<CommentDto> getCommentByPostId(Long postId, Pageable commentPageable) {
+    public Page<ParentCommentDto> getCommentByPostId(Long postId, Pageable commentPageable) {
 
-//        public CommentDto(Long commentId, String content, String author, LocalDateTime createdAt) {
-        List<CommentDto> content = queryFactory
-                .select(new QCommentDto(
+        List<ParentCommentDto> content = queryFactory
+                .select(new QParentCommentDto(
                         comment.id,
                         comment.content,
                         comment.member.username.as("author"),
@@ -95,7 +94,7 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
                         comment.parent.isNull()
                 )
                 .orderBy(
-                        comment.id.desc()
+                        comment.id.desc() // 최신댓글 우선
                 )
                 .offset(commentPageable.getOffset()) // page number
                 .limit(commentPageable.getPageSize()) // page size
@@ -106,10 +105,34 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
                 .from(comment)
                 .leftJoin(comment.member, member)
                 .where(
-                        comment.post.id.eq(postId)
+                        comment.post.id.eq(postId),
+                        comment.parent.isNull()
                 );
 
         return PageableExecutionUtils.getPage(content, commentPageable, countQuery::fetchOne);
+    }
+
+    // 조회된 댓글의 대댓글 조회 (where 절에서 in 사용해서 한번에 조회)
+    @Override
+    public List<ReplyCommentDto> getCommentByParentId(List<Long> parentIdList) {
+
+        return queryFactory
+                .select(new QReplyCommentDto(
+                        comment.id,
+                        comment.content,
+                        comment.member.username.as("author"),
+                        comment.createdAt,
+                        comment.parent.id)
+                )
+                .from(comment)
+                .leftJoin(comment.post, post)
+                .where(
+                        comment.parent.id.in(parentIdList)
+                )
+                .orderBy(
+                        comment.id.asc() // 최신 대댓글은 아래로
+                )
+                .fetch();
     }
 
     // 정렬 조건 변환 (단일 조건)

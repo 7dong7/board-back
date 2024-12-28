@@ -1,5 +1,6 @@
 package mystudy.study.domain.dto.comment;
 
+import com.querydsl.core.annotations.QueryProjection;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -17,5 +18,23 @@ public class CommentViewDto {
     private String content; // 댓글 내용
     private String author; // 댓글 작성자
     private LocalDateTime createdAt; // 댓글 작성일
-    private List<CommentDto> replies = new ArrayList<>(); // 댓글 대댓글
+    private Long parentId; // 부모 댓글 id (대댓글인 경우 값이 있음)
+    private List<CommentViewDto> replies = new ArrayList<>(); // 댓글 대댓글
+
+    @QueryProjection
+    public CommentViewDto(Long commentId, String content, String author, LocalDateTime createdAt) {
+        this.commentId = commentId;
+        this.content = content;
+        this.author = author;
+        this.createdAt = createdAt;
+    }
+
+    @QueryProjection
+    public CommentViewDto(Long commentId, String content, String author, LocalDateTime createdAt, Long parentId) {
+        this.commentId = commentId;
+        this.content = content;
+        this.author = author;
+        this.createdAt = createdAt;
+        this.parentId = parentId;
+    }
 }

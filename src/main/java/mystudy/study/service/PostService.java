@@ -2,6 +2,9 @@ package mystudy.study.service;
 
 import lombok.RequiredArgsConstructor;
 import mystudy.study.domain.dto.comment.CommentDto;
+import mystudy.study.domain.dto.comment.CommentViewDto;
+import mystudy.study.domain.dto.comment.ParentCommentDto;
+import mystudy.study.domain.dto.comment.ReplyCommentDto;
 import mystudy.study.domain.dto.post.PostDto;
 import mystudy.study.domain.dto.post.PostSearchCondition;
 import mystudy.study.domain.dto.post.PostViewDto;
@@ -14,7 +17,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -56,13 +60,34 @@ public class PostService {
 
         post.increaseViewCount();
 
-        // 게시글 가져오기
+        // 게시글 조회
         PostViewDto postView = postRepository.getPostView(postId);
 
-        // 댓글 가져오기 ( 페이징 )
-        Page<CommentDto> commentDto = commentService.getCommentByPostId(postId, commentPageable);
-        
-        postView.addComments(commentDto); // comment 추가
+        // 댓글 조회 ( 페이징 )
+        Page<ParentCommentDto> parentCommentDtoPage = commentService.getCommentByPostId(postId, commentPageable);
+
+            // 조횐된 댓글 id 리스트
+        List<Long> parentIdList = parentCommentDtoPage.stream()
+                .map(ParentCommentDto::getCommentId)
+                .toList();
+
+            // 조회된 댓글의 대댓글 조회 (where 절에서 in 사용해서 한번에 조회)
+        List<ReplyCommentDto> replies = commentService.getCommentByParentId(parentIdList);
+
+
+            // 조회한 대댓글 parentId 변로 구분
+        Map<Long, List<ReplyCommentDto>> groupReplyMap = replies.stream()
+                .collect(Collectors.groupingBy(ReplyCommentDto::getParentId));
+
+            // parentId에 해당하는 값이 없으면 빈 리스트 추가
+        parentCommentDtoPage.forEach(parentCommentDto -> {
+                // 댓글 commentId 필드와 대댓글의 parentId 필드가 일치되는 경우 parentCommentDto 안의 (replies) 대댓글에 넣어주기
+            List<ReplyCommentDto> reply = groupReplyMap.getOrDefault(parentCommentDto.getCommentId(), new ArrayList<>());
+            parentCommentDto.getReplies().addAll(reply);
+        });
+
+        // postView 안에 List<ParentCommentDto> 에 추가
+        postView.addComments(parentCommentDtoPage); 
 
         return postView;
     }
