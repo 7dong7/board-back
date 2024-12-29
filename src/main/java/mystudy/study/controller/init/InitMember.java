@@ -87,12 +87,12 @@ public class InitMember {
                 em.persist(comment);
             }
 
-                // 대상 comment
-            Comment comment = em.createQuery("select c from Comment c where c.id = :id", Comment.class)
+                // 부모 댓글
+            Comment comment23 = em.createQuery("select c from Comment c where c.id = :id", Comment.class)
                     .setParameter("id", 23)
                     .getSingleResult();
 
-                // 작성 사용자
+                // 대댓글 작성자
             Member member2 = em.createQuery("select m from Member m where m.username = :username", Member.class)
                     .setParameter("username", "member2")
                     .getSingleResult();
@@ -103,10 +103,34 @@ public class InitMember {
                         .content("댓글에 대댓글을 작성했다 " + i)
                         .post(post)
                         .member(member2)
-                        .parent(comment)
+                        .parent(comment23)
                         .build();
                 em.persist(reply);
             }
+
+            // 대댓글 작성자
+            Member member3 = em.createQuery("select m from Member m where m.username = :username", Member.class)
+                    .setParameter("username", "member3")
+                    .getSingleResult();
+
+            // 부모 댓글
+            Comment comment22 = em.createQuery("select c from Comment c where c.id = :id", Comment.class)
+                    .setParameter("id", 22)
+                    .getSingleResult();
+
+                // 대댓글 2
+            for (int i = 1; i < 4; i++) {
+                Comment reply = Comment.builder()
+                        .content("댓글에 대댓글을 작성했다 " + i)
+                        .post(post)
+                        .member(member3)
+                        .parent(comment22)
+                        .build();
+                em.persist(reply);
+            }
+
+
+
 
 //                Post post = new Post("새로운 글작성"+i, "새로운 글이 작성되었습니다"+i, member2);
 //                member2.addPost(post);

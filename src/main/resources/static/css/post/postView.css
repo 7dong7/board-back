@@ -109,6 +109,40 @@ body {
     margin-bottom:1rem;
 }
 
+/* 대댓글 */
+.reply-list {
+    margin-left:3rem;
+}
+
+.reply-info {
+    padding: 0.3rem  0;
+    margin-bottom: 0.2rem;
+    background-color: #e8e8e8;
+    border-radius: 4px;
+
+    /* 작성자, 작성일 양끝정렬*/
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* 수직 정렬 */
+}
+
+.reply-author {
+    font-size:12pt;
+    padding-left:1rem;
+}
+
+.reply-date {
+    padding-right:1rem;
+    font-size:9pt;
+}
+
+.reply-content {
+    padding: 0.3rem 1rem 0.4rem 1rem;
+    font-size:11.6pt;
+    margin-bottom:1rem;
+}
+
+
 /* 페이지네이션 */
 .pagination {
     display: flex;
