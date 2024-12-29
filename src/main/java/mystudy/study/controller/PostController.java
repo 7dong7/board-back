@@ -16,10 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -65,12 +62,13 @@ public class PostController {
         Map<String, Object> map = new HashMap<>();
         map.put("searchType", searchType);
         map.put("searchWord", searchWord);
-        
+
         model.addAttribute("postPage", postPage);
         model.addAttribute("searchParam", map);
         return "post/posts";
     }
 
+    // 게시글 내용 보기, 댓글, 대댓글 (페이징)
     @GetMapping("/{id}")
     public String getPostView(@PathVariable Long id,
                               @PageableDefault(size=20, page=0) Pageable clPageable,
@@ -85,20 +83,23 @@ public class PostController {
         // 게시글 내용물 가져오기, 댓글 가져오기 (페이징)
         PostViewDto postViewDto = postService.getPostView(id, commentPageable);
 
-        /*
-        private Long postId; // 게시글 번호
-        private String title; // 제목
-        private String content; // 내용
-        private LocalDateTime createdAt; // 작성일
-        private Integer viewCount; // 조회수
-        private Long memberId;  // 게시자 id
-        private String username; // 게시자 이름
-
-        private Page<CommentDto> commentDtoPage;
-        */
         List<ParentCommentDto> content = postViewDto.getCommentDtoPage().getContent();
 
         model.addAttribute("post", postViewDto);
         return "post/postView";
+    }
+
+    // 새로운 글 작성 페이지
+    @GetMapping("/new")
+    public String createPost(Model model) {
+
+        return "post/newPost";
+    }
+
+    // 새로운 글 작성
+    @PostMapping
+    public String createPost() {
+
+        return "redirect:/posts";
     }
 }
