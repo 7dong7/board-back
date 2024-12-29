@@ -130,6 +130,23 @@ tr td:nth-child(5) {
     width: 13rem;
 }
 
+/* 글 쓰기 버튼 */
+.create-post-button {
+    display: inline-block;
+    margin: 1.5rem 0;
+    padding: 0.5rem 2.5rem;
+    background-color: #333333;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    text-align: center;
+    transition: background-color 0.3s, transform 0.2s;
+
+}
+
+.create-post-button:hover {
+    background-color: #555;
+}
 
 /* 페이징 네비게이션 바 */
 .pagination {
