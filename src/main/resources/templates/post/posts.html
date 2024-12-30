@@ -61,7 +61,7 @@
         </td>
         <td th:text="${post.viewCount}">조회수</td>
         <td th:text="${post.username}">작성자</td>
-        <td th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}">2024-06-17 15:30</td>
+        <td th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm:ss')}">2024-06-17 15:30</td>
     </tr>
     <tr th:if="${postPage.totalElements == 0}">
         <td colspan="4">게시글이 없습니다.</td>

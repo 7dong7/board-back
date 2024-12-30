@@ -2,9 +2,7 @@ package mystudy.study.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import mystudy.study.domain.BaseEntity;
 
 import java.util.ArrayList;
@@ -12,7 +10,7 @@ import java.util.List;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
 public class Post extends BaseEntity {
 
@@ -23,6 +21,7 @@ public class Post extends BaseEntity {
 
     @Lob
     private String content;
+
     private Integer viewCount = 0;
 
     @ToString.Exclude
@@ -34,6 +33,7 @@ public class Post extends BaseEntity {
     private List<Comment> comments = new ArrayList<>();
 
     // 생성자
+    @Builder
     public Post(String title, String content, Member member) {
         this.title = title;
         this.content = content;

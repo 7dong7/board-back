@@ -9,10 +9,8 @@ import java.util.List;
 
 @Entity
 @Getter
-@NoArgsConstructor // 기본 생성자 (JPA 요구)
-@AllArgsConstructor // 전체 필드 생성자 (개발 편의)
+@NoArgsConstructor(access = AccessLevel.PROTECTED) // 기본 생성자 (JPA 요구)
 @ToString
-@Builder
 public class Comment extends BaseEntity {
 
     @Id @GeneratedValue
@@ -38,5 +36,14 @@ public class Comment extends BaseEntity {
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> replies = new ArrayList<>(); // 부모 댓글의 댓글들
 
+    @Builder
+    public Comment(Long id, String content, Post post, Member member, Comment parent, List<Comment> replies) {
+        this.id = id;
+        this.content = content;
+        this.post = post;
+        this.member = member;
+        this.parent = parent;
+        this.replies = replies;
+    }
 
 }

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import mystudy.study.domain.dto.comment.CommentDto;
 import mystudy.study.domain.dto.comment.ParentCommentDto;
 import mystudy.study.domain.dto.comment.ReplyCommentDto;
+import mystudy.study.domain.dto.post.NewPostDto;
 import mystudy.study.domain.dto.post.PostDto;
 import mystudy.study.domain.dto.post.PostSearchCondition;
 import mystudy.study.domain.dto.post.PostViewDto;
@@ -93,12 +94,16 @@ public class PostController {
     @GetMapping("/new")
     public String createPost(Model model) {
 
+        model.addAttribute("newPost", new NewPostDto());
         return "post/newPost";
     }
 
-    // 새로운 글 작성
+    // 새로운 게시글 작성
     @PostMapping
-    public String createPost() {
+    public String createPost(@ModelAttribute("newPost") NewPostDto newPostDto) {
+        System.out.println("newPostDto = " + newPostDto);
+
+        postService.createPost(newPostDto);
 
         return "redirect:/posts";
     }

@@ -1,9 +1,7 @@
 package mystudy.study.domain.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import mystudy.study.domain.BaseTimeEntity;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -13,7 +11,7 @@ import java.util.List;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
 @EntityListeners(AuditingEntityListener.class)
 public class Member extends BaseTimeEntity {
@@ -51,6 +49,7 @@ public class Member extends BaseTimeEntity {
     private List<Comment> comments = new ArrayList<>();
 
     // 생성자
+    @Builder
     public Member(String username, int age, String email) {
         this.username = username;
         this.age = age;

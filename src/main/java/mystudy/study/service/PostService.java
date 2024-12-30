@@ -5,9 +5,11 @@ import mystudy.study.domain.dto.comment.CommentDto;
 import mystudy.study.domain.dto.comment.CommentViewDto;
 import mystudy.study.domain.dto.comment.ParentCommentDto;
 import mystudy.study.domain.dto.comment.ReplyCommentDto;
+import mystudy.study.domain.dto.post.NewPostDto;
 import mystudy.study.domain.dto.post.PostDto;
 import mystudy.study.domain.dto.post.PostSearchCondition;
 import mystudy.study.domain.dto.post.PostViewDto;
+import mystudy.study.domain.entity.Member;
 import mystudy.study.domain.entity.Post;
 import mystudy.study.repository.CommentRepository;
 import mystudy.study.repository.PostRepository;
@@ -24,16 +26,10 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class PostService {
-    /**
-     * @Transactional(readOnly = true)
-     * 클래스 레벨에서 @Transactional(readOnly = true)를 선언하고, 변경작업을 수행하는 별도의 @Transactional 을 붙이는 방식이 좋다
-     * 
-     *
-     *  */
-
 
     private final PostRepository postRepository;
     private final CommentService commentService;
+    private final MemberQueryService memberQueryService;
 
     // 게시글 검색해서 가져오기
     public Page<PostDto> getPostPage(Pageable pageable, PostSearchCondition condition) {
@@ -90,5 +86,46 @@ public class PostService {
         postView.addComments(parentCommentDtoPage); 
 
         return postView;
+    }
+
+    // 새로은 게시글 작성
+    @Transactional
+    public void createPost(NewPostDto newPostDto) {
+
+        // 사용자 정보 ( 로그인 정보로 가져오도 )
+        Member member = memberQueryService.findMemberById(3L);
+
+        Post post = Post.builder()
+                .title(newPostDto.getTitle())
+                .content(newPostDto.getContent())
+                .member(member)
+                .build();
+
+        member.getPosts().add(post);
+
+/*
+* public class NewPostDto {
+    private String title; // 게시글 제목
+    private String content; // 게시글 내용
+* */
+
+    /*
+        @Column(name = "post_id", updatable = false)
+        private Long id;
+        private String title;
+
+        @Lob
+        private String content;
+        private Integer viewCount = 0;
+
+        @ToString.Exclude
+        @ManyToOne(fetch = FetchType.LAZY)
+        @JoinColumn(name = "member_id", updatable = false)
+        private Member member;
+
+        @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+        private List<Comment> comments = new ArrayList<>();
+    * */
+
     }
 }

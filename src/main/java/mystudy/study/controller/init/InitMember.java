@@ -129,15 +129,6 @@ public class InitMember {
                 em.persist(reply);
             }
 
-
-
-
-//                Post post = new Post("새로운 글작성"+i, "새로운 글이 작성되었습니다"+i, member2);
-//                member2.addPost(post);
-//            }
-
-//            em.persist(member2);
-
         }
     }
 
