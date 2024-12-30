@@ -46,7 +46,6 @@ th, td {
     color: #fff;
 }
 
-
 /* 게시글 댓글 공통 */
 .member-post th,
 .member-comment th {
@@ -63,12 +62,12 @@ th, td {
 .member-comment tbody tr:hover {
     background: #f9f9f9;
 }
-    /* 내용 필드 좌측 정렬*/
+/* 내용 필드 좌측 정렬*/
 td:nth-child(2) {
     text-align:left;
 }
 
-    /* 링크  */
+/* 링크  */
 .member-post table th a,
 .member-comment table th a{
     text-decoration:none;
@@ -86,12 +85,59 @@ td:nth-child(2) {
     color:#aeaeae;
 }
 
+/* 게시글 테이블 */
+.member-post td:nth-child(1) {
+    width:100px;
+}
 
-/* 게시글 */
+.member-post td:nth-child(2) {
+    width:250px;
+    text-align:left;
+}
 
+.member-post td:nth-child(3) {
+    width:60px;
+}
 
-/* 댓글 */
+.member-post td:nth-child(4) {
+    width:100px;
+}
 
+/* 댓글 테이블 */
+.member-comment td:nth-child(1) {
+    width:100px;
+}
+
+.member-comment td:nth-child(2) {
+    width:250px;
+    text-align:left;
+}
+
+.member-comment td:nth-child(3) {
+    width:60px;
+}
+
+.member-comment td:nth-child(4) {
+    width:100px;
+}
+
+/* 게시글 테이블 */
+.member-post td:nth-child(1) {
+    width:100px;
+}
+
+.member-post td:nth-child(2) {
+    width:250px;
+    text-align:left;
+}
+
+.member-post td:nth-child(3) {
+    width:60px;
+}
+
+.member-post td:nth-child(4) {
+    width:100px;
+}
 
 /* 데이터가 없을 경우 */
 .no-posts {

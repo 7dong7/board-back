@@ -50,7 +50,7 @@
                         <th>게시글 번호</th>
                         <th>
                             <a th:href="@{/members/{id}(id=${memberInfo.id}, postPage=1, commentPage=${memberInfo.commentPage.number + 1}, ps='title', pd=${pd == 'ASC' ? 'DESC' : 'ASC'})}">
-                                제목
+                                게시글 제목
                                 <span th:if="${ps == 'title'}"
                                       th:text="${pd == 'ASC' ? '▲' : '▼'}"></span>
                             </a>
@@ -62,7 +62,6 @@
                                       th:text="${pd == 'ASC' ? '▲' : '▼'}"></span>
                             </a>
                         </th>
-                        <th>작성자</th>
                         <th>
                             <a th:href="@{/members/{id}(id=${memberInfo.id}, postPage=1, commentPage=${memberInfo.commentPage.number + 1}, ps='createdAt', pd=${pd == 'ASC' ? 'DESC' : 'ASC'})}">
                                 작성일
@@ -81,13 +80,12 @@
                         <a th:href="@{/posts/{id}(id=${post.postId})}" th:text="${post.title}"></a>
                     </td>
                     <td th:text="${post.viewCount}">조회수</td>
-                    <td th:text="${post.username}">작성자</td>
                     <td th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}">2024-06-17 15:30</td>
                 </tr>
 
                 <!-- 게시글이 없을 때 -->
                 <tr th:if="${memberInfo.postPage.content.isEmpty()}">
-                    <td colspan="4" class="no-posts">작성한 게시글이 없습니다.</td>
+                    <td colspan="5" class="no-posts">작성한 게시글이 없습니다.</td>
                 </tr>
                 </tbody>
             </table>
@@ -126,16 +124,10 @@
             <table>
                 <thead>
                     <tr>
-                        <th>
-                            <a th:href="@{/members/{id}(id=${memberInfo.id}, postPage=${memberInfo.postPage.number + 1}, commentPage=1, cs='id', cd=${cd == 'ASC' ? 'DESC': 'ASC'})}">
-                                댓글 번호
-                                <span th:if="${cs == 'id'}"
-                                      th:text="${cd == 'ASC' ? '▲' : '▼'}"></span>
-                            </a>
-                        </th>
+                        <th>댓글 번호</th>
                         <th>
                             <a th:href="@{/members/{id}(id=${memberInfo.id}, postPage=${memberInfo.postPage.number + 1}, commentPage=1, cs='content', cd=${cd == 'ASC' ? 'DESC': 'ASC'})}">
-                                내용
+                                댓글 내용
                                 <span th:if="${cs == 'content'}"
                                       th:text="${cd == 'ASC' ? '▲' : '▼'}"></span>
                             </a>

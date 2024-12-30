@@ -29,8 +29,9 @@
         </p>
     </div>
     <hr class="divider">
-    <div class="comments">
-        <h2>댓글</h2>
+
+    <h2>댓글</h2>
+    <div class="comments" > <!-- th:if="${!post.commentDtoPage.content.isEmpty()}" -->
         <ul class="comment-list">
             <!-- 댓글 -->
             <li th:each="comment : ${post.commentDtoPage}">
@@ -52,33 +53,39 @@
                 </ul>
             </li>
         </ul>
+
+        <!-- 페이지네이션 -->
+        <div class="pagination" th:if="${post.commentDtoPage.totalPages > 0}">
+            <!-- 처음 페이지 -->
+            <a th:href="@{/posts/{id}(id=${post.postId}, page=1)}"
+               th:if="${!post.commentDtoPage.first}">처음</a>
+
+            <!-- 이전 페이지 -->
+            <a th:href="@{/posts/{id}(id=${post.postId}, page=${post.commentDtoPage.number})}"
+               th:if="${post.commentDtoPage.hasPrevious()}">이전</a>
+
+            <!-- 페이지 번호 반복 출력 -->
+            <div th:if="${post.commentDtoPage.totalPages > 0}">
+                <span th:each="page : ${#numbers.sequence(1, post.commentDtoPage.totalPages)}"
+                      th:if="${page >= post.commentDtoPage.number + 1 - 3 and page <= post.commentDtoPage.number + 1 + 3}">
+                    <a th:href="@{/posts/{id}(id=${post.postId}, page=${page})}"
+                       th:text="${page}"
+                       th:classappend="${page == post.commentDtoPage.number + 1} ? 'active'">1</a>
+                </span>
+            </div>
+            <!-- 다음 페이지 -->
+            <a th:href="@{/posts/{id}(id=${post.postId}, page=${post.commentDtoPage.number + 2})}"
+               th:if="${post.commentDtoPage.hasNext()}">다음</a>
+
+            <!-- 마지막 페이지 -->
+            <a th:href="@{/posts/{id}(id=${post.postId}, page=${post.commentDtoPage.totalPages})}"
+               th:if="${!post.commentDtoPage.last}">마지막</a>
+        </div>
+
     </div>
-    <!-- 페이지네이션 -->
-    <div class="pagination">
-        <!-- 처음 페이지 -->
-        <a th:href="@{/posts/{id}(id=${post.postId}, page=1)}"
-           th:if="${!post.commentDtoPage.first}">처음</a>
 
-        <!-- 이전 페이지 -->
-        <a th:href="@{/posts/{id}(id=${post.postId}, page=${post.commentDtoPage.number})}"
-           th:if="${post.commentDtoPage.hasPrevious()}">이전</a>
+    <div class="no-comment" th:if="${post.commentDtoPage.content.isEmpty()}">작성된 댓글이 없습니다.</div>
 
-        <!-- 페이지 번호 반복 출력 -->
-        <span th:each="page : ${#numbers.sequence(1, post.commentDtoPage.totalPages)}"
-              th:if="${page >= post.commentDtoPage.number + 1 - 3 and page <= post.commentDtoPage.number + 1 + 3}">
-            <a th:href="@{/posts/{id}(id=${post.postId}, page=${page})}"
-               th:text="${page}"
-               th:classappend="${page == post.commentDtoPage.number + 1} ? 'active'">1</a>
-        </span>
-
-        <!-- 다음 페이지 -->
-        <a th:href="@{/posts/{id}(id=${post.postId}, page=${post.commentDtoPage.number + 2})}"
-           th:if="${post.commentDtoPage.hasNext()}">다음</a>
-
-        <!-- 마지막 페이지 -->
-        <a th:href="@{/posts/{id}(id=${post.postId}, page=${post.commentDtoPage.totalPages})}"
-           th:if="${!post.commentDtoPage.last}">마지막</a>
-    </div>
     <div class="footer">
         <a href="/post" class="back-link">목록으로 돌아가기</a>
     </div>

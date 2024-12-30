@@ -173,6 +173,14 @@ body {
     font-weight: bold;
 }
 
+/* 댓글이 없는 경우 */
+.no-comment {
+    color: #777;
+    font-style: italic;
+    padding: 1rem 0;
+}
+
+/* 댓글 아래 부분 */
 
 .footer {
     margin-top: 20px;
