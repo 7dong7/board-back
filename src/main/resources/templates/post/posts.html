@@ -17,89 +17,89 @@
 </script>
 
 <body>
-<!-- 검색창 -->
-<div class="search-container">
-    <form id="searchForm" th:action="@{/posts}" method="get">
-        <!-- 검색 타입-->
-        <select name="searchType">
-            <option value="username" th:selected="${searchParam.searchType == 'username'}">작성자</option>
-            <option value="title" th:selected="${searchParam.searchType == 'title'}">제목</option>
-            <option value="content" th:selected="${searchParam.searchType == 'content'}">내용</option>
-            <option value="title_content" th:selected="${searchParam.searchType == 'title_content'}">제목+내용</option>
-        </select>
+    <!-- 검색창 -->
+    <div class="search-container">
+        <form id="searchForm" th:action="@{/posts}" method="get">
+            <!-- 검색 타입-->
+            <select name="searchType">
+                <option value="username" th:selected="${searchParam.searchType == 'username'}">작성자</option>
+                <option value="title" th:selected="${searchParam.searchType == 'title'}">제목</option>
+                <option value="content" th:selected="${searchParam.searchType == 'content'}">내용</option>
+                <option value="title_content" th:selected="${searchParam.searchType == 'title_content'}">제목+내용</option>
+            </select>
 
-        <!-- 검색어 -->
-        <input type="text" name="searchWord" placeholder="검색어를 입력하세요" th:value="${param.searchWord}">
-        <button type="submit">찾기</button>
+            <!-- 검색어 -->
+            <input type="text" name="searchWord" placeholder="검색어를 입력하세요" th:value="${param.searchWord}">
+            <button type="submit">찾기</button>
 
-        <!-- 페이지 크기 선택 -->
-        <select class="page-size-container" name="size" onchange="submitForm()">
-            <option value="20" th:selected="${postPage.size} == '20'">20개씩 보기</option>
-            <option value="30" th:selected="${postPage.size} == '30'">30개씩 보기</option>
-            <option value="40" th:selected="${postPage.size} == '40'">40개씩 보기</option>
-        </select>
-    </form>
-</div>
+            <!-- 페이지 크기 선택 -->
+            <select class="page-size-container" name="size" onchange="submitForm()">
+                <option value="20" th:selected="${postPage.size} == '20'">20개씩 보기</option>
+                <option value="30" th:selected="${postPage.size} == '30'">30개씩 보기</option>
+                <option value="40" th:selected="${postPage.size} == '40'">40개씩 보기</option>
+            </select>
+        </form>
+    </div>
 
-<!-- 검색된 사용자 표시 -->
-<table>
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>제목</th>
-        <th>조회수</th>
-        <th>작성자</th>
-        <th>작성일</th>
-    </tr>
-    </thead>
+    <!-- 검색된 사용자 표시 -->
+    <table>
+        <thead>
+            <tr>
+                <th>게시글 번호</th>
+                <th>제목</th>
+                <th>조회수</th>
+                <th>작성자</th>
+                <th>작성일</th>
+            </tr>
+        </thead>
 
-    <tbody>
-    <tr th:each="post : ${postPage.content}">
-        <td th:text="${post.postId}">id</td>
-        <td>
-            <a th:href="@{/posts/{id}(id=${post.postId})}" th:text="${post.title}"></a>
-        </td>
-        <td th:text="${post.viewCount}">조회수</td>
-        <td th:text="${post.username}">작성자</td>
-        <td th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm:ss')}">2024-06-17 15:30</td>
-    </tr>
-    <tr th:if="${postPage.totalElements == 0}">
-        <td colspan="4">게시글이 없습니다.</td>
-    </tr>
-    </tbody>
-</table>
+        <tbody>
+            <tr th:each="post : ${postPage.content}">
+                <td th:text="${post.postId}">id</td>
+                <td>
+                    <a th:href="@{/posts/{id}(id=${post.postId})}" th:text="${post.title}"></a>
+                </td>
+                <td th:text="${post.viewCount}">조회수</td>
+                <td th:text="${post.username}">작성자</td>
+                <td th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm:ss')}">2024-06-17 15:30</td>
+            </tr>
+            <tr th:if="${postPage.totalElements == 0}">
+                <td colspan="5">게시글이 없습니다.</td>
+            </tr>
+        </tbody>
+    </table>
 
-<!-- 글쓰기 버튼 추가 -->
-<div class="button-container">
-    <a href="/posts/new" class="create-post-button">글쓰기</a>
-</div>
+    <!-- 글쓰기 버튼 추가 -->
+    <div class="button-container">
+        <a href="/posts/new" class="create-post-button">글쓰기</a>
+    </div>
 
-<!-- 페이지네이션 -->
-<div class="pagination">
-    <!-- 처음 페이지 -->
-    <a th:href="@{/posts(page=1, size=${param.size}, searchType=${param.searchType}, searchWord=${param.searchWord})}"
-       th:if="${!postPage.first}">처음</a>
+    <!-- 페이지네이션 -->
+    <div class="pagination">
+        <!-- 처음 페이지 -->
+        <a th:href="@{/posts(page=1, size=${param.size}, searchType=${param.searchType}, searchWord=${param.searchWord})}"
+           th:if="${!postPage.first}">처음</a>
 
-    <!-- 이전 페이지 -->
-    <a th:href="@{/posts(page=${postPage.number}, size=${param.size}, searchType=${param.searchType}, searchWord=${param.searchWord})}"
-       th:if="${postPage.hasPrevious()}">이전</a>
+        <!-- 이전 페이지 -->
+        <a th:href="@{/posts(page=${postPage.number}, size=${param.size}, searchType=${param.searchType}, searchWord=${param.searchWord})}"
+           th:if="${postPage.hasPrevious()}">이전</a>
 
-    <!-- 페이지 번호 반복 출력 -->
-    <span th:each="page : ${#numbers.sequence(1, postPage.totalPages)}"
-          th:if="${page >= postPage.number + 1 - 5 and page <= postPage.number + 1 + 5}">
-        <a th:href="@{/posts(page=${page}, size=${param.size}, searchType=${param.searchType}, searchWord=${param.searchWord})}"
-           th:text="${page}"
-           th:classappend="${page == postPage.number + 1} ? 'active'">1</a>
-    </span>
+        <!-- 페이지 번호 반복 출력 -->
+        <span th:each="page : ${#numbers.sequence(1, postPage.totalPages)}"
+              th:if="${page >= postPage.number + 1 - 5 and page <= postPage.number + 1 + 5}">
+            <a th:href="@{/posts(page=${page}, size=${param.size}, searchType=${param.searchType}, searchWord=${param.searchWord})}"
+               th:text="${page}"
+               th:classappend="${page == postPage.number + 1} ? 'active'">1</a>
+        </span>
 
-    <!-- 다음 페이지 -->
-    <a th:href="@{/posts(page=${postPage.number + 2}, size=${param.size}, searchType=${param.searchType}, searchWord=${param.searchWord})}"
-       th:if="${postPage.hasNext()}">다음</a>
+        <!-- 다음 페이지 -->
+        <a th:href="@{/posts(page=${postPage.number + 2}, size=${param.size}, searchType=${param.searchType}, searchWord=${param.searchWord})}"
+           th:if="${postPage.hasNext()}">다음</a>
 
-    <!-- 마지막 페이지 -->
-    <a th:href="@{/posts(page=${postPage.totalPages}, size=${param.size}, searchType=${param.searchType}, searchWord=${param.searchWord})}"
-       th:if="${!postPage.last}">마지막</a>
-</div>
+        <!-- 마지막 페이지 -->
+        <a th:href="@{/posts(page=${postPage.totalPages}, size=${param.size}, searchType=${param.searchType}, searchWord=${param.searchWord})}"
+           th:if="${!postPage.last}">마지막</a>
+    </div>
 
 </body>
 </html>

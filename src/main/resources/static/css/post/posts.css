@@ -115,19 +115,24 @@ tr td:nth-child(2) > a:visited {
     color: #aeaeae;
 }
 
+tr td:nth-child(1) {
+    width:80px;
+    font-size: 11pt;
+}
+
 tr td:nth-child(3) {
-    width:5rem;
+    width:90px;
     font-size: 10pt;
     padding:0;
 }
 
 tr td:nth-child(4) {
-    width: 11rem;
+    width: 140px;
     font-size: 11pt;
 }
 
 tr td:nth-child(5) {
-    width: 13rem;
+    width: 110px;
 }
 
 /* 글 쓰기 버튼 */
