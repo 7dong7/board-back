@@ -148,7 +148,7 @@
                 <tr th:each="comment : ${memberInfo.commentPage.content}">
                     <td th:text="${comment.commentId}">id</td>
                     <td>
-                        <a th:href="@{/comments/{id}(id=${comment.commentId})}" th:text="${comment.content}"></a>
+                        <a th:href="@{/posts/{id}(id=${comment.postId})}" th:text="${comment.content}"></a>
                     </td>
                     <td th:text="${comment.author}">댓글 작성자</td>
                     <td th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm')}">2024-06-17 15:30</td>

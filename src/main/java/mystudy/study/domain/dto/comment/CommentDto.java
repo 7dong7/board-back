@@ -14,12 +14,14 @@ public class CommentDto {
     private String content;
     private String author; // username
     private LocalDateTime createdAt;
+    private Long postId;
 
     @QueryProjection
-    public CommentDto(Long commentId, String content, String author, LocalDateTime createdAt) {
+    public CommentDto(Long commentId, String content, String author, LocalDateTime createdAt, Long postId) {
         this.commentId = commentId;
         this.content = content;
         this.author = author;
         this.createdAt = createdAt;
+        this.postId = postId;
     }
 }

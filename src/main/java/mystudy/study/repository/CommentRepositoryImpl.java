@@ -30,8 +30,7 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
         this.queryFactory = new JPAQueryFactory(em);
     }
 
-
-    // 사용자가 작성한 댓글 수 가져오기
+    // 사용자 id를 사용해서 작성한 전체 댓글 수 조회
     @Override
     public Long getCommentCountByMemberId(Long id) {
 
@@ -42,21 +41,22 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
                 .fetchOne();
     }
 
-    // 사용자가 작성한 댓글 조회 (페이징)
+    // 사용자 id를 사용해서 댓글 조회 (페이징)
     @Override
-    public Page<CommentDto> getCommentByMemberId(Long id, Pageable pageable) {
+    public Page<CommentDto> getCommentByMemberId(Long memberId, Pageable pageable) {
 
         List<CommentDto> content = queryFactory
                 .select(new QCommentDto(
                         comment.id,
                         comment.content,
                         member.username,
-                        comment.createdAt)
+                        comment.createdAt,
+                        comment.post.id.as("postId"))
                 )
                 .from(comment)
                 .leftJoin(comment.member, member)
                 .where(
-                        comment.member.id.eq(id)
+                        comment.member.id.eq(memberId)
                 )
                 .orderBy(
                         commentSort(pageable)
@@ -70,13 +70,13 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
                 .from(comment)
                 .leftJoin(comment.member, member)
                 .where(
-                        comment.member.id.eq(id)
+                        comment.member.id.eq(memberId)
                 );
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
     }
 
-    // 게시글 댓글 조회 (페이징)
+    // 게시글 id를 사용해서 댓글 조회 (페이징)
     @Override
     public Page<ParentCommentDto> getCommentByPostId(Long postId, Pageable commentPageable) {
 
@@ -112,7 +112,7 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
         return PageableExecutionUtils.getPage(content, commentPageable, countQuery::fetchOne);
     }
 
-    // 조회된 댓글의 대댓글 조회 (where 절에서 in 사용해서 한번에 조회)
+    // 댓글 id를 parentId 로 사용하는 댓글 조회 (대댓글 조회, where 절에서 in 사용해서 한번에 조회)
     @Override
     public List<ReplyCommentDto> getCommentByParentId(List<Long> parentIdList) {
 
