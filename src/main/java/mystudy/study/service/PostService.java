@@ -27,8 +27,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PostService {
 
+
     private final PostRepository postRepository;
     private final CommentService commentService;
+
+    private final PostQueryService postQueryService;
     private final MemberQueryService memberQueryService;
 
     // 게시글 검색해서 가져오기
@@ -51,9 +54,7 @@ public class PostService {
     public PostViewDto getPostView(Long postId, Pageable commentPageable) {
 
         // 조회수 증가
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + postId));
-
+        Post post = postQueryService.findById(postId);
         post.increaseViewCount();
 
         // 게시글 조회

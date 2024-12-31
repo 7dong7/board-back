@@ -1,10 +1,10 @@
 package mystudy.study.service;
 
 import lombok.RequiredArgsConstructor;
-import mystudy.study.domain.dto.comment.CommentDto;
-import mystudy.study.domain.dto.comment.CommentViewDto;
-import mystudy.study.domain.dto.comment.ParentCommentDto;
-import mystudy.study.domain.dto.comment.ReplyCommentDto;
+import mystudy.study.domain.dto.comment.*;
+import mystudy.study.domain.entity.Comment;
+import mystudy.study.domain.entity.Member;
+import mystudy.study.domain.entity.Post;
 import mystudy.study.repository.CommentRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +19,9 @@ import java.util.List;
 public class CommentService {
 
     private final CommentRepository commentRepository;
+
+    private final PostQueryService postQueryService;
+    private final MemberQueryService memberQueryService;
 
     // 사용자가 작성한 댓글 수 조회
     public Long getCommentCountByMemberId(Long id) {
@@ -38,5 +41,27 @@ public class CommentService {
     // 댓글 id를 parentId 로 사용하는 댓글 조회 (대댓글 조회, where 절에서 in 사용해서 한번에 조회)
     public List<ReplyCommentDto> getCommentByParentId(List<Long> parentIdList) {
         return commentRepository.getCommentByParentId(parentIdList);
+    }
+
+    // postId 댓글 작성
+    @Transactional
+    public void newComment(NewCommentDto newCommentDto) {
+
+        // 글 작성자 ( 로그인 정보로 가져와야 함 )
+        Member member = memberQueryService.findMemberById(3L);
+
+        // 게시글 조회
+        Post post = postQueryService.findById(newCommentDto.getPostId());
+
+        // 새로운 댓글(comment) 생성
+        Comment comment = Comment.builder()
+                .content(newCommentDto.getContent())
+                .member(member)
+                .post(post)
+                .build();
+
+        // 댓글 저장
+        commentRepository.save(comment);
+
     }
 }

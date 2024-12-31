@@ -1,12 +1,9 @@
 package mystudy.study.controller;
 
 import lombok.RequiredArgsConstructor;
-import mystudy.study.domain.dto.comment.CommentDto;
 import mystudy.study.domain.dto.member.MemberInfoDto;
 import mystudy.study.domain.dto.member.MemberSearchCondition;
 import mystudy.study.domain.dto.member.SearchMemberDto;
-import mystudy.study.domain.dto.post.PostDto;
-import mystudy.study.repository.PostRepository;
 import mystudy.study.service.MemberService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,11 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import static org.springframework.util.StringUtils.hasText;
 
 @Controller
 @RequiredArgsConstructor

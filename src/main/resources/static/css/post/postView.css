@@ -177,10 +177,58 @@ body {
 .no-comment {
     color: #777;
     font-style: italic;
-    padding: 1rem 0;
+    padding: 1rem 0 5rem 0;
 }
 
-/* 댓글 아래 부분 */
+/* 댓글 작성 폼 */
+.comment-form {
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.comment-form h3 {
+    margin:0 0 10px 0;
+    font-size: 18px;
+    color: #333;
+}
+
+.comment-form .form-group {
+}
+
+.comment-form textarea {
+    width: 97.5%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    resize: none;
+}
+
+.comment-form textarea:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+.comment-form .submit-button {
+    display: inline-block;
+    margin: 7px 0 0 0;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.comment-form .submit-button:hover {
+    background-color: #0056b3;
+}
+
 
 .footer {
     margin-top: 20px;

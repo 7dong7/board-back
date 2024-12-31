@@ -2,6 +2,7 @@ package mystudy.study.controller;
 
 import lombok.RequiredArgsConstructor;
 import mystudy.study.domain.dto.comment.CommentDto;
+import mystudy.study.domain.dto.comment.NewCommentDto;
 import mystudy.study.domain.dto.comment.ParentCommentDto;
 import mystudy.study.domain.dto.comment.ReplyCommentDto;
 import mystudy.study.domain.dto.post.NewPostDto;
@@ -86,6 +87,11 @@ public class PostController {
 
         List<ParentCommentDto> content = postViewDto.getCommentDtoPage().getContent();
 
+        NewCommentDto newCommentDto = NewCommentDto.builder()
+                .postId(id)
+                .build();
+
+        model.addAttribute("newComment", newCommentDto);
         model.addAttribute("post", postViewDto);
         return "post/postView";
     }

@@ -31,7 +31,7 @@
     <hr class="divider">
 
     <h2>댓글</h2>
-    <div class="comments" > <!-- th:if="${!post.commentDtoPage.content.isEmpty()}" -->
+    <div class="comments" >
         <ul class="comment-list">
             <!-- 댓글 -->
             <li th:each="comment : ${post.commentDtoPage}">
@@ -53,6 +53,23 @@
                 </ul>
             </li>
         </ul>
+
+        <!-- 작성된 댓글이 없는 경우-->
+        <div class="no-comment" th:if="${post.commentDtoPage.content.isEmpty()}">작성된 댓글이 없습니다.</div>
+
+        <!-- 댓글 작성 폼 -->
+        <div class="comment-form">
+            <h3>댓글 작성</h3>
+            <form th:action="@{/comments/new}" th:object="${newComment}" method="post">
+                <div class="form-group">
+                    <textarea id="comment-content" th:field="*{content}" rows="3" required></textarea>
+                </div>
+                <input th:type="hidden" th:field="*{postId}" />
+                <div class="form-group">
+                    <button type="submit" class="submit-button">등록</button>
+                </div>
+            </form>
+        </div>
 
         <!-- 페이지네이션 -->
         <div class="pagination" th:if="${post.commentDtoPage.totalPages > 0}">
@@ -81,10 +98,9 @@
             <a th:href="@{/posts/{id}(id=${post.postId}, page=${post.commentDtoPage.totalPages})}"
                th:if="${!post.commentDtoPage.last}">마지막</a>
         </div>
-
     </div>
 
-    <div class="no-comment" th:if="${post.commentDtoPage.content.isEmpty()}">작성된 댓글이 없습니다.</div>
+
 
     <div class="footer">
         <a href="/post" class="back-link">목록으로 돌아가기</a>
