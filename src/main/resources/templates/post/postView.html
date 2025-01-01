@@ -4,6 +4,31 @@
     <title>게시글 상세</title>
     <link rel="stylesheet" href="/css/post/postView.css">
 </head>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+        document.querySelectorAll(".btn-reply").forEach(button => {
+
+            button.addEventListener("click", function() {
+                console.log(this.dataset.postId);
+                console.log(this.dataset.parentId);
+
+                let postId = this.dataset.postId;
+                let parentId = this.dataset.parentId;
+
+                this.parentElement.querySelector(".postId").value = postId;
+                this.parentElement.querySelector(".parentId").value = parentId;
+
+                console.log(this.parentElement.querySelector(".postId").value)
+                console.log(this.parentElement.querySelector(".parentId").value)
+
+            });
+
+        }); // end of document.querySelectorAll(".btn-reply").forEach(button => {
+    }); // end of document.addEventListener('DOMContentLoaded', () => {
+</script>
+
 <body>
 <div class="container">
     <div class="header">
@@ -51,6 +76,16 @@
                         <div class="reply-content" th:text="${reply.content}"></div>
                     </li>
                 </ul>
+
+                <!-- 대댓글 작성 폼 -->
+                <div class="reply-form" id="reply-form-${comment.id}" style="display: block;">
+                    <form th:action="@{/comments/replies/new}" method="post" th:object="${newComment}">
+                        <textarea th:field="*{content}" rows="3" placeholder="댓글 내용을 입력하세요" required></textarea>
+                        <button class="btn-reply" type="submit" th:attr="data-post-id=${post.postId}, data-parent-id=${comment.commentId}">등록</button>
+                        <span>postId</span><input class="postId" th:field="*{postId}" /> <!-- 게시글 id-->
+                        <span>commentId</span><input class="parentId" th:field="*{parentId}"/> <!-- 부모 댓글 id-->
+                    </form>
+                </div>
             </li>
         </ul>
 
@@ -100,7 +135,11 @@
         </div>
     </div>
 
-
+    <div class="tags">
+        <span class="tag" data-id="1">Tag 1</span>
+        <span class="tag" data-id="2">Tag 2</span>
+        <span class="tag" data-id="3">Tag 3</span>
+    </div>
 
     <div class="footer">
         <a href="/post" class="back-link">목록으로 돌아가기</a>

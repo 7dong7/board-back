@@ -20,13 +20,22 @@ public class CommentController {
     // 게시글에 댓글 작성하기 (comment)
     @PostMapping("/new")
     public String newComment(@ModelAttribute("newComment")NewCommentDto newCommentDto) {
-
+        // 댓글 저장
         commentService.newComment(newCommentDto);
+
+        // 게시글로 돌아가기
+        Long postId = newCommentDto.getPostId();
+        return "redirect:/posts/" + postId;
+    }
+
+    // 게시글에 댓글 작성하기 (comment)
+    @PostMapping("/replies/new")
+    public String newCommentReply(@ModelAttribute("newComment")NewCommentDto newCommentDto) {
 
         System.out.println("newCommentDto = " + newCommentDto);
 
+        // 게시글로 돌아가기
         Long postId = newCommentDto.getPostId();
-
         return "redirect:/posts/" + postId;
     }
 

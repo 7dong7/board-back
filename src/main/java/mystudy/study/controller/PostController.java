@@ -87,11 +87,8 @@ public class PostController {
 
         List<ParentCommentDto> content = postViewDto.getCommentDtoPage().getContent();
 
-        NewCommentDto newCommentDto = NewCommentDto.builder()
-                .postId(id)
-                .build();
 
-        model.addAttribute("newComment", newCommentDto);
+        model.addAttribute("newComment", new NewCommentDto());
         model.addAttribute("post", postViewDto);
         return "post/postView";
     }
