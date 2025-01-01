@@ -77,10 +77,6 @@ body {
     padding: 0;
 }
 
-.comments li {
-
-}
-
 .comment-info {
     padding: 0.3rem  0;
     margin-bottom: 0.2rem;
@@ -142,7 +138,10 @@ body {
     margin-bottom:1rem;
 }
 
-
+/* 댓글 대댓글 공통*/
+.content:hover {
+    cursor:pointer;
+}
 
 /* 페이지네이션 */
 .pagination {
@@ -182,6 +181,12 @@ body {
 }
 
 /* 댓글 작성 폼, 대댓글 작성 폼 */
+.comment-form h3 {
+    margin:0 0 10px 0;
+    font-size: 18px;
+    color: #333;
+}
+
 .reply-form,
 .comment-form {
     padding: 15px;
@@ -190,10 +195,8 @@ body {
     background-color: #f9f9f9;
 }
 
-.comment-form h3 {
-    margin:0 0 10px 0;
-    font-size: 18px;
-    color: #333;
+.reply-form {
+    margin-bottom:1.5rem;
 }
 
 .reply-form textarea,
@@ -213,7 +216,7 @@ body {
 }
 
 .reply-form .btn-reply,
-.comment-form .submit-button {
+.comment-form .btn-comment {
     display: inline-block;
     margin: 7px 0 0 0;
     padding: 10px 20px;
@@ -228,7 +231,7 @@ body {
 }
 
 .reply-form .btn-reply:hover,
-.comment-form .submit-button:hover {
+.comment-form .btn-comment:hover {
     background-color: #0056b3;
 }
 
@@ -246,29 +249,4 @@ body {
 
 .back-link:hover {
     text-decoration: underline;
-}
-
-
-/* ㅇㅇㅇㅇ */
-
-.tags {
-    display: flex;
-    gap: 10px;
-    margin: 20px;
-}
-
-.tag {
-    padding: 10px 20px;
-    background-color: lightblue;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: background-color 0.3s;
-}
-
-.tag.hidden {
-    display: none;
-}
-
-.tag:hover {
-    background-color: deepskyblue;
 }

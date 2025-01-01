@@ -22,6 +22,7 @@ public class CommentService {
 
     private final PostQueryService postQueryService;
     private final MemberQueryService memberQueryService;
+    private final CommentQueryService commentQueryService;
 
     // 사용자가 작성한 댓글 수 조회
     public Long getCommentCountByMemberId(Long id) {
@@ -62,6 +63,32 @@ public class CommentService {
 
         // 댓글 저장
         commentRepository.save(comment);
+
+    }
+
+    // 대댓글 작성하기
+    @Transactional
+    public void newReply(NewCommentDto newCommentDto) {
+
+        // 글 작성자 ( 로그인 정보로 가져와야 함 )
+        Member member = memberQueryService.findMemberById(3L);
+
+        // 게시글 조회
+        Post post = postQueryService.findById(newCommentDto.getPostId());
+
+        // 부모 댓글 조회
+        Comment parentComment = commentQueryService.findCommentById(newCommentDto.getParentId());
+
+        // 새로운 댓글(comment) 생성
+        Comment newComment = Comment.builder()
+                .content(newCommentDto.getContent())
+                .member(member)
+                .post(post)
+                .parent(parentComment)
+                .build();
+
+        // 댓글 저장
+        commentRepository.save(newComment);
 
     }
 }

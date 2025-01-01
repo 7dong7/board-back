@@ -94,7 +94,7 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
                         comment.parent.isNull()
                 )
                 .orderBy(
-                        comment.id.desc() // 최신댓글 우선
+                        comment.id.asc() // 먼저 작성한 댓글 위로
                 )
                 .offset(commentPageable.getOffset()) // page number
                 .limit(commentPageable.getPageSize()) // page size

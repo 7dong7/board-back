@@ -31,8 +31,10 @@ public class CommentController {
     // 게시글에 댓글 작성하기 (comment)
     @PostMapping("/replies/new")
     public String newCommentReply(@ModelAttribute("newComment")NewCommentDto newCommentDto) {
-
         System.out.println("newCommentDto = " + newCommentDto);
+
+        // 대댓글 저장하기
+        commentService.newReply(newCommentDto);
 
         // 게시글로 돌아가기
         Long postId = newCommentDto.getPostId();
