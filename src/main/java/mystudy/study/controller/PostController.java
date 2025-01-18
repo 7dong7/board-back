@@ -1,16 +1,13 @@
 package mystudy.study.controller;
 
 import lombok.RequiredArgsConstructor;
-import mystudy.study.domain.dto.comment.CommentDto;
 import mystudy.study.domain.dto.comment.NewCommentDto;
 import mystudy.study.domain.dto.comment.ParentCommentDto;
-import mystudy.study.domain.dto.comment.ReplyCommentDto;
 import mystudy.study.domain.dto.post.NewPostDto;
 import mystudy.study.domain.dto.post.PostDto;
 import mystudy.study.domain.dto.post.PostSearchCondition;
 import mystudy.study.domain.dto.post.PostViewDto;
-import mystudy.study.repository.PostRepository;
-import mystudy.study.service.PostService;
+import mystudy.study.service.post.PostService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

@@ -1,4 +1,4 @@
-package mystudy.study.service;
+package mystudy.study.service.member;
 
 import lombok.RequiredArgsConstructor;
 import mystudy.study.domain.dto.comment.CommentDto;
@@ -7,13 +7,13 @@ import mystudy.study.domain.dto.member.MemberSearchCondition;
 import mystudy.study.domain.dto.member.SearchMemberDto;
 import mystudy.study.domain.dto.post.PostDto;
 import mystudy.study.domain.entity.Member;
-import mystudy.study.repository.MemberRepository;
+import mystudy.study.repository.member.MemberRepository;
+import mystudy.study.service.post.PostService;
+import mystudy.study.service.comment.CommentService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)

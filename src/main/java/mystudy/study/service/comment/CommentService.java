@@ -1,11 +1,13 @@
-package mystudy.study.service;
+package mystudy.study.service.comment;
 
 import lombok.RequiredArgsConstructor;
 import mystudy.study.domain.dto.comment.*;
 import mystudy.study.domain.entity.Comment;
 import mystudy.study.domain.entity.Member;
 import mystudy.study.domain.entity.Post;
-import mystudy.study.repository.CommentRepository;
+import mystudy.study.repository.comment.CommentRepository;
+import mystudy.study.service.member.MemberQueryService;
+import mystudy.study.service.post.PostQueryService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

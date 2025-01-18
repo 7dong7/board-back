@@ -1,4 +1,4 @@
-package mystudy.study.repository;
+package mystudy.study.repository.comment;
 
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
@@ -6,15 +6,11 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import mystudy.study.domain.dto.comment.*;
-import mystudy.study.domain.dto.post.PostDto;
-import mystudy.study.domain.dto.post.QPostDto;
-import mystudy.study.domain.entity.QComment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.support.PageableExecutionUtils;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.querydsl.jpa.JPAExpressions.select;

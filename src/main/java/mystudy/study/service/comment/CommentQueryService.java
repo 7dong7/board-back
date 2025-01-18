@@ -1,8 +1,8 @@
-package mystudy.study.service;
+package mystudy.study.service.comment;
 
 import lombok.RequiredArgsConstructor;
 import mystudy.study.domain.entity.Comment;
-import mystudy.study.repository.CommentRepository;
+import mystudy.study.repository.comment.CommentRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

@@ -7,7 +7,7 @@ import mystudy.study.domain.dto.member.MemberRegisterForm;
 import mystudy.study.domain.dto.member.MemberSearchCondition;
 import mystudy.study.domain.dto.member.SearchMemberDto;
 import mystudy.study.domain.entity.Member;
-import mystudy.study.service.MemberService;
+import mystudy.study.service.member.MemberService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

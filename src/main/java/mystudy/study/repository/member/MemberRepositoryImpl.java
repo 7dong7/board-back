@@ -1,4 +1,4 @@
-package mystudy.study.repository;
+package mystudy.study.repository.member;
 
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
@@ -32,7 +32,6 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
     // 사용자 조건 검색
     @Override
     public List<Member> searchMember(MemberSearchCondition condition) {
-
         return queryFactory
                 .select(member)
                 .from(member)
@@ -69,6 +68,18 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
         JPAQuery<Long> countQuery = countQuery(condition);
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
+    }
+
+    // 사용자 로그인
+    @Override
+    public Member login(String loginId, String password) {
+        return queryFactory.select(member)
+                .from(member)
+                .where(
+                        member.email.eq(loginId),
+                        member.password.eq(password)
+                )
+                .fetchOne();
     }
 
     // 정렬 조건 변환

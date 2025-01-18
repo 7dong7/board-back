@@ -1,8 +1,8 @@
-package mystudy.study.service;
+package mystudy.study.service.post;
 
 import lombok.RequiredArgsConstructor;
 import mystudy.study.domain.entity.Post;
-import mystudy.study.repository.PostRepository;
+import mystudy.study.repository.post.PostRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

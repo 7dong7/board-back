@@ -1,7 +1,6 @@
-package mystudy.study.repository;
+package mystudy.study.repository.comment;
 
 import mystudy.study.domain.dto.comment.CommentDto;
-import mystudy.study.domain.dto.comment.CommentViewDto;
 import mystudy.study.domain.dto.comment.ParentCommentDto;
 import mystudy.study.domain.dto.comment.ReplyCommentDto;
 import org.springframework.data.domain.Page;

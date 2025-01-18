@@ -1,4 +1,4 @@
-package mystudy.study.repository;
+package mystudy.study.repository.post;
 
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;

@@ -3,6 +3,8 @@ package mystudy.study.repository;
 import jakarta.persistence.EntityManager;
 import mystudy.study.domain.entity.Member;
 import mystudy.study.domain.entity.Post;
+import mystudy.study.repository.member.MemberRepository;
+import mystudy.study.repository.post.PostRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

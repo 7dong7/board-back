@@ -1,4 +1,4 @@
-package mystudy.study.service;
+package mystudy.study.service.post;
 
 import lombok.RequiredArgsConstructor;
 import mystudy.study.domain.dto.comment.ParentCommentDto;
@@ -9,7 +9,9 @@ import mystudy.study.domain.dto.post.PostSearchCondition;
 import mystudy.study.domain.dto.post.PostViewDto;
 import mystudy.study.domain.entity.Member;
 import mystudy.study.domain.entity.Post;
-import mystudy.study.repository.PostRepository;
+import mystudy.study.repository.post.PostRepository;
+import mystudy.study.service.comment.CommentService;
+import mystudy.study.service.member.MemberQueryService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

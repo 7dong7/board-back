@@ -2,11 +2,9 @@ package mystudy.study.controller;
 
 import lombok.RequiredArgsConstructor;
 import mystudy.study.domain.dto.comment.NewCommentDto;
-import mystudy.study.service.CommentService;
+import mystudy.study.service.comment.CommentService;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 

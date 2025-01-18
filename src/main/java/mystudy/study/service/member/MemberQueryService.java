@@ -1,8 +1,8 @@
-package mystudy.study.service;
+package mystudy.study.service.member;
 
 import lombok.RequiredArgsConstructor;
 import mystudy.study.domain.entity.Member;
-import mystudy.study.repository.MemberRepository;
+import mystudy.study.repository.member.MemberRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
