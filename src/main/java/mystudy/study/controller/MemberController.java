@@ -15,6 +15,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -37,8 +38,17 @@ public class MemberController {
 
     // 회원 가입 form
     @PostMapping("/new")
-    public String saveMember(@ModelAttribute("memberForm") MemberRegisterForm memberForm, BindingResult bindingResult) {
+    public String saveMember(@Validated @ModelAttribute("memberForm") MemberRegisterForm memberForm, BindingResult bindingResult) {
+        log.info("memberForm = {}", memberForm);
+        log.info("bindingResult = {}", bindingResult);
 
+        if (!memberForm.getPassword().equals(memberForm.getConfirmPassword())) {
+            bindingResult.reject("confirmPassword.noMatch","비밀번호가 같지 않습니다.");
+        }
+
+        if (bindingResult.hasErrors()) {
+            return "member/memberRegister";
+        }
         return "redirect:/members";
     }
     

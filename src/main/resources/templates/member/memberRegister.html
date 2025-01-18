@@ -16,19 +16,23 @@
             <div>
                 <label for="username">닉네임</label>
                 <input type="text" id="username" th:field="*{username}" placeholder="이름을 입력하세요" required />
+                <div th:errors="*{username}">닉네임 에러</div>
             </div>
             <div>
                 <label for="email">이메일</label>
                 <input type="email" id="email" th:field="*{email}" placeholder="예) example@domain.com" required />
+                <div th:errors="*{email}"></div>
             </div>
             <div>
                 <label for="password">비밀번호</label>
                 <input type="password" id="password" th:field="*{password}" placeholder="비밀번호를 입력하세요" required />
+                <div th:errors="*{password}"></div>
             </div>
             <div>
                 <label for="confirm-password">비밀번호 확인</label>
                 <input type="password" id="confirm-password" th:field="*{confirmPassword}"
                        placeholder="비밀번호를 다시 입력하세요" required />
+                <div th:errors="*{confirmPassword}"></div>
             </div>
             <button type="submit">가입하기</button>
 
