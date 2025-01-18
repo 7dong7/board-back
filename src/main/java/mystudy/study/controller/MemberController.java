@@ -34,7 +34,7 @@ public class MemberController {
     // 회원 가입 페이지
     @GetMapping("/new")
     public String newMemberForm(@ModelAttribute("memberForm") MemberRegisterForm memberForm) {
-        return "member/memberRegister";
+        return "pages/member/memberRegister";
     }
 
     // 회원 가입 form
@@ -50,7 +50,7 @@ public class MemberController {
 
         // 필드 에러가 담겨 있는 경우 다시 회원가입 페이지로
         if (bindingResult.hasErrors()) {
-            return "member/memberRegister";
+            return "pages/member/memberRegister";
         }
 
         // 멤버 생성
@@ -99,7 +99,7 @@ public class MemberController {
         // model 속성 추가
         model.addAttribute("memberList", memberList);
         model.addAttribute("searchParam", map);
-        return "member/members";
+        return "pages/member/members";
     }
 
 
@@ -151,7 +151,7 @@ public class MemberController {
         model.addAttribute("cs", cs); // 댓글 정렬 조건
         model.addAttribute("cd", cd); // 댓글 정렬 방향
         model.addAttribute("memberInfo", memberInfo);
-        return "member/memberAndPosts";
+        return "pages/member/memberAndPosts";
     }
 
 }

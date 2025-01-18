@@ -64,7 +64,7 @@ public class PostController {
 
         model.addAttribute("postPage", postPage);
         model.addAttribute("searchParam", map);
-        return "post/posts";
+        return "pages/post/posts";
     }
 
     // 게시글 내용 보기, 댓글, 대댓글 (페이징)
@@ -87,7 +87,7 @@ public class PostController {
 
         model.addAttribute("newComment", new NewCommentDto());
         model.addAttribute("post", postViewDto);
-        return "post/postView";
+        return "pages/post/postView";
     }
 
     // 새로운 글 작성 페이지
@@ -95,7 +95,7 @@ public class PostController {
     public String createPost(Model model) {
 
         model.addAttribute("newPost", new NewPostDto());
-        return "post/newPost";
+        return "pages/post/newPost";
     }
 
     // 새로운 게시글 작성

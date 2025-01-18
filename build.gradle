@@ -61,14 +61,14 @@ dependencies {
 	// Bean Validation 검증 (@NotNull, @Validated, 글로벌 메시지)
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 
+	// 타임 리프 Layout Dialect // 자동 최신 버전 공식 문서 확인
+	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.2.1'
+
 // 설정만 추가 아직 쓴적 없음
 
 
 	// H2 db 사용
 //	runtimeOnly 'com.h2database:h2'
-
-	// Thymeleaf Layout Dialect -- 타임리프 tiles
-//	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.2.1'
 
 	// Spring Security
 //	implementation 'org.springframework.boot:spring-boot-starter-security'

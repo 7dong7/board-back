@@ -26,7 +26,7 @@ public class LoginController {
     // 로그인 페이지
     @GetMapping("/login")
     public String loginForm(@ModelAttribute("loginForm")MemberLoginForm loginForm) {
-        return "login/login";
+        return "pages/login/login";
     }
 
     // 로그인
@@ -36,7 +36,7 @@ public class LoginController {
         log.info("loginForm: {}", loginForm);
 
         if (bindingResult.hasErrors()) {
-            return "login/login";
+            return "pages/login/login";
         }
 
         Member loginMember = loginService.login(loginForm.getLoginId(), loginForm.getPassword());
@@ -44,9 +44,8 @@ public class LoginController {
         // 로그인 실패 처리    아이디, 비번 DB 불일치
         if (loginMember == null) {
             bindingResult.reject("notFoundMember", "아이디 또는 비밀번호가 맞지 않습니다.");
-            return "login/login";
+            return "pages/login/login";
         }
-        log.info("loginMember: {}", loginMember.getUsername());
 
         // 로그인 성공 처리
             // 세션 생성
