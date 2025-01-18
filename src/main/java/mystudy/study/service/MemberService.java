@@ -7,9 +7,7 @@ import mystudy.study.domain.dto.member.MemberSearchCondition;
 import mystudy.study.domain.dto.member.SearchMemberDto;
 import mystudy.study.domain.dto.post.PostDto;
 import mystudy.study.domain.entity.Member;
-import mystudy.study.repository.CommentRepository;
 import mystudy.study.repository.MemberRepository;
-import mystudy.study.repository.PostRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -26,6 +24,8 @@ public class MemberService {
     
     // 다른 엔티티 서비스
     private final PostService postService;
+
+
     private final CommentService commentService;
     private final MemberQueryService memberQueryService;
 

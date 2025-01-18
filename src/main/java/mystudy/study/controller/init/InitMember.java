@@ -10,12 +10,9 @@ import mystudy.study.domain.entity.Member;
 import mystudy.study.domain.entity.Post;
 import mystudy.study.repository.MemberRepository;
 import mystudy.study.repository.MemberRepositoryImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Profile("local")
 @Component
@@ -39,26 +36,45 @@ public class InitMember {
 
         @Transactional
         public void init() {
-            Member member1 = new Member("member1", 10, "member1@naver.com");
-//            Member member2 = new Member("member2", 20, "member2@naver.com");
+            Member member1 = Member.builder()
+                    .email("member1@naver.com")
+                    .password("test!")
+                    .username("member1")
+                    .age(10)
+                    .build();
+
             em.persist(member1);
 
             // 새로운 사용자 추가
             for (int i = 2; i < 51; i++) {
-                Member member = new Member("member" + i, i, "member" + i + "@naver.com");
+                Member member = Member.builder()
+                        .email("member" + i + "@naver.com")
+                        .password("test!")
+                        .username("member" + i)
+                        .age(i)
+                        .build();
                 em.persist(member);
             }
 
             for (int i = 51; i < 101; i++) {
-                Member member = new Member("user" + i, i, "user" + i + "@gmail.com");
+                Member member = Member.builder()
+                        .email("user" + i + "@gmail.com")
+                        .password("test!")
+                        .username("user" + i)
+                        .age(i)
+                        .build();
                 em.persist(member);
             }
 
             for (int i = 101; i < 124; i++) {
-                Member member = new Member("postuser" + i, i, "postuser" + i + "@daum.net");
+                Member member = Member.builder()
+                        .email("postuser" + i + "@daum.com")
+                        .password("test!")
+                        .username("postuser" + i)
+                        .age(i)
+                        .build();
                 em.persist(member);
             }
-
 
             // 게시글 작성
             for ( int i = 1; i < 103; i++ ) {

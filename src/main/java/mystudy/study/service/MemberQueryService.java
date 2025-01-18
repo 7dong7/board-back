@@ -14,7 +14,6 @@ public class MemberQueryService {
     private final MemberRepository memberRepository;
 
     // id로 사용자 조회
-    @Transactional
     public Member findMemberById(Long memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("사용자가 존재하지 않습니다"));

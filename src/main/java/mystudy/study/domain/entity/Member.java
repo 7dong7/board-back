@@ -36,11 +36,11 @@ public class Member extends BaseTimeEntity {
     @Column(name = "member_id", updatable = false)
     private Long id;
 
-    private String username;
-//    private String password;
-
-    private int age;
     private String email;
+    private String password;
+
+    private String username;
+    private int age;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> posts = new ArrayList<>();
@@ -48,16 +48,17 @@ public class Member extends BaseTimeEntity {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
-    // 생성자
+
+    // ---- 생성자 ----
     @Builder
-    public Member(String username, int age, String email) {
+    public Member(String email, String password, String username, int age) {
+        this.email = email;
+        this.password = password;
         this.username = username;
         this.age = age;
-        this.email = email;
     }
 
     // ---- 메소드 ----
-
     // username 변경 메소드
     public void updateUsername(String username) {
         this.username = username;

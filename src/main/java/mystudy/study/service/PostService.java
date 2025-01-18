@@ -1,8 +1,6 @@
 package mystudy.study.service;
 
 import lombok.RequiredArgsConstructor;
-import mystudy.study.domain.dto.comment.CommentDto;
-import mystudy.study.domain.dto.comment.CommentViewDto;
 import mystudy.study.domain.dto.comment.ParentCommentDto;
 import mystudy.study.domain.dto.comment.ReplyCommentDto;
 import mystudy.study.domain.dto.post.NewPostDto;
@@ -11,10 +9,8 @@ import mystudy.study.domain.dto.post.PostSearchCondition;
 import mystudy.study.domain.dto.post.PostViewDto;
 import mystudy.study.domain.entity.Member;
 import mystudy.study.domain.entity.Post;
-import mystudy.study.repository.CommentRepository;
 import mystudy.study.repository.PostRepository;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +22,6 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class PostService {
-
 
     private final PostRepository postRepository;
     private final CommentService commentService;
