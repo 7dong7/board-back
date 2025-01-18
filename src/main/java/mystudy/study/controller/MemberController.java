@@ -6,6 +6,7 @@ import mystudy.study.domain.dto.member.MemberInfoDto;
 import mystudy.study.domain.dto.member.MemberRegisterForm;
 import mystudy.study.domain.dto.member.MemberSearchCondition;
 import mystudy.study.domain.dto.member.SearchMemberDto;
+import mystudy.study.domain.entity.Member;
 import mystudy.study.service.MemberService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -42,13 +43,27 @@ public class MemberController {
         log.info("memberForm = {}", memberForm);
         log.info("bindingResult = {}", bindingResult);
 
+        // 비밀번호 다시 입력 검증
         if (!memberForm.getPassword().equals(memberForm.getConfirmPassword())) {
-            bindingResult.reject("confirmPassword.noMatch","비밀번호가 같지 않습니다.");
+            bindingResult.rejectValue("confirmPassword","confirmPassword.noMatch", "비밀번호가 같지 않습니다.");
         }
 
+        // 필드 에러가 담겨 있는 경우 다시 회원가입 페이지로
         if (bindingResult.hasErrors()) {
             return "member/memberRegister";
         }
+
+        // 멤버 생성
+        Member member = Member.builder()
+                .email(memberForm.getEmail())
+                .password(memberForm.getPassword())
+                .username(memberForm.getUsername())
+                .age(10)
+                .build();
+
+        // 회원 가입
+        memberService.saveMember(member);
+
         return "redirect:/members";
     }
     

@@ -27,28 +27,29 @@ class MemberRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        // 사용자 등록
-        Member member1 = new Member("member1", 10, "member1@naver.com");
-        Member member2 = new Member("member2", 20, "member2@naver.com");
-        Member member3 = new Member("Member3", 30, "Member3@naver.com");
-        Member member4 = new Member("Member4", 40, "Member4@naver.com");
-        Member user1 = new Member("user1", 10, "user1@naver.com");
-        Member user2 = new Member("user2", 20, "user2@naver.com");
-        Member user3 = new Member("User3", 30, "User3@naver.com");
+        // 데이터 입력
+        Member member1 = Member.builder()
+                .email("member1@naver.com")
+                .password("test!")
+                .username("memberi")
+                .age(1)
+                .build();
+        em.persist(member1);
 
-        memberRepository.save(member1);
-        memberRepository.save(member2);
-        memberRepository.save(member3);
-        memberRepository.save(member4);
-        memberRepository.save(user1);
-        memberRepository.save(user2);
-        memberRepository.save(user3);
-        
+        for (int i = 2; i < 5; i++) {
+            Member member = Member.builder()
+                    .email("member" + i + "@naver.com")
+                    .password("test!")
+                    .username("member" + i)
+                    .age(i)
+                    .build();
+            em.persist(member);
+        }
+        // 사용자 등록
+
         // 글 작성
         Post post1 = new Post("새로운 글작성", "새로운 글이 작성되었습니다.", member1);
-
         postRepository.save(post1);
-
     }
 
     // 기본 테스트

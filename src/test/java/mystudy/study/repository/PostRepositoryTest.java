@@ -33,7 +33,8 @@ class PostRepositoryTest {
     @BeforeEach
     void setUp() {
         // 사용자 등록
-        Member member1 = new Member("member1", 10, "member1@naver.com");
+
+        Member member1 = new Member("member1@naver.com", "test!", "member1", 10);
 
         // 글 작성
         Post post1 = new Post("새로운 글작성1", "새로운 글이 작성되었습니다1.", member1);

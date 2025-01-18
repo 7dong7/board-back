@@ -1,14 +1,15 @@
 package mystudy.study.domain.dto.member;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.Range;
 
 @Data
 public class MemberRegisterForm {
 
+    @Pattern(regexp = "^[^\\s]+$",
+            message = "공백 문자를 포함할 수 없습니다.")
     @NotBlank(message = "공백은 사용할 수 없습니다.")
     private String username;
 

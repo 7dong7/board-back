@@ -2,6 +2,7 @@ package mystudy.study.domain.entity;
 
 import jakarta.persistence.EntityManager;
 import mystudy.study.repository.MemberRepository;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,17 +27,16 @@ class MemberTest {
     @BeforeEach
     void setUp() {
         // 데이터 입력
-        Member member1 = new Member("member1", 10, "member1@naver.com");
-        Member member2 = new Member("member2", 20, "member2@naver.com");
-        Member member3 = new Member("member3", 30, "member3@naver.com");
-        Member member4 = new Member("member4", 40, "member4@naver.com");
-
-        memberRepository.save(member1);
-        memberRepository.save(member2);
-        memberRepository.save(member3);
-        memberRepository.save(member4);
+        for (int i = 1; i < 4; i++) {
+            Member member = Member.builder()
+                    .email("member" + i + "@naver.com")
+                    .password("test!")
+                    .username("member" + i)
+                    .age(i)
+                    .build();
+            em.persist(member);
+        }
     }
-
 
     // 생성날짜, 수정날짜 테스트
     @Test
@@ -49,6 +49,23 @@ class MemberTest {
             System.out.println("member.getUpdated_at() = " + member.getUpdatedAt());
             System.out.println("member = " + member);
         }
+    }
+    
+    // 사용자 회원가입 테스트
+    @Test
+    public void saveMemberTest() throws Exception{
+        Member member = Member.builder()
+                .email("test@gmail.com")
+                .password("test!")
+                .username("testuser")
+                .age(10)
+                .build();
+        // 사용자 등록
+        memberRepository.save(member);
 
+        Member findMember = memberRepository.findByUsername("testuser")
+                .orElseGet(() -> null);
+
+        Assertions.assertThat(findMember).isEqualTo(member);
     }
 }

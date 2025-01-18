@@ -29,6 +29,11 @@ public class MemberService {
     private final CommentService commentService;
     private final MemberQueryService memberQueryService;
 
+    // 사용자 등록
+    @Transactional
+    public void saveMember(Member member) {
+        memberRepository.save(member);
+    }
 
     // 사용자 페이징
     public Page<SearchMemberDto> getMemberPage(MemberSearchCondition condition, Pageable pageable) {
@@ -64,4 +69,6 @@ public class MemberService {
                 .commentPage(commentPage)
                 .build();
     }
+
+
 }
