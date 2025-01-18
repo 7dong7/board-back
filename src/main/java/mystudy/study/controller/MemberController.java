@@ -1,7 +1,9 @@
 package mystudy.study.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import mystudy.study.domain.dto.member.MemberInfoDto;
+import mystudy.study.domain.dto.member.MemberRegisterForm;
 import mystudy.study.domain.dto.member.MemberSearchCondition;
 import mystudy.study.domain.dto.member.SearchMemberDto;
 import mystudy.study.service.MemberService;
@@ -12,15 +14,14 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/members")
@@ -28,7 +29,20 @@ public class MemberController {
 
     private final MemberService memberService;
 
+    // 회원 가입 페이지
+    @GetMapping("/new")
+    public String newMemberForm(@ModelAttribute("memberForm") MemberRegisterForm memberForm) {
+        return "member/memberRegister";
+    }
 
+    // 회원 가입 form
+    @PostMapping("/new")
+    public String saveMember(@ModelAttribute("memberForm") MemberRegisterForm memberForm, BindingResult bindingResult) {
+
+        return "redirect:/members";
+    }
+    
+    
     // 사용자 검색
     @GetMapping
     public String getMemberPage(

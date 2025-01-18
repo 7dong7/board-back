@@ -58,10 +58,11 @@ dependencies {
 	// 타임 리프
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
+	// Bean Validation 검증 (@NotNull, @Validated, 글로벌 메시지)
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
 // 설정만 추가 아직 쓴적 없음
 
-	// @NotEmpty 사용
-//	implementation 'org.springframework.boot:spring-boot-starter-validation'
 
 	// H2 db 사용
 //	runtimeOnly 'com.h2database:h2'

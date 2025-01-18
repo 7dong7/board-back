@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+
+<link rel="stylesheet" href="/css/member/memberRegister.css"/> <!-- css -->
+
+<head>
+    <meta charset="UTF-8">
+    <title>회원 가입</title>
+</head>
+
+<body>
+    <div class="signup-container">
+        <h1>회원가입</h1>
+        <form class="signup-form" action="/members/new" method="POST" th:object="${memberForm}">
+            <div>
+                <label for="username">닉네임</label>
+                <input type="text" id="username" th:field="*{username}" placeholder="이름을 입력하세요" required />
+            </div>
+            <div>
+                <label for="email">이메일</label>
+                <input type="email" id="email" th:field="*{email}" placeholder="예) example@domain.com" required />
+            </div>
+            <div>
+                <label for="password">비밀번호</label>
+                <input type="password" id="password" th:field="*{password}" placeholder="비밀번호를 입력하세요" required />
+            </div>
+            <div>
+                <label for="confirm-password">비밀번호 확인</label>
+                <input type="password" id="confirm-password" th:field="*{confirmPassword}"
+                       placeholder="비밀번호를 다시 입력하세요" required />
+            </div>
+            <button type="submit">가입하기</button>
+
+            <div class="extra-link">
+                이미 회원이신가요? <a href="/login">로그인</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
