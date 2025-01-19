@@ -1,13 +1,16 @@
-/* 공통 배경, 컨테이너 스타일 (회원가입과 동일) */
-body {
-    min-height: 100vh;
+/* layout 내용 */
+.layout-main {
     display: flex;
-    align-items: center;
+
+    /* 가로 중앙 정렬 */
     justify-content: center;
-    background: #f3f5f7;
+    /* 세로 중앙 정렬 */
+    /*align-items: center;*/
+    /* 화면 전체 높이 */
+    /*height: 100vh;*/
 }
 
-.signup-container { /* 이름은 그대로 둬도 되고, login-container로 바꿀 수도 있음 */
+.signup-container {
     background-color: #fff;
     width: 500px;
     padding: 2rem;

@@ -1,17 +1,39 @@
 <!DOCTYPE html>
 <html lang="ko"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
 
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <!-- css -->
-    <link rel="stylesheet" href="/css/fragments/header.css">
 </head>
 
 <body>
-    <div th:fragment="header">
-        <h1>fragment 헤더가 들어옴</h1>
-    </div>
+    <header th:fragment="header">
+        <!-- CSS -->
+        <link rel="stylesheet" href="/css/fragments/header.css">
+
+        <!-- header content -->
+        <div class="header-left">
+            <nav>
+                <ul>
+                    <!-- 게시글 목록 링크 -->
+                    <li><a th:href="@{/posts}">게시글 목록</a></li>
+                    <!-- 필요시 추가 네비게이션 링크를 여기 추가 -->
+                </ul>
+            </nav>
+        </div>
+        <div class="header-right">
+            <!-- 로그인 상태에 따른 표시 -->
+            <span >
+                    <span >사용자명</span>님,
+                    <a th:href="@{/logout}">로그아웃</a>
+                </span>
+            <span >
+                    <a th:href="@{/login}">로그인</a>
+                </span>
+        </div>
+    </header>
 </body>
 </html>
