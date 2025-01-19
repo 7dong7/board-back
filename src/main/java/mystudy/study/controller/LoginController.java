@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import mystudy.study.domain.dto.member.login.LoginSessionInfo;
 import mystudy.study.domain.dto.member.login.MemberLoginForm;
 import mystudy.study.domain.entity.Member;
 import mystudy.study.service.login.LoginService;
@@ -48,12 +49,34 @@ public class LoginController {
         }
 
         // 로그인 성공 처리
-            // 세션 생성
+        
+        // 로그인 사용자 정보 처리
+        LoginSessionInfo sessionMemberInfo = LoginSessionInfo.builder()
+                .id(loginMember.getId())
+                .username(loginMember.getUsername())
+                .build();
+
+        // 세션 생성
         HttpSession session = request.getSession();
             // 로그인 회원 정보 저장
-        session.setAttribute(SessionConst.LOGIN_MEMBER_ID, loginMember.getId());
+        session.setAttribute(SessionConst.LOGIN_MEMBER_ID, sessionMemberInfo);
 
-        return "redirect:/members";
+        log.info("sessionMemberInfo: {}", session.getAttribute(SessionConst.LOGIN_MEMBER_ID));
+        return "redirect:/posts";
+    }
+
+    @PostMapping("/logout")
+    public String logout(HttpServletRequest request) {
+
+        // 세션 가져오기  없으면 생성 X
+        HttpSession session = request.getSession(false);
+
+        // 세션의 값이 없는 경우
+        if (session != null) {
+            session.invalidate();
+        }
+
+        return "redirect:/posts";
     }
 
 

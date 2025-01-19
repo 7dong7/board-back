@@ -20,19 +20,22 @@
                 <ul>
                     <!-- 게시글 목록 링크 -->
                     <li><a th:href="@{/posts}">게시글 목록</a></li>
-                    <!-- 필요시 추가 네비게이션 링크를 여기 추가 -->
                 </ul>
             </nav>
         </div>
         <div class="header-right">
             <!-- 로그인 상태에 따른 표시 -->
-            <span >
-                    <span >사용자명</span>님,
-                    <a th:href="@{/logout}">로그아웃</a>
-                </span>
-            <span >
-                    <a th:href="@{/login}">로그인</a>
-                </span>
+            <span th:if="${session.loginMemberId != null}">
+                <span th:class="header-right-username" th:text="${session.loginMemberId.username}">사용자명</span>
+                <form th:action="@{/logout}" method="post">
+                    <button th:class="logout-btn" type="submit">
+                        로그아웃
+                    </button>
+                </form>
+            </span>
+            <span th:unless="${session.loginMemberId != null}">
+                <a th:href="@{/login}">로그인</a>
+            </span>
         </div>
     </header>
 </body>

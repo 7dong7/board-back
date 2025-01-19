@@ -5,6 +5,7 @@ header {
     padding: 1rem 2rem;
     background-color: #2c3e50;
     border-bottom: 1px solid #f2f2f2;
+    font-weight: bold;
 }
 
 /* 좌측 네비게이션 스타일 */
@@ -21,26 +22,66 @@ header {
 
 .header-left nav ul li a {
     text-decoration: none;
-    color: #ffffff;
-    font-weight: bold;
-}
-
-.header-left nav ul li a:hover {
-    text-decoration: underline;
 }
 
 /* 우측 로그인/로그아웃 영역 스타일 */
-.header-right span {
-    font-size: 1rem;
+.header-right-username {
     color: #ffffff;
-}
-
-.header-right a {
-    margin-left: 1rem;
     text-decoration: none;
-    color: #ffffff;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    font-weight:normal;
 }
 
+.header-right-username:hover {
+    background-color: #d6dc94;
+    color: #2c3e50;
+    border-radius: 4px;
+}
+
+.header-right span,
+.header-right form {
+    display: flex;              /* span과 form을 flex 컨테이너로 설정 */
+    align-items: center;        /* 수직 중앙 정렬 */
+    gap: 0.5rem;                /* 사용자명과 버튼 사이 간격 */
+}
+
+.header-left a,
+.header-right a {
+    color: #ffffff;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.header-left a:hover,
 .header-right a:hover {
-    text-decoration: underline;
+    background-color: #d6dc94;
+    color: #2c3e50;
+    border-radius: 4px;
+}
+
+/* 로그아웃 버튼 스타일 */
+.logout-btn {
+    color: #ffffff;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+
+    /* 버튼 기본 스타일 초기화 */
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 11pt;       /* 필요에 따라 조정 */
+    font-weight: bold;     /* 링크와 유사하게 */
+}
+
+
+/* 로그아웃 버튼 호버 효과 */
+.logout-btn:hover {
+    background-color: #d6dc94;
+    color: #2c3e50;
 }
