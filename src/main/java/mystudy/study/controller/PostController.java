@@ -84,14 +84,13 @@ public class PostController {
 
         List<ParentCommentDto> content = postViewDto.getCommentDtoPage().getContent();
 
-
         model.addAttribute("newComment", new NewCommentDto());
         model.addAttribute("post", postViewDto);
         return "pages/post/postView";
     }
 
     // 새로운 글 작성 페이지
-    @GetMapping("/new")
+    @GetMapping("/new/post")
     public String createPost(Model model) {
 
         model.addAttribute("newPost", new NewPostDto());
@@ -99,7 +98,7 @@ public class PostController {
     }
 
     // 새로운 게시글 작성
-    @PostMapping
+    @PostMapping("/new/post")
     public String createPost(@ModelAttribute("newPost") NewPostDto newPostDto) {
         System.out.println("newPostDto = " + newPostDto);
 
