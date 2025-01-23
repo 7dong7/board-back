@@ -15,7 +15,7 @@
     <main class="layout-main" layout:fragment="content">
         <div class="signup-container" >
             <h1>로그인</h1>
-            <form class="signup-form" action="/login" method="POST" th:object="${loginForm}">
+            <form class="signup-form" action="/login" th:action method="POST" th:object="${loginForm}">
                 <!-- 아이디 -->
                 <div>
                     <label for="username">아이디</label>

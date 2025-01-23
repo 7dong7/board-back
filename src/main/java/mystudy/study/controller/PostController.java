@@ -1,13 +1,18 @@
 package mystudy.study.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import mystudy.study.domain.dto.comment.NewCommentDto;
 import mystudy.study.domain.dto.comment.ParentCommentDto;
+import mystudy.study.domain.dto.member.login.LoginSessionInfo;
 import mystudy.study.domain.dto.post.NewPostDto;
 import mystudy.study.domain.dto.post.PostDto;
 import mystudy.study.domain.dto.post.PostSearchCondition;
 import mystudy.study.domain.dto.post.PostViewDto;
 import mystudy.study.service.post.PostService;
+import mystudy.study.session.SessionConst;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("posts")
@@ -99,10 +105,16 @@ public class PostController {
 
     // 새로운 게시글 작성
     @PostMapping("/new/post")
-    public String createPost(@ModelAttribute("newPost") NewPostDto newPostDto) {
+    public String createPost(@ModelAttribute("newPost") NewPostDto newPostDto,
+                             HttpServletRequest request) {
         System.out.println("newPostDto = " + newPostDto);
+        
+        // 사용자 id값
+        HttpSession session = request.getSession();
+        LoginSessionInfo loginSessionInfo = (LoginSessionInfo) session.getAttribute(SessionConst.LOGIN_MEMBER_ID);
+        log.info("LoginSessionInfo: {}", loginSessionInfo);
 
-        postService.createPost(newPostDto);
+        postService.createPost(newPostDto, loginSessionInfo.getId());
 
         return "redirect:/posts";
     }

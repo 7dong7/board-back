@@ -3,6 +3,7 @@ package mystudy.study.service.post;
 import lombok.RequiredArgsConstructor;
 import mystudy.study.domain.dto.comment.ParentCommentDto;
 import mystudy.study.domain.dto.comment.ReplyCommentDto;
+import mystudy.study.domain.dto.member.login.LoginSessionInfo;
 import mystudy.study.domain.dto.post.NewPostDto;
 import mystudy.study.domain.dto.post.PostDto;
 import mystudy.study.domain.dto.post.PostSearchCondition;
@@ -88,10 +89,10 @@ public class PostService {
 
     // 새로은 게시글 작성
     @Transactional
-    public void createPost(NewPostDto newPostDto) {
+    public void createPost(NewPostDto newPostDto, Long writeMemberId) {
 
-        // 사용자 정보 ( 로그인 정보로 가져오도 )
-        Member member = memberQueryService.findMemberById(3L);
+        // 사용자 정보 ( 로그인 정보로 가져옴 )
+        Member member = memberQueryService.findMemberById(writeMemberId);
 
         Post post = Post.builder()
                 .title(newPostDto.getTitle())
@@ -100,30 +101,5 @@ public class PostService {
                 .build();
 
         member.getPosts().add(post);
-
-/*
-* public class NewPostDto {
-    private String title; // 게시글 제목
-    private String content; // 게시글 내용
-* */
-
-    /*
-        @Column(name = "post_id", updatable = false)
-        private Long id;
-        private String title;
-
-        @Lob
-        private String content;
-        private Integer viewCount = 0;
-
-        @ToString.Exclude
-        @ManyToOne(fetch = FetchType.LAZY)
-        @JoinColumn(name = "member_id", updatable = false)
-        private Member member;
-
-        @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-        private List<Comment> comments = new ArrayList<>();
-    * */
-
     }
 }

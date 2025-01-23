@@ -1,4 +1,4 @@
-package mystudy.study.controller;
+package mystudy.study.controller.login;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -36,6 +36,7 @@ public class LoginController {
     public String login(@Validated @ModelAttribute("loginForm") MemberLoginForm loginForm, BindingResult bindingResult,
                         @RequestParam(defaultValue = "/") String redirectURL,
                         HttpServletRequest request) {
+        log.info("redirectURL {}", redirectURL);
         log.info("loginForm: {}", loginForm);
 
         if (bindingResult.hasErrors()) {
@@ -63,8 +64,8 @@ public class LoginController {
             // 로그인 회원 정보 저장
         session.setAttribute(SessionConst.LOGIN_MEMBER_ID, sessionMemberInfo);
 
-
         log.info("sessionMemberInfo: {}", session.getAttribute(SessionConst.LOGIN_MEMBER_ID));
+        log.info("redirectURL: {}", redirectURL);
         return "redirect:"+redirectURL;
     }
 
@@ -79,7 +80,7 @@ public class LoginController {
             session.invalidate();
         }
 
-        return "redirect:/posts/list";
+        return "redirect:/";
     }
 
 

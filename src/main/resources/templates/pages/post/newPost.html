@@ -1,37 +1,41 @@
 <!DOCTYPE html>
 <html lang="ko"
-      xmlns:th="http://www.thymeleaf.org">
-
-<link rel="stylesheet" href="/css/pages/post/newPost.css"/> <!-- CSS 파일 -->
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
 
 <head>
     <meta charset="UTF-8">
     <title>글 작성</title>
+    <!-- CSS 파일 -->
+    <link rel="stylesheet" href="/css/pages/post/newPost.css"/>
 </head>
 
 <body>
-<div class="container">
-    <h1>글 작성</h1>
+    <main class="layout-main" layout:fragment="content">
+        <div class="container">
+            <h1>글 작성</h1>
 
-    <form th:action="@{/posts/new}" th:object="${newPost}" method="post">
-        <!-- 제목 -->
-        <div class="form-group">
-            <label for="title">제목</label>
-            <input type="text" id="title" th:field="*{title}" placeholder="제목을 입력하세요" required>
-        </div>
+            <form th:action="@{/posts/new/post}" th:object="${newPost}" method="post">
+                <!-- 제목 -->
+                <div class="form-group">
+                    <label for="title">제목</label>
+                    <input type="text" id="title" th:field="*{title}" placeholder="제목을 입력하세요" required>
+                </div>
 
-        <!-- 내용 -->
-        <div class="form-group">
-            <label for="content">내용</label>
-            <textarea id="content" rows="10" th:field="*{content}" placeholder="내용을 입력하세요" required></textarea>
-        </div>
+                <!-- 내용 -->
+                <div class="form-group">
+                    <label for="content">내용</label>
+                    <textarea id="content" rows="10" th:field="*{content}" placeholder="내용을 입력하세요" required></textarea>
+                </div>
 
-        <!-- 버튼 -->
-        <div class="button-container">
-            <button type="submit" class="submit-button">작성</button>
-            <a href="/posts" class="cancel-button">취소</a>
+                <!-- 버튼 -->
+                <div class="button-container">
+                    <button type="submit" class="submit-button">작성</button>
+                    <a href="/posts" class="cancel-button">취소</a>
+                </div>
+            </form>
         </div>
-    </form>
-</div>
+    </main>
 </body>
 </html>

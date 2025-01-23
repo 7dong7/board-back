@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import mystudy.study.session.SessionConst;
+import org.springframework.http.HttpMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -18,8 +19,11 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
         // 클라이언트가 접속하려는 URI 의 경로
             // 로그인이 되어있지 않은 경우 이 값을 사용하여 로그인후에 이 URI 로 돌려보내준다
         String requestURI = request.getRequestURI();
+            // 요청 method 확인 post 인 경우 요청의 url 이 클라이언트를 돌려보내기에 적절하지 않을 수 있음
+        String requestMethod = request.getMethod();
+        log.info("LoginCheckInterceptor 실행 [{}][{}]", requestMethod, requestURI);
 
-        log.info("LoginCheckInterceptor 실행 {}", requestURI);
+
         // false 는 session 이 이미 있으면 가져오고, 없으면 생성하지 말라는 것
         HttpSession session = request.getSession(false);
         
@@ -27,6 +31,17 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
         if (session == null || session.getAttribute(SessionConst.LOGIN_MEMBER_ID) == null ) {
         // session 이 null 이거나 session 안에 저장된 loginMemberId의 값이 null 인 경우는 미인증 사용자
             log.info("비 로그인 사용자의 요청");
+
+            if ("POST".equals(requestMethod)) {
+                String referer = request.getHeader("Referer");
+
+                log.info("header Referer {}: ", referer);
+                if(referer != null ) {
+                    requestURI = referer;
+                }
+            }
+
+            log.info("interceptor redirectURL: {}", requestURI);
             response.sendRedirect("/login?redirectURL="+requestURI);
             return false; // preHandle 의 리턴 값이 false 이면 더 이상 로직진행 금지
         }
