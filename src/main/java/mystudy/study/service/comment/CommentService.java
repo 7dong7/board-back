@@ -46,12 +46,12 @@ public class CommentService {
         return commentRepository.getCommentByParentId(parentIdList);
     }
 
-    // postId 댓글 작성
+    // 게시물에 댓글 작성
     @Transactional
-    public void newComment(NewCommentDto newCommentDto) {
+    public void newComment(NewCommentDto newCommentDto, Long loginMemberId) {
 
-        // 글 작성자 ( 로그인 정보로 가져와야 함 )
-        Member member = memberQueryService.findMemberById(3L);
+        // 글 작성자   로그인 사용자
+        Member member = memberQueryService.findMemberById(loginMemberId);
 
         // 게시글 조회
         Post post = postQueryService.findById(newCommentDto.getPostId());
@@ -65,15 +65,14 @@ public class CommentService {
 
         // 댓글 저장
         commentRepository.save(comment);
-
     }
 
-    // 대댓글 작성하기
+    // 게시물 대댓글 작성하기
     @Transactional
-    public void newReply(NewCommentDto newCommentDto) {
+    public void newReply(NewCommentDto newCommentDto, Long loginMemberId) {
 
         // 글 작성자 ( 로그인 정보로 가져와야 함 )
-        Member member = memberQueryService.findMemberById(3L);
+        Member member = memberQueryService.findMemberById(loginMemberId);
 
         // 게시글 조회
         Post post = postQueryService.findById(newCommentDto.getPostId());
@@ -91,6 +90,5 @@ public class CommentService {
 
         // 댓글 저장
         commentRepository.save(newComment);
-
     }
 }

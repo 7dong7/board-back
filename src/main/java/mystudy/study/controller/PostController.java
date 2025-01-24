@@ -110,7 +110,7 @@ public class PostController {
         System.out.println("newPostDto = " + newPostDto);
         
         // 사용자 id값
-        HttpSession session = request.getSession();
+        HttpSession session = request.getSession(false);
         LoginSessionInfo loginSessionInfo = (LoginSessionInfo) session.getAttribute(SessionConst.LOGIN_MEMBER_ID);
         log.info("LoginSessionInfo: {}", loginSessionInfo);
 
