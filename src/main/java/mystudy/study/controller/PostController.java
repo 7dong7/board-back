@@ -142,8 +142,19 @@ public class PostController {
 
     // 글 수정 페이지
     @PostMapping("/{id}/edit")
-    public String updatePost() {
-        String postId = "13";
+    public String updatePost(@PathVariable("id") Long postId,
+                             @ModelAttribute("postEditForm") PostEditForm postEditForm,
+                             HttpServletRequest request) {
+        log.info("postId = " + postId);
+        log.info("postEditForm = " + postEditForm);
+
+        // 수정 게시글 로그인 사용자의 게시글인지 확인
+        HttpSession session = request.getSession(false);
+        LoginSessionInfo loginSessionInfo = (LoginSessionInfo) session.getAttribute(SessionConst.LOGIN_MEMBER_ID);
+
+        // 수정하고자 하는 게시글 내용
+        PostEditForm valid = postQueryService.findByPostIdAndMemberId(postId, loginSessionInfo.getId());
+        log.info("postEditForm = " + postEditForm);
 
         return "redirect:/posts/" + postId;
     }
