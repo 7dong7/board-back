@@ -20,6 +20,11 @@ public class PostQueryService {
                 .orElseThrow( () -> new IllegalArgumentException("해당하는 게시글이 존재하지 않습니다."));
     }
 
+    // postId 로 게시글 조회 (fetch join) queryDSL
+    public Post findByPostId(Long postId) {
+        return postRepository.findByPostId(postId);
+    }
+    
     // postId 와 memberId로 게시글 조회
     public PostEditForm findByPostIdAndMemberId(Long postId, Long memberId) {
         return postRepository.findByPostIdAndMemberId(postId, memberId);

@@ -19,6 +19,10 @@ body {
     text-align: center;
 }
 
+.post-info {
+    margin-bottom:4rem;
+}
+
 .board-title {
     font-size: 24px;
     font-weight: bold;
@@ -30,6 +34,10 @@ body {
     border: none;
     border-top: 2px solid #2c3e50;
 }
+.below-divider {
+    margin-top:1rem;
+}
+
 
 .post-title {
     font-size: 18px;
@@ -59,11 +67,32 @@ body {
 }
 
 .post-content {
-    margin: 5rem 0;
     font-size: 16px;
     line-height: 1.8;
     color: #000000;
 }
+
+/* 게시글 수정하기 버튼 */
+.edit-btn-div {
+    margin:8rem 0 1rem 0;
+    display:flex;
+    justify-content: center;
+}
+
+.edit-btn {
+    display:inline-block;
+    padding: 0.3rem 1rem;
+    background-color: #6c757d;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.edit-btn:hover {
+    background-color: #5a6268;
+}
+
 
 /* 댓글 */
 .comments h2 {

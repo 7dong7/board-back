@@ -1,6 +1,7 @@
 package mystudy.study.service.post;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import mystudy.study.domain.dto.comment.ParentCommentDto;
 import mystudy.study.domain.dto.comment.ReplyCommentDto;
 import mystudy.study.domain.dto.member.login.LoginSessionInfo;
@@ -15,9 +16,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.nio.file.AccessDeniedException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -100,5 +103,16 @@ public class PostService {
         member.getPosts().add(post);
     }
 
+    // 게시글 수정하기
+    @Transactional
+    public void postEdit(PostEditForm postEditForm, Long memberId, Long postId) throws AccessDeniedException {
+        Post post = postQueryService.findByPostId(postId);
+        
+        if (!post.getMember().getId().equals(memberId)) { // 로그인 사용자와 게시글의 사용자가 일치하지 않음
+            throw new AccessDeniedException("해당 게시글의 수정 권한이 없습니다");
+        }
 
+        // 게시글 수정
+        post.editContent(postEditForm.getContent());
+    }
 }

@@ -44,5 +44,10 @@ public class Post extends BaseEntity {
     public void increaseViewCount() {
         viewCount++;
     }
+
+    // 게시글 내용 수정
+    public void editContent(String content) {
+        this.content = content;
+    }
     
 }

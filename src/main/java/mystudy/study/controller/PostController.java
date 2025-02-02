@@ -20,6 +20,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.file.AccessDeniedException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -106,12 +107,11 @@ public class PostController {
     @PostMapping("/new/post")
     public String createPost(@ModelAttribute("newPost") NewPostDto newPostDto,
                              HttpServletRequest request) {
-        System.out.println("newPostDto = " + newPostDto);
-        
+        log.info("newPostDto: {}", newPostDto);
+
         // 사용자 id값
         HttpSession session = request.getSession(false);
         LoginSessionInfo loginSessionInfo = (LoginSessionInfo) session.getAttribute(SessionConst.LOGIN_MEMBER_ID);
-        log.info("LoginSessionInfo: {}", loginSessionInfo);
 
         postService.createPost(newPostDto, loginSessionInfo.getId());
 
@@ -123,8 +123,6 @@ public class PostController {
     public String updatePostPage(@PathVariable("id") Long postId,
                                  HttpServletRequest request,
                                  Model model) {
-        log.info("postId = " + postId);
-        
         // 수정 게시글 로그인 사용자의 게시글인지 확인
         HttpSession session = request.getSession(false);
         LoginSessionInfo loginSessionInfo = (LoginSessionInfo) session.getAttribute(SessionConst.LOGIN_MEMBER_ID);
@@ -144,17 +142,14 @@ public class PostController {
     @PostMapping("/{id}/edit")
     public String updatePost(@PathVariable("id") Long postId,
                              @ModelAttribute("postEditForm") PostEditForm postEditForm,
-                             HttpServletRequest request) {
-        log.info("postId = " + postId);
+                             HttpServletRequest request) throws AccessDeniedException {
         log.info("postEditForm = " + postEditForm);
 
         // 수정 게시글 로그인 사용자의 게시글인지 확인
         HttpSession session = request.getSession(false);
         LoginSessionInfo loginSessionInfo = (LoginSessionInfo) session.getAttribute(SessionConst.LOGIN_MEMBER_ID);
 
-        // 수정하고자 하는 게시글 내용
-        PostEditForm valid = postQueryService.findByPostIdAndMemberId(postId, loginSessionInfo.getId());
-        log.info("postEditForm = " + postEditForm);
+        postService.postEdit(postEditForm, loginSessionInfo.getId(), postId);
 
         return "redirect:/posts/" + postId;
     }

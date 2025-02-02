@@ -7,6 +7,7 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import mystudy.study.domain.dto.post.*;
+import mystudy.study.domain.entity.Post;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -143,6 +144,19 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                 .where(
                         post.id.eq(postId),
                         post.member.id.eq(memberId)
+                )
+                .fetchOne();
+    }
+
+    // postId로 게시글 조회 fetch join
+    @Override
+    public Post findByPostId(Long postId) {
+
+        return queryFactory.select(post)
+                .from(post)
+                .leftJoin(post.member, member).fetchJoin()
+                .where(
+                        post.id.eq(postId)
                 )
                 .fetchOne();
     }
