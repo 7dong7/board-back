@@ -139,4 +139,12 @@ public class PostController {
         model.addAttribute("postEditForm", postEditForm);
         return "pages/post/updatePost";
     }
+
+    // 글 수정 페이지
+    @PostMapping("/{id}/edit")
+    public String updatePost() {
+        String postId = "13";
+
+        return "redirect:/posts/" + postId;
+    }
 }

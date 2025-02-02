@@ -13,7 +13,7 @@
 <body>
     <main class="layout-main" layout:fragment="content">
         <div class="container">
-            <h1 class="board-title">글 작성</h1>
+            <h1 class="board-title">글 수정</h1>
 
             <form th:action="@{/posts/{id}/edit(id=${postEditForm.postId})}" th:object="${postEditForm}" method="post">
                 <!-- 제목 -->
@@ -37,7 +37,7 @@
 
                 <!-- 버튼 -->
                 <div class="button-container">
-                    <button type="submit" class="submit-button">수정하기</button>
+                    <button type="submit" class="submit-button">수정</button>
                     <a th:href="@{/posts/{id}(id=${postEditForm.postId})}" class="cancel-button">취소</a>
                 </div>
             </form>
