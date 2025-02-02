@@ -7,10 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import mystudy.study.domain.dto.comment.NewCommentDto;
 import mystudy.study.domain.dto.comment.ParentCommentDto;
 import mystudy.study.domain.dto.member.login.LoginSessionInfo;
-import mystudy.study.domain.dto.post.NewPostDto;
-import mystudy.study.domain.dto.post.PostDto;
-import mystudy.study.domain.dto.post.PostSearchCondition;
-import mystudy.study.domain.dto.post.PostViewDto;
+import mystudy.study.domain.dto.post.*;
+import mystudy.study.service.post.PostQueryService;
 import mystudy.study.service.post.PostService;
 import mystudy.study.session.SessionConst;
 import org.springframework.data.domain.Page;
@@ -33,6 +31,7 @@ import java.util.Map;
 public class PostController {
 
     private final PostService postService;
+    private final PostQueryService postQueryService;
 
     // 게시글 검색 조건 페이징
     @GetMapping
@@ -117,5 +116,27 @@ public class PostController {
         postService.createPost(newPostDto, loginSessionInfo.getId());
 
         return "redirect:/posts";
+    }
+
+    // 글 수정 페이지
+    @GetMapping("/{id}/edit")
+    public String updatePostPage(@PathVariable("id") Long postId,
+                                 HttpServletRequest request,
+                                 Model model) {
+        log.info("postId = " + postId);
+        
+        // 수정 게시글 로그인 사용자의 게시글인지 확인
+        HttpSession session = request.getSession(false);
+        LoginSessionInfo loginSessionInfo = (LoginSessionInfo) session.getAttribute(SessionConst.LOGIN_MEMBER_ID);
+
+        // 수정하고자 하는 게시글 내용
+        PostEditForm postEditForm = postQueryService.findByPostIdAndMemberId(postId, loginSessionInfo.getId());
+        log.info("postEditForm = " + postEditForm);
+        if (postEditForm == null) { // 게시글을 사용자가 작성하지 않음
+            return "redirect:/posts/" + postId;
+        }
+
+        model.addAttribute("postEditForm", postEditForm);
+        return "pages/post/updatePost";
     }
 }

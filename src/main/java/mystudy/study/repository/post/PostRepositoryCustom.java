@@ -1,6 +1,7 @@
 package mystudy.study.repository.post;
 
 import mystudy.study.domain.dto.post.PostDto;
+import mystudy.study.domain.dto.post.PostEditForm;
 import mystudy.study.domain.dto.post.PostSearchCondition;
 import mystudy.study.domain.dto.post.PostViewDto;
 import org.springframework.data.domain.Page;
@@ -17,6 +18,9 @@ public interface PostRepositoryCustom {
     // 사용자가 작성한 게시글 페이징으로 가져오기
     Page<PostDto> getPostByMemberId(Long id, Pageable pageable);
     
-    // 게시글 내용 보기
+    // 게시글 보기 - 게시글 내용 조회
     PostViewDto getPostView(Long postId);
+
+    // 게시글 수정 - 게시글 내용 조회
+    PostEditForm findByPostIdAndMemberId(Long postId, Long memberId);
 }

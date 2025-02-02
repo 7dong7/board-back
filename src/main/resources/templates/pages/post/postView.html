@@ -8,6 +8,7 @@
     <title>게시글 상세</title>
     <!-- css -->
     <link rel="stylesheet" href="/css/pages/post/postView.css">
+    <!-- 스크립트 -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
 
@@ -53,8 +54,6 @@
     </script>
 </head>
 
-
-
 <body>
     <main class="layout-main" layout:fragment="content">
         <div class="container">
@@ -79,6 +78,9 @@
                 <p th:text="${post.content}">
                     여기에 게시글 본문이 들어갑니다.
                 </p>
+                <div th:if="${session.loginMemberId != null and post.memberId == session.loginMemberId.id}">
+                    <a th:href="@{/posts/{id}/edit(id=${post.postId})}">수정하기</a>
+                </div>
             </div>
             <hr class="divider">
 

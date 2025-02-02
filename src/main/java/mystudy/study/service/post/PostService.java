@@ -4,10 +4,7 @@ import lombok.RequiredArgsConstructor;
 import mystudy.study.domain.dto.comment.ParentCommentDto;
 import mystudy.study.domain.dto.comment.ReplyCommentDto;
 import mystudy.study.domain.dto.member.login.LoginSessionInfo;
-import mystudy.study.domain.dto.post.NewPostDto;
-import mystudy.study.domain.dto.post.PostDto;
-import mystudy.study.domain.dto.post.PostSearchCondition;
-import mystudy.study.domain.dto.post.PostViewDto;
+import mystudy.study.domain.dto.post.*;
 import mystudy.study.domain.entity.Member;
 import mystudy.study.domain.entity.Post;
 import mystudy.study.repository.post.PostRepository;
@@ -102,4 +99,6 @@ public class PostService {
 
         member.getPosts().add(post);
     }
+
+
 }

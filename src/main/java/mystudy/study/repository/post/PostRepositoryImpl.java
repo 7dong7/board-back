@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.support.PageableExecutionUtils;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -101,7 +102,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
     }
 
-    // 게시글 내용 가져오기
+    // 게시글 보기 - 게시글 내용 가져오기
     @Override
     public PostViewDto getPostView(Long postId) {
         
@@ -122,6 +123,30 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                 )
                 .fetchOne();
     }
+
+    // 게시글 수정 - 게시글 조회 (로그인 Id 와 게시글 Id 비교)
+    @Override
+    public PostEditForm findByPostIdAndMemberId(Long postId, Long memberId) {
+        return queryFactory.select(new QPostEditForm(
+                        post.id.as("postId"),
+                        post.title,
+                        post.content,
+                        post.createdAt,
+                        post.updatedAt,
+                        post.viewCount,
+                        member.id.as("memberId"),
+                        member.username
+                        )
+                )
+                .from(post)
+                .leftJoin(post.member, member)
+                .where(
+                        post.id.eq(postId),
+                        post.member.id.eq(memberId)
+                )
+                .fetchOne();
+    }
+
 
     // 정렬 조건 변환
     private OrderSpecifier<?>[] postSort(Pageable pageable) {
