@@ -2,12 +2,12 @@ package mystudy.study.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import mystudy.study.domain.dto.member.MemberInfoDto;
-import mystudy.study.domain.dto.member.MemberRegisterForm;
-import mystudy.study.domain.dto.member.MemberSearchCondition;
-import mystudy.study.domain.dto.member.SearchMemberDto;
-import mystudy.study.domain.entity.Member;
-import mystudy.study.service.member.MemberService;
+import mystudy.study.domain.member.dto.MemberInfoDto;
+import mystudy.study.domain.member.dto.MemberRegisterForm;
+import mystudy.study.domain.member.dto.MemberSearchCondition;
+import mystudy.study.domain.member.dto.SearchMemberDto;
+import mystudy.study.domain.member.entity.Member;
+import mystudy.study.domain.member.service.MemberService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

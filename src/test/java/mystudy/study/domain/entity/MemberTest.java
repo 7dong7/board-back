@@ -1,7 +1,8 @@
 package mystudy.study.domain.entity;
 
 import jakarta.persistence.EntityManager;
-import mystudy.study.repository.member.MemberRepository;
+import mystudy.study.domain.member.entity.Member;
+import mystudy.study.domain.member.repository.MemberRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
