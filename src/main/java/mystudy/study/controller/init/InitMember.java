@@ -1,6 +1,7 @@
 package mystudy.study.controller.init;
 
 
+import groovyjarjarpicocli.CommandLine;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -10,22 +11,24 @@ import mystudy.study.domain.entity.Member;
 import mystudy.study.domain.entity.Post;
 import mystudy.study.repository.member.MemberRepository;
 import mystudy.study.repository.member.MemberRepositoryImpl;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-@Profile("local")
 @Component
 @RequiredArgsConstructor
-public class InitMember {
+public class InitMember implements CommandLineRunner {
 
     private final InitMemberService initMemberService;
     private final MemberRepository memberRepository;
-    private final MemberRepositoryImpl memberRepositoryImpl;
 
-    @PostConstruct
-    public void init() {
-        initMemberService.init();
+
+    @Override
+    public void run(String... args) throws Exception {
+        if (memberRepository.count() == 0) {
+            initMemberService.init();
+        }
     }
 
     @Component
