@@ -6,11 +6,8 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
+import mystudy.study.domain.post.dto.*;
 import mystudy.study.domain.post.entity.Post;
-import mystudy.study.domain.post.dto.PostDto;
-import mystudy.study.domain.post.dto.PostEditForm;
-import mystudy.study.domain.post.dto.PostSearchCondition;
-import mystudy.study.domain.post.dto.PostViewDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -19,8 +16,8 @@ import org.springframework.data.support.PageableExecutionUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-import static mystudy.study.domain.entity.QMember.member;
-import static mystudy.study.domain.entity.QPost.post;
+import static mystudy.study.domain.member.entity.QMember.member;
+import static mystudy.study.domain.post.entity.QPost.post;
 import static org.springframework.util.StringUtils.hasText;
 
 public class PostRepositoryImpl implements PostRepositoryCustom {

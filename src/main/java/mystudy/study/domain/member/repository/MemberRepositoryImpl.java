@@ -8,7 +8,7 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import mystudy.study.domain.member.dto.MemberSearchCondition;
-import mystudy.study.domain.dto.member.QSearchMemberDto;
+import mystudy.study.domain.member.dto.*;
 import mystudy.study.domain.member.dto.SearchMemberDto;
 import mystudy.study.domain.member.entity.Member;
 import org.springframework.data.domain.Page;
@@ -18,7 +18,7 @@ import org.springframework.data.support.PageableExecutionUtils;
 
 import java.util.List;
 
-import static mystudy.study.domain.entity.QMember.member;
+import static mystudy.study.domain.member.entity.QMember.member;
 import static org.springframework.util.StringUtils.hasText;
 
 public class MemberRepositoryImpl implements MemberRepositoryCustom {

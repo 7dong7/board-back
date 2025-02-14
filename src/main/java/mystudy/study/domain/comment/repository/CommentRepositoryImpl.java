@@ -5,9 +5,7 @@ import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
-import mystudy.study.domain.comment.dto.CommentDto;
-import mystudy.study.domain.comment.dto.ParentCommentDto;
-import mystudy.study.domain.comment.dto.ReplyCommentDto;
+import mystudy.study.domain.comment.dto.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -15,10 +13,9 @@ import org.springframework.data.support.PageableExecutionUtils;
 
 import java.util.List;
 
-import static com.querydsl.jpa.JPAExpressions.select;
-import static mystudy.study.domain.entity.QComment.comment;
-import static mystudy.study.domain.entity.QMember.member;
-import static mystudy.study.domain.entity.QPost.post;
+import static mystudy.study.domain.comment.entity.QComment.comment;
+import static mystudy.study.domain.member.entity.QMember.member;
+import static mystudy.study.domain.post.entity.QPost.post;
 
 public class CommentRepositoryImpl implements CommentRepositoryCustom {
 
