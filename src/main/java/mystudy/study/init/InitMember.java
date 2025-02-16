@@ -10,6 +10,7 @@ import mystudy.study.domain.member.entity.RoleType;
 import mystudy.study.domain.post.entity.Post;
 import mystudy.study.domain.member.repository.MemberRepository;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,17 +30,21 @@ public class InitMember implements CommandLineRunner {
     }
 
     @Component
+    @RequiredArgsConstructor
     static class InitMemberService {
 
         @PersistenceContext
         EntityManager em;
+
+        private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
 
         @Transactional
         public void init() {
             // 관리자 한명
             Member admin = Member.builder()
                     .email("admin")
-                    .password("1234")
+                    .password(bCryptPasswordEncoder.encode("1234"))
                     .username("admin")
                     .age(0)
                     .role(RoleType.ADMIN)
@@ -49,7 +54,7 @@ public class InitMember implements CommandLineRunner {
 
             Member member1 = Member.builder()
                     .email("member1@naver.com")
-                    .password("test!")
+                    .password(bCryptPasswordEncoder.encode("test!"))
                     .username("member1")
                     .age(10)
                     .role(RoleType.USER)
@@ -61,7 +66,7 @@ public class InitMember implements CommandLineRunner {
             for (int i = 2; i < 51; i++) {
                 Member member = Member.builder()
                         .email("member" + i + "@naver.com")
-                        .password("test!")
+                        .password(bCryptPasswordEncoder.encode("test!"))
                         .username("member" + i)
                         .age(i)
                         .role(RoleType.USER)
@@ -72,7 +77,7 @@ public class InitMember implements CommandLineRunner {
             for (int i = 51; i < 101; i++) {
                 Member member = Member.builder()
                         .email("user" + i + "@gmail.com")
-                        .password("test!")
+                        .password(bCryptPasswordEncoder.encode("test!"))
                         .username("user" + i)
                         .age(i)
                         .role(RoleType.USER)
@@ -83,7 +88,7 @@ public class InitMember implements CommandLineRunner {
             for (int i = 101; i < 124; i++) {
                 Member member = Member.builder()
                         .email("postuser" + i + "@daum.com")
-                        .password("test!")
+                        .password(bCryptPasswordEncoder.encode("test!"))
                         .username("postuser" + i)
                         .age(i)
                         .role(RoleType.USER)

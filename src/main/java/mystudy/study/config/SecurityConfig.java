@@ -24,7 +24,7 @@ import static mystudy.study.config.AccessURL.WHITELIST;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final AuthenticationManager authenticationManager;
+    private final AuthenticationConfiguration authenticationConfiguration;
     private final JWTUtil jwtUtil;
 
     @Bean
@@ -75,10 +75,9 @@ public class SecurityConfig {
         // 필터를 커스텀해서 만들어야 한다
         http
                 .addFilterAt(
-                        new LoginFilter(authenticationManager, jwtUtil),
+                        new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil),
                         UsernamePasswordAuthenticationFilter.class
                 );
-        
 
         return http.build();
     }
