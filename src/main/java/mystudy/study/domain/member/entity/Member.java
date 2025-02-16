@@ -34,15 +34,19 @@ public class Member extends BaseTimeEntity {
      * 기본값 true
      */
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id", updatable = false)
     private Long id;
 
+    @Column(unique = true)
     private String email;
     private String password;
 
     private String username;
     private int age;
+
+    @Enumerated(EnumType.STRING) // 안붙이면 인덱스로 저장됨 0, 1
+    private RoleType role;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> posts = new ArrayList<>();
@@ -53,11 +57,12 @@ public class Member extends BaseTimeEntity {
 
     // ---- 생성자 ----
     @Builder
-    public Member(String email, String password, String username, int age) {
+    public Member(String email, String password, String username, int age, RoleType role) {
         this.email = email;
         this.password = password;
         this.username = username;
         this.age = age;
+        this.role = role;
     }
 
     // ---- 메소드 ----

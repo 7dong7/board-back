@@ -64,26 +64,19 @@ dependencies {
 	// 타임 리프 Layout Dialect // 자동 최신 버전 공식 문서 확인
 	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.2.1'
 
+	// 시큐리티
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	testImplementation 'org.springframework.security:spring-security-test'
+
+	// JWT 0.12.3 버전 (버전에 따라서 구현 방식이 다름)
+	implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
+	implementation 'io.jsonwebtoken:jjwt-impl:0.12.3'
+	implementation 'io.jsonwebtoken:jjwt-jackson:0.12.3'
+
 // 설정만 추가 아직 쓴적 없음
-
-
-	// H2 db 사용
-//	runtimeOnly 'com.h2database:h2'
-
-	// Spring Security
-//	implementation 'org.springframework.boot:spring-boot-starter-security'
-//	testImplementation 'org.springframework.security:spring-security-test' // 단위 테스트
 
 	// thymeleaf-extras-springsecurity6 - Spring Security 6와 Thymeleaf 통합 설정 - Thymeleaf에서 Spring Security 기능을 활용
 //	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6:3.1.2.RELEASE'
-
-
-
-	// JWT
-//	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
-//	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
-//	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
-
 }
 
 tasks.named('test') {

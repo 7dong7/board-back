@@ -43,7 +43,7 @@ public class LoginController {
             return "pages/login/login";
         }
 
-        Member loginMember = loginService.login(loginForm.getLoginId(), loginForm.getPassword());
+        Member loginMember = loginService.login(loginForm.getUsername(), loginForm.getPassword());
 
         // 로그인 실패 처리    아이디, 비번 DB 불일치
         if (loginMember == null) {

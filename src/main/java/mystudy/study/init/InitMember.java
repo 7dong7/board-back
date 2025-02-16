@@ -6,6 +6,7 @@ import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import mystudy.study.domain.comment.entity.Comment;
 import mystudy.study.domain.member.entity.Member;
+import mystudy.study.domain.member.entity.RoleType;
 import mystudy.study.domain.post.entity.Post;
 import mystudy.study.domain.member.repository.MemberRepository;
 import org.springframework.boot.CommandLineRunner;
@@ -35,11 +36,23 @@ public class InitMember implements CommandLineRunner {
 
         @Transactional
         public void init() {
+            // 관리자 한명
+            Member admin = Member.builder()
+                    .email("admin")
+                    .password("1234")
+                    .username("admin")
+                    .age(0)
+                    .role(RoleType.ADMIN)
+                    .build();
+
+            em.persist(admin);
+
             Member member1 = Member.builder()
                     .email("member1@naver.com")
                     .password("test!")
                     .username("member1")
                     .age(10)
+                    .role(RoleType.USER)
                     .build();
 
             em.persist(member1);
@@ -51,6 +64,7 @@ public class InitMember implements CommandLineRunner {
                         .password("test!")
                         .username("member" + i)
                         .age(i)
+                        .role(RoleType.USER)
                         .build();
                 em.persist(member);
             }
@@ -61,6 +75,7 @@ public class InitMember implements CommandLineRunner {
                         .password("test!")
                         .username("user" + i)
                         .age(i)
+                        .role(RoleType.USER)
                         .build();
                 em.persist(member);
             }
@@ -71,6 +86,7 @@ public class InitMember implements CommandLineRunner {
                         .password("test!")
                         .username("postuser" + i)
                         .age(i)
+                        .role(RoleType.USER)
                         .build();
                 em.persist(member);
             }

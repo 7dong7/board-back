@@ -19,7 +19,7 @@ public class CommentViewDto {
     private String author; // 댓글 작성자
     private LocalDateTime createdAt; // 댓글 작성일
     private Long parentId; // 부모 댓글 id (대댓글인 경우 값이 있음)
-    private List<CommentViewDto> replies = new ArrayList<>(); // 댓글 대댓글
+    private List<CommentViewDto> replies; // 댓글 대댓글
 
     @QueryProjection
     public CommentViewDto(Long commentId, String content, String author, LocalDateTime createdAt) {
