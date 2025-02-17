@@ -10,13 +10,13 @@
 </head>
 <body>
     <!-- 헤더 -->
-    <header th:replace="fragments/header :: header"></header>
+    <header th:replace="~{fragments/header :: header}"></header>
 
     <!-- 메인 content -->
     <main layout:fragment="content"></main>
 
     <!-- 푸터 -->
-    <footer th:replace="fragments/footer :: footer"></footer>
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
 
 </body>
 </html>

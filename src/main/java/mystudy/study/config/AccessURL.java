@@ -7,7 +7,7 @@ public class AccessURL {
     };
 
     public static final String[] WHITELIST = { // 권한이 없어도 접근 가능한
-        "/login", "/", "/join"
+            "/login","/members/new","/", "/posts"
     };
     
     public static final String[] BLACKLIST = { // 접근 불가

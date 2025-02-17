@@ -35,6 +35,9 @@ public class JWTUtil {
                 .expiration(new Date(System.currentTimeMillis() + expiredMs))
                 .signWith(secretKey)
                 .compact();
+        // 1초 = 1,000 밀리초
+        // 1분 = 60 * 1,000 밀리초 = 60,000 밀리초
+        // 1시간 = 60 * 60 * 1,000 밀리초 = 3,600,000 밀리초
     }
 
     

@@ -1,6 +1,7 @@
 package mystudy.study.config;
 
 import lombok.RequiredArgsConstructor;
+import mystudy.study.jwt.JWTAuthFilter;
 import mystudy.study.jwt.JWTUtil;
 import mystudy.study.jwt.LoginFilter;
 import org.springframework.context.annotation.Bean;
@@ -16,8 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import static mystudy.study.config.AccessURL.RESOURCE;
-import static mystudy.study.config.AccessURL.WHITELIST;
+import static mystudy.study.config.AccessURL.*;
 
 @Configuration
 @RequiredArgsConstructor
@@ -44,7 +44,7 @@ public class SecurityConfig {
         return web -> web.ignoring().requestMatchers(RESOURCE);
     }
 
-    // 시큐리티 필터 체인
+    // 폼로그인 + JWT 필터 체인
     @Bean
     public SecurityFilterChain loginFilterChain(HttpSecurity http) throws Exception {
 
@@ -72,11 +72,15 @@ public class SecurityConfig {
                 );
 
         // 폼 로그인 방식으로 로그인을 진행하고 JWT 발급을 위해서는 필터의 successHandler 가 필요하기 때문에
-        // 필터를 커스텀해서 만들어야 한다
+        // 필터를 커스텀해서 만들어야 한다 // UsernamePasswordAuthenticationFilter 를 LoginFilter 로 대체
         http
                 .addFilterAt(
-                        new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil),
-                        UsernamePasswordAuthenticationFilter.class
+                        new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil), UsernamePasswordAuthenticationFilter.class
+                );
+        // 토큰 검증 필터 추가 (LoginFilter 전에 추가)
+        http
+                .addFilterBefore(
+                        new JWTAuthFilter(jwtUtil), LoginFilter.class
                 );
 
         return http.build();
