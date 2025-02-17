@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mystudy.study.domain.comment.dto.NewCommentDto;
 import mystudy.study.domain.comment.dto.ParentCommentDto;
+import mystudy.study.domain.member.dto.CustomUserDetail;
 import mystudy.study.domain.member.dto.login.LoginSessionInfo;
 import mystudy.study.domain.post.dto.*;
 import mystudy.study.domain.post.service.PostQueryService;
@@ -16,6 +17,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -28,19 +33,44 @@ import java.util.Map;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("posts")
+@RequestMapping
 public class PostController {
 
     private final PostService postService;
     private final PostQueryService postQueryService;
 
     // 게시글 검색 조건 페이징
-    @GetMapping
+    @GetMapping("/posts")
     public String getPostPage(
             @RequestParam(value = "searchType", required = false) String searchType,
             @RequestParam(value = "searchWord", required = false) String searchWord,
             @PageableDefault(size = 20, page = 1, sort = "id", direction = Sort.Direction.DESC) Pageable clPageable,
-            Model model) {
+            Model model,
+            HttpServletRequest request) {
+        // == 로그인 세션 정보 확인 == //
+        log.info("=== 로그인 세션 정보 확인 === ");
+        HttpSession session = request.getSession(false); // 세션이 존재하면 가져옴 (생성하지 않음)
+        if(session != null) {
+            // 세션에 저장된 SecurityContext 꺼내기
+            SecurityContext context = (SecurityContext) session.getAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY); //
+            if(context != null) {
+                // context 안에 있는 인증객체(Authentication) 꺼내기
+                Authentication authentication = context.getAuthentication();
+                if (authentication != null) {
+                    // 인증객체 확인
+                    log.info("session에 저장된 현재 사용자: {}", authentication.getName()); 
+                }
+            }
+        }
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String name = authentication.getName();
+        CustomUserDetail principal = (CustomUserDetail) authentication.getPrincipal();
+        String memberName = principal.getName();
+        log.info("securityContextHolder에 저장된 현재 사용자: {}", name);
+        log.info("MemberName: {}", memberName);
+
+
+
 
         // pageable 생성
         Pageable pageable = PageRequest.of(
@@ -74,7 +104,7 @@ public class PostController {
     }
 
     // 게시글 내용 보기, 댓글, 대댓글 (페이징)
-    @GetMapping("/{id}")
+    @GetMapping("/posts/{id}")
     public String getPostView(@PathVariable Long id,
                               @PageableDefault(size=20, page=0) Pageable clPageable,
                               Model model) {
@@ -96,7 +126,7 @@ public class PostController {
     }
 
     // 새로운 글 작성 페이지
-    @GetMapping("/new/post")
+    @GetMapping("/posts/new/post")
     public String createPost(Model model) {
 
         model.addAttribute("newPost", new NewPostDto());
@@ -104,7 +134,7 @@ public class PostController {
     }
 
     // 새로운 게시글 작성
-    @PostMapping("/new/post")
+    @PostMapping("/posts/new/post")
     public String createPost(@ModelAttribute("newPost") NewPostDto newPostDto,
                              HttpServletRequest request) {
         log.info("newPostDto: {}", newPostDto);
@@ -119,7 +149,7 @@ public class PostController {
     }
 
     // 글 수정 페이지
-    @GetMapping("/{id}/edit")
+    @GetMapping("/posts/{id}/edit")
     public String updatePostPage(@PathVariable("id") Long postId,
                                  HttpServletRequest request,
                                  Model model) {
@@ -139,7 +169,7 @@ public class PostController {
     }
 
     // 글 수정 페이지
-    @PostMapping("/{id}/edit")
+    @PostMapping("/posts/{id}/edit")
     public String updatePost(@PathVariable("id") Long postId,
                              @ModelAttribute("postEditForm") PostEditForm postEditForm,
                              HttpServletRequest request) throws AccessDeniedException {

@@ -35,7 +35,11 @@ public class CustomUserDetail implements UserDetails {
     }
 
     @Override
-    public String getUsername() {
+    public String getUsername() { // 아이디로 사용하는 email 반환
         return member.getEmail();
+    }
+
+    public String getName() { // 사용자가 지정한 닉네임
+        return member.getUsername();
     }
 }
