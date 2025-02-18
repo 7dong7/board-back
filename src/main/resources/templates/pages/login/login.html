@@ -9,6 +9,7 @@
     <title>로그인</title>
     <!-- css -->
     <link rel="stylesheet" href="/css/pages/login/login.css"/>
+    <link rel="stylesheet" href="/css/pages/login/login-btn.css"/>
 </head>
 
 <body>
@@ -47,8 +48,14 @@
                     아직 회원이 아니신가요?
                     <a href="/members/new">회원가입</a>
                 </div>
-                <a href="/oauth2/authorization/naver">naver login</a><br>
-                <a href="/oauth2/authorization/google">google login</a>
+                <a class="login-btn login-naver" href="/oauth2/authorization/naver">
+                    <img th:src="@{/images/login/naver_사각.png}"/>
+                    <div class="btn-name">네이버 로그인</div>
+                </a>
+                <a class="login-btn login-google" href="/oauth2/authorization/google">
+                    <img th:src="@{/images/login/web_neutral_sq_na@4x.png}"/>
+                    <div class="btn-name">구글 로그인</div>
+                </a>
             </form>
         </div>
     </main>

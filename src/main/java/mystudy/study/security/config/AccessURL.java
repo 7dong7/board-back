@@ -3,12 +3,13 @@ package mystudy.study.security.config;
 public class AccessURL {
 
     public static final String[] RESOURCE = {
-            "/css/**", "/js/**", "/favicon.ico"
+            "/css/**", "/js/**", "/favicon.ico", "/images/**"
     };
 
     public static final String[] WHITELIST = { // 권한이 없어도 접근 가능한
             "/",
             "/login",
+            "/logout",
             "/posts", "/posts/*",
             "/members", "/members/*",
             "/oauth2/**",

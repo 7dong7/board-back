@@ -73,6 +73,16 @@ public class SecurityConfig {
                         // 외부 인증 제공자 엔드포인트 지정
                         // 사용자의 프로필 정보를 조회할 때 사용
                 );
+        
+        // 로그아웃
+        http
+                .logout(logout -> logout
+                        .logoutUrl("/logout")           // 로그아웃 경로
+                        .logoutSuccessUrl("/login?logout")     // 로그아웃 이후 경로
+                        .invalidateHttpSession(true)    // 세션 무효화
+                        .deleteCookies("JSESSIONID")
+                        .permitAll()
+                );
 
     // ==== form login JWT 방식 ==== //
 //        // 세션 statelsee

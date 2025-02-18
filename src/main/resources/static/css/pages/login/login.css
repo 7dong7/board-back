@@ -70,7 +70,8 @@
 /* 로그인 / 가입 버튼 */
 .login-form button {
     padding: 0.8rem;
-    font-size: 1rem;
+    font-size: 1.1rem;
+    font-weight:bold;
     color: #fff;
     background-color: #525659c2;
     border: none;

@@ -1,0 +1,48 @@
+.login-btn {
+    text-decoration:none;
+    font-size: 1.1rem;
+    font-weight:bold;
+    height:3.1rem;
+
+    display: inline-flex;
+    justify-content: center; /* 수평 */
+    align-items: center; /* 수직 */
+
+}
+
+
+/* 네이버 로그인 버튼 */
+.login-naver {
+    margin-top:40px;
+    background-color:#03c75a;
+    border-radius: 4px;
+    color:#ffffff;
+
+    transition: 0.15s;
+    margin-bottom:px
+}
+.login-naver img {
+    height:75%;
+}
+
+.login-naver:hover {
+    filter: brightness(0.9);
+    transition: 0.15s;
+}
+
+/* 구글 로그인 버튼 */
+.login-google {
+    background-color:#f2f2f2;
+    border-radius: 4px;
+    color:#131314;
+
+    transition: 0.15s;
+}
+.login-google img {
+    height:80%;
+}
+
+.login-google:hover {
+    filter: brightness(0.9);
+    transition: 0.15s;
+}
