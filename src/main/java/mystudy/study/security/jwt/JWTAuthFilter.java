@@ -1,4 +1,4 @@
-package mystudy.study.jwt;
+package mystudy.study.security.jwt;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

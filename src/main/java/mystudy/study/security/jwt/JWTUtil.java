@@ -1,4 +1,4 @@
-package mystudy.study.jwt;
+package mystudy.study.security.jwt;
 
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;

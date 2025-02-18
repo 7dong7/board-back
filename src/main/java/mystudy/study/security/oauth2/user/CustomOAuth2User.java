@@ -1,12 +1,11 @@
-package mystudy.study.domain.member.dto.login;
+package mystudy.study.security.oauth2.user;
 
+import mystudy.study.security.oauth2.OAuth2Response;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 
@@ -47,6 +46,6 @@ public class CustomOAuth2User implements OAuth2User {
     }
 
     public String getEmail() {
-        return oAuth2Response.getProvider() + " " + oAuth2Response.getProviderId();
+        return null;
     }
 }

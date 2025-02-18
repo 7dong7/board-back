@@ -1,10 +1,8 @@
-package mystudy.study.config;
+package mystudy.study.security.config;
 
 import lombok.RequiredArgsConstructor;
-import mystudy.study.domain.member.service.login.CustomOAuth2UserService;
-import mystudy.study.jwt.JWTAuthFilter;
-import mystudy.study.jwt.JWTUtil;
-import mystudy.study.jwt.LoginFilter;
+import mystudy.study.security.oauth2.service.CustomOAuth2UserService;
+import mystudy.study.security.jwt.JWTUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,12 +11,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import static mystudy.study.config.AccessURL.*;
 
 @Configuration
 @RequiredArgsConstructor
@@ -44,7 +38,7 @@ public class SecurityConfig {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         // 정적 리소스에 대한 시큐리티 필터 접근제한 X
-        return web -> web.ignoring().requestMatchers(RESOURCE);
+        return web -> web.ignoring().requestMatchers(AccessURL.RESOURCE);
     }
 
     // 폼로그인 + JWT 필터 체인
@@ -58,9 +52,9 @@ public class SecurityConfig {
         // 인가 설정
         http
                 .authorizeHttpRequests( auth -> auth
-                        .requestMatchers(WHITELIST).permitAll()
-                        .requestMatchers(USER_ROUTE).hasRole("USER")
-                        .requestMatchers(ADMIN_ROUTE).hasRole("ADMIN")
+                        .requestMatchers(AccessURL.WHITELIST).permitAll()
+                        .requestMatchers(AccessURL.USER_ROUTE).hasRole("USER")
+                        .requestMatchers(AccessURL.ADMIN_ROUTE).hasRole("ADMIN")
                         .anyRequest().authenticated()
                 );
 

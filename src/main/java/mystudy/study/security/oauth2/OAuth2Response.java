@@ -1,4 +1,4 @@
-package mystudy.study.domain.member.dto.login;
+package mystudy.study.security.oauth2;
 
 public interface OAuth2Response {
 

@@ -1,15 +1,15 @@
-package mystudy.study.domain.member.service.login;
+package mystudy.study.security.oauth2.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import mystudy.study.domain.member.dto.login.CustomOAuth2User;
-import mystudy.study.domain.member.dto.login.GoogleResponse;
-import mystudy.study.domain.member.dto.login.NaverResponse;
-import mystudy.study.domain.member.dto.login.OAuth2Response;
 import mystudy.study.domain.member.entity.Member;
 import mystudy.study.domain.member.entity.RoleType;
 import mystudy.study.domain.member.service.MemberQueryService;
 import mystudy.study.domain.member.service.MemberService;
+import mystudy.study.security.oauth2.GoogleResponse;
+import mystudy.study.security.oauth2.NaverResponse;
+import mystudy.study.security.oauth2.OAuth2Response;
+import mystudy.study.security.oauth2.user.CustomOAuth2User;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;

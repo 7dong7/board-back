@@ -1,4 +1,4 @@
-package mystudy.study.config;
+package mystudy.study.security.config;
 
 public class AccessURL {
 

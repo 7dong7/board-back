@@ -1,4 +1,4 @@
-package mystudy.study.domain.member.dto.login;
+package mystudy.study.security.oauth2;
 
 import lombok.Data;
 

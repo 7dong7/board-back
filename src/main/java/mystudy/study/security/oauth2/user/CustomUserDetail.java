@@ -1,4 +1,4 @@
-package mystudy.study.domain.member.dto.login;
+package mystudy.study.security.oauth2.user;
 
 import mystudy.study.domain.member.entity.Member;
 import org.springframework.security.core.GrantedAuthority;
