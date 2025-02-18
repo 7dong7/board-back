@@ -80,9 +80,19 @@ public class Member extends BaseTimeEntity {
 
 
     // ---- 메소드 ----
-    // username 변경 메소드
+    // nickname 변경 메소드
     public void updateNickname(String nickname) {
         this.nickname = nickname;
+    }
+
+    // mobile 변경 메소드
+    public void updateMobile(String mobile) {
+        this.mobile = mobile;
+    }
+    
+    // age 변경 메소드 (사용하는거 아님 로그인 할때 최신 네이버 데이터로 업데이트)
+    public void updateAge(String age) {
+        this.age = Integer.parseInt(age);
     }
 
     // 글 작성

@@ -12,4 +12,7 @@ public interface MemberRepository extends JpaRepository<Member, Long>, MemberRep
 
     // 사용자 email 로 조회 (아이디)
     Member findByEmail(String email);
+    
+    // OAuth2 사용자 조회
+    Member findByProviderId(String providerId);
 }

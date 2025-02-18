@@ -26,4 +26,8 @@ public class MemberQueryService {
         log.info("findByEmail email: {}", email);
         return memberRepository.findByEmail(email);
     }
+
+    public Member findByProviderId(String providerId) {
+        return memberRepository.findByProviderId(providerId);
+    }
 }
