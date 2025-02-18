@@ -47,27 +47,27 @@ public class PostController {
             @PageableDefault(size = 20, page = 1, sort = "id", direction = Sort.Direction.DESC) Pageable clPageable,
             Model model,
             HttpServletRequest request) {
-        // == 로그인 세션 정보 확인 == //
-        log.info("=== 로그인 세션 정보 확인 === ");
-        HttpSession session = request.getSession(false); // 세션이 존재하면 가져옴 (생성하지 않음)
-        if(session != null) {
-            // 세션에 저장된 SecurityContext 꺼내기
-            SecurityContext context = (SecurityContext) session.getAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY); //
-            if(context != null) {
-                // context 안에 있는 인증객체(Authentication) 꺼내기
-                Authentication authentication = context.getAuthentication();
-                if (authentication != null) {
-                    // 인증객체 확인
-                    log.info("session에 저장된 현재 사용자: {}", authentication.getName());
-                }
-            }
-        }
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String name = authentication.getName();
-        CustomOAuth2User principal = (CustomOAuth2User) authentication.getPrincipal();
-        String memberName = principal.getName();
-        log.info("securityContextHolder에 저장된 현재 사용자: {}", name);
-        log.info("MemberName: {}", memberName);
+//        // == 로그인 세션 정보 확인 == //
+//        log.info("=== 로그인 세션 정보 확인 === ");
+//        HttpSession session = request.getSession(false); // 세션이 존재하면 가져옴 (생성하지 않음)
+//        if(session != null) {
+//            // 세션에 저장된 SecurityContext 꺼내기
+//            SecurityContext context = (SecurityContext) session.getAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY); //
+//            if(context != null) {
+//                // context 안에 있는 인증객체(Authentication) 꺼내기
+//                Authentication authentication = context.getAuthentication();
+//                if (authentication != null) {
+//                    // 인증객체 확인
+//                    log.info("session에 저장된 현재 사용자: {}", authentication.getName());
+//                }
+//            }
+//        }
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        String name = authentication.getName();
+//        CustomOAuth2User principal = (CustomOAuth2User) authentication.getPrincipal();
+//        String memberName = principal.getName();
+//        log.info("securityContextHolder에 저장된 현재 사용자: {}", name);
+//        log.info("MemberName: {}", memberName);
 
 
         // pageable 생성

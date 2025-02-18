@@ -59,10 +59,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             return null;
         }
 
-        // DB에 저장, 조회할 username
-            // 실제 이메일은 아니고 저장, 조회용으로 사용
-
-        // 기존에 있는 사용자 조회
+        
+        // 로그인 사용자가 기존의 사용자인지 조회
         Member findMember = memberQueryService.findByProviderId(oAuth2Response.getProviderId());
         RoleType role = RoleType.USER;
 

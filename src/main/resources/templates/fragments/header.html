@@ -39,7 +39,7 @@
 <!--            </span>-->
 
             <span sec:authorize="isAuthenticated()">
-                <span th:class="header-right-username" sec:authentication="principal.name">사용자명</span>
+                <span th:class="header-right-username" sec:authentication="principal.nickname">사용자명</span>
                 <form th:action="@{/logout}" method="post">
                     <button th:class="logout-btn" type="submit">
                         로그아웃

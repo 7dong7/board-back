@@ -44,8 +44,9 @@ public class InitMember implements CommandLineRunner {
             // 관리자 한명
             Member admin = Member.builder()
                     .email("admin")
+                    .name("admin")
                     .password(bCryptPasswordEncoder.encode("1234"))
-                    .nickname("admin")
+                    .nickname("관리자")
                     .age(0)
                     .role(RoleType.ADMIN)
                     .build();

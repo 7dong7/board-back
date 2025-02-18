@@ -40,6 +40,10 @@ public class CustomUserDetail implements UserDetails {
     }
 
     public String getName() { // 사용자가 지정한 닉네임
+        return member.getName();
+    }
+
+    public String getNickname() {
         return member.getNickname();
     }
 }
