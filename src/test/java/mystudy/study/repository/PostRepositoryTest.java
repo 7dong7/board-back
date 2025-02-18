@@ -7,7 +7,6 @@ import mystudy.study.domain.member.entity.Member;
 import mystudy.study.domain.post.entity.Post;
 import mystudy.study.domain.member.repository.MemberRepository;
 import mystudy.study.domain.post.repository.PostRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -32,26 +31,10 @@ class PostRepositoryTest {
     @Autowired
     MemberRepository memberRepository;
 
-    @BeforeEach
-    void setUp() {
-        // 사용자 등록
-
-        Member member1 = new Member("member1@naver.com", "test!", "member1", 10);
-
-        // 글 작성
-        Post post1 = new Post("새로운 글작성1", "새로운 글이 작성되었습니다1.", member1);
-        Post post2 = new Post("새로운 글작성2", "새로운 글이 작성되었습니다2.", member1);
-
-        member1.addPost(post1);
-        member1.addPost(post2);
-
-        memberRepository.save(member1);
-    }
-
     @Test
     public void postBasicTest() throws Exception{
         // member 찾아보기
-        Optional<Member> optMember = memberRepository.findByUsername("member1");
+        Optional<Member> optMember = memberRepository.findByNickname("member1");
 
         Member member = optMember.orElseThrow(() -> new IllegalArgumentException("사용자가 없습니다"));
 
@@ -67,7 +50,7 @@ class PostRepositoryTest {
 
         // 삭제
         member.removePost(member.getPosts().get(0));
-        Optional<Member> optMember2 = memberRepository.findByUsername("member1");
+        Optional<Member> optMember2 = memberRepository.findByNickname("member1");
 
         Member member2 = optMember.orElseThrow(() -> new IllegalArgumentException("사용자가 없습니다"));
         List<Post> posts2 = member2.getPosts();

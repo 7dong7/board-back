@@ -76,6 +76,9 @@ dependencies {
 	// 스프링 시큐리티 + thymeleaf 연결 사용 sec 네임 스페이스 사용가능
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
 
+	// oauth2 사용
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
 // 설정만 추가 아직 쓴적 없음
 
 	// thymeleaf-extras-springsecurity6 - Spring Security 6와 Thymeleaf 통합 설정 - Thymeleaf에서 Spring Security 기능을 활용

@@ -44,7 +44,7 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
                 .select(new QCommentDto(
                         comment.id,
                         comment.content,
-                        member.username,
+                        member.nickname,
                         comment.createdAt,
                         comment.post.id.as("postId"))
                 )
@@ -79,7 +79,7 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
                 .select(new QParentCommentDto(
                         comment.id,
                         comment.content,
-                        comment.member.username.as("author"),
+                        comment.member.nickname.as("author"),
                         comment.createdAt)
                 )
                 .from(comment)
@@ -115,7 +115,7 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
                 .select(new QReplyCommentDto(
                         comment.id,
                         comment.content,
-                        comment.member.username.as("author"),
+                        comment.member.nickname.as("author"),
                         comment.createdAt,
                         comment.parent.id)
                 )

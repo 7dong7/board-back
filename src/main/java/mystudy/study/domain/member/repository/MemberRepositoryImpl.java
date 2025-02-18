@@ -50,7 +50,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
                 .select(
                         new QSearchMemberDto(
                                 member.id.as("member_id"),
-                                member.username,
+                                member.nickname,
                                 member.email,
                                 member.createdAt)
                 )
@@ -93,7 +93,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
 
                 switch (order.getProperty()) {
                     case "username" :
-                        return new OrderSpecifier<>(direction, member.username);
+                        return new OrderSpecifier<>(direction, member.nickname);
                     case "email" :
                         return new OrderSpecifier<>(direction, member.email);
                     case "id":
@@ -123,7 +123,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
             String searchWord = condition.getSearchWord(); // 검색어
 
             return switch (searchType) {
-                case "username" -> member.username.containsIgnoreCase(searchWord);
+                case "username" -> member.nickname.containsIgnoreCase(searchWord);
                 case "email" -> member.email.containsIgnoreCase(searchWord);
                 default -> null; // 검색 조건이 있으나 사전에 정의된 조건이 아닌 경우
             };
@@ -135,7 +135,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
     
     // ---
     private BooleanExpression usernameEq(String username) {
-        return hasText(username) ? member.username.containsIgnoreCase(username) : null;
+        return hasText(username) ? member.nickname.containsIgnoreCase(username) : null;
     }
 
     private Predicate emailEq(String email) {

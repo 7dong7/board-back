@@ -45,7 +45,7 @@ public class InitMember implements CommandLineRunner {
             Member admin = Member.builder()
                     .email("admin")
                     .password(bCryptPasswordEncoder.encode("1234"))
-                    .username("admin")
+                    .nickname("admin")
                     .age(0)
                     .role(RoleType.ADMIN)
                     .build();
@@ -55,7 +55,7 @@ public class InitMember implements CommandLineRunner {
             Member member1 = Member.builder()
                     .email("member1@naver.com")
                     .password(bCryptPasswordEncoder.encode("test!"))
-                    .username("member1")
+                    .nickname("member1")
                     .age(10)
                     .role(RoleType.USER)
                     .build();
@@ -67,7 +67,7 @@ public class InitMember implements CommandLineRunner {
                 Member member = Member.builder()
                         .email("member" + i + "@naver.com")
                         .password(bCryptPasswordEncoder.encode("test!"))
-                        .username("member" + i)
+                        .nickname("member" + i)
                         .age(i)
                         .role(RoleType.USER)
                         .build();
@@ -78,7 +78,7 @@ public class InitMember implements CommandLineRunner {
                 Member member = Member.builder()
                         .email("user" + i + "@gmail.com")
                         .password(bCryptPasswordEncoder.encode("test!"))
-                        .username("user" + i)
+                        .nickname("user" + i)
                         .age(i)
                         .role(RoleType.USER)
                         .build();
@@ -89,7 +89,7 @@ public class InitMember implements CommandLineRunner {
                 Member member = Member.builder()
                         .email("postuser" + i + "@daum.com")
                         .password(bCryptPasswordEncoder.encode("test!"))
-                        .username("postuser" + i)
+                        .nickname("postuser" + i)
                         .age(i)
                         .role(RoleType.USER)
                         .build();
@@ -104,7 +104,7 @@ public class InitMember implements CommandLineRunner {
 
             // 댓글 작성
                 // 작성자
-            Member member = em.createQuery("select m from Member m where m.username = :username", Member.class)
+            Member member = em.createQuery("select m from Member m where m.nickname = :username", Member.class)
                     .setParameter("username", "member1")
                     .getSingleResult();
 
@@ -129,7 +129,7 @@ public class InitMember implements CommandLineRunner {
                     .getSingleResult();
 
                 // 대댓글 작성자
-            Member member2 = em.createQuery("select m from Member m where m.username = :username", Member.class)
+            Member member2 = em.createQuery("select m from Member m where m.nickname = :username", Member.class)
                     .setParameter("username", "member2")
                     .getSingleResult();
             
@@ -145,7 +145,7 @@ public class InitMember implements CommandLineRunner {
             }
 
             // 대댓글 작성자
-            Member member3 = em.createQuery("select m from Member m where m.username = :username", Member.class)
+            Member member3 = em.createQuery("select m from Member m where m.nickname = :username", Member.class)
                     .setParameter("username", "member3")
                     .getSingleResult();
 

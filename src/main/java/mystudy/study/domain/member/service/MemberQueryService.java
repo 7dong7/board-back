@@ -24,7 +24,6 @@ public class MemberQueryService {
     // email 로 사용자 조회
     public Member findByEmail(String email) {
         log.info("findByEmail email: {}", email);
-        return memberRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("사용자가 존재하지 않습니다"+email));
+        return memberRepository.findByEmail(email);
     }
 }

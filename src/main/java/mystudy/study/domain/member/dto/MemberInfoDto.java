@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 public class MemberInfoDto {
     // member 엔티티
     private Long id;
-    private String username;
+    private String nickname;
     private String email;
     private LocalDateTime createdAt;
     // post 엔티티

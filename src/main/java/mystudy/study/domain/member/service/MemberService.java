@@ -60,7 +60,7 @@ public class MemberService {
         // 반환 dto 채우기
         return MemberInfoDto.builder()
                 .id(memberId)
-                .username(member.getUsername())
+                .nickname(member.getNickname())
                 .email(member.getEmail())
                 .createdAt(member.getCreatedAt())
                 .postCount(postCount)

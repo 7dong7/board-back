@@ -1,4 +1,4 @@
-package mystudy.study.domain.member.dto;
+package mystudy.study.domain.member.dto.login;
 
 import mystudy.study.domain.member.entity.Member;
 import org.springframework.security.core.GrantedAuthority;
@@ -40,6 +40,6 @@ public class CustomUserDetail implements UserDetails {
     }
 
     public String getName() { // 사용자가 지정한 닉네임
-        return member.getUsername();
+        return member.getNickname();
     }
 }

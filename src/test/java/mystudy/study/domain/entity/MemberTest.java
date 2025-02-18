@@ -30,7 +30,7 @@ class MemberTest {
             Member member = Member.builder()
                     .email("member" + i + "@naver.com")
                     .password("test!")
-                    .username("member" + i)
+                    .nickname("member" + i)
                     .age(i)
                     .build();
             em.persist(member);
@@ -56,13 +56,13 @@ class MemberTest {
         Member member = Member.builder()
                 .email("test@gmail.com")
                 .password("test!")
-                .username("testuser")
+                .nickname("testuser")
                 .age(10)
                 .build();
         // 사용자 등록
         memberRepository.save(member);
 
-        Member findMember = memberRepository.findByUsername("testuser")
+        Member findMember = memberRepository.findByNickname("testuser")
                 .orElseGet(() -> null);
 
         Assertions.assertThat(findMember).isEqualTo(member);

@@ -1,6 +1,7 @@
 package mystudy.study.config;
 
 import lombok.RequiredArgsConstructor;
+import mystudy.study.domain.member.service.login.CustomOAuth2UserService;
 import mystudy.study.jwt.JWTAuthFilter;
 import mystudy.study.jwt.JWTUtil;
 import mystudy.study.jwt.LoginFilter;
@@ -26,6 +27,7 @@ public class SecurityConfig {
 
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JWTUtil jwtUtil;
+    private final CustomOAuth2UserService customOAuth2UserService;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
@@ -57,6 +59,8 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests( auth -> auth
                         .requestMatchers(WHITELIST).permitAll()
+                        .requestMatchers(USER_ROUTE).hasRole("USER")
+                        .requestMatchers(ADMIN_ROUTE).hasRole("ADMIN")
                         .anyRequest().authenticated()
                 );
 
@@ -64,6 +68,16 @@ public class SecurityConfig {
         http
                 .formLogin(form -> form
                         .loginPage("/login")
+                );
+
+        // oauth2 로그인 방식 사용
+        http
+                .oauth2Login(oauth2 -> oauth2
+                        .loginPage("/login") // 로그인 페이지
+                        .userInfoEndpoint( userInfoEndpointConfig -> userInfoEndpointConfig
+                                .userService(customOAuth2UserService))
+                        // 외부 인증 제공자 엔드포인트 지정
+                        // 사용자의 프로필 정보를 조회할 때 사용
                 );
 
     // ==== form login JWT 방식 ==== //

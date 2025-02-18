@@ -33,7 +33,7 @@ class MemberRepositoryTest {
         Member member1 = Member.builder()
                 .email("member1@naver.com")
                 .password("test!")
-                .username("memberi")
+                .nickname("memberi")
                 .age(1)
                 .build();
         em.persist(member1);
@@ -42,7 +42,7 @@ class MemberRepositoryTest {
             Member member = Member.builder()
                     .email("member" + i + "@naver.com")
                     .password("test!")
-                    .username("member" + i)
+                    .nickname("member" + i)
                     .age(i)
                     .build();
             em.persist(member);
@@ -73,8 +73,8 @@ class MemberRepositoryTest {
 
         // 이메일로 사용자 찾기
             // 이메일에 해당하는 사용자가 있을수도 없을수도 있음
-        Optional<Member> findMember = memberRepository.findByUsername("member1");
-        Optional<Member> findMember2 = memberRepository.findByUsername("memb");
+        Optional<Member> findMember = memberRepository.findByNickname("member1");
+        Optional<Member> findMember2 = memberRepository.findByNickname("memb");
 
         System.out.println("findMember = " + findMember);
 
@@ -89,13 +89,13 @@ class MemberRepositoryTest {
     @Test
     public void assertTest() throws Exception{
 
-        Optional<Member> findMemberOption = memberRepository.findByUsername("member1");
+        Optional<Member> findMemberOption = memberRepository.findByNickname("member1");
 
         Member member = findMemberOption.orElseThrow(() -> new IllegalArgumentException("사용자가 없음"));
 
         System.out.println("member = " + member);
 
-        assertThat(member.getUsername()).isEqualTo("member1");
+        assertThat(member.getNickname()).isEqualTo("member1");
 //        assertThat(member.getUsername()).as("찾는 사용자가 아닙니다.").isEqualTo("member2");
     }
 
@@ -177,7 +177,7 @@ class MemberRepositoryTest {
         assertThat(members).hasSize(7); // 전체 사용자 수 7
 
         assertThat(members)
-                .filteredOn(member -> member.getUsername().toLowerCase().contains("member"))
+                .filteredOn(member -> member.getNickname().toLowerCase().contains("member"))
                 .hasSize(4); // 7명 중 username 이 member 가 포함되는 사용자는 4명
     }
 
@@ -193,8 +193,8 @@ class MemberRepositoryTest {
         assertThat(members).hasSize(7); // 전체 사용자 수 7
 
         assertThat(members)
-                .filteredOn(member -> member.getUsername().toLowerCase().contains("member"))
-                .allMatch(member -> member.getUsername().toLowerCase().contains("member"));
+                .filteredOn(member -> member.getNickname().toLowerCase().contains("member"))
+                .allMatch(member -> member.getNickname().toLowerCase().contains("member"));
 
 //        assertThat(members)
 //                .as("리스트안의 모든 username에 member가 포함되지 않습니다.")

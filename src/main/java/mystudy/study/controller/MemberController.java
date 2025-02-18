@@ -26,19 +26,19 @@ import java.util.Set;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/members")
+@RequestMapping
 public class MemberController {
 
     private final MemberService memberService;
 
-    // 회원 가입 페이지
-    @GetMapping("/new")
+    // 회원 가입 : 페이지
+    @GetMapping("/members/new")
     public String newMemberForm(@ModelAttribute("memberForm") MemberRegisterForm memberForm) {
         return "pages/member/memberRegister";
     }
 
-    // 회원 가입 form
-    @PostMapping("/new")
+    // 회원 가입 : 기능
+    @PostMapping("/members/new")
     public String saveMember(@Validated @ModelAttribute("memberForm") MemberRegisterForm memberForm, BindingResult bindingResult) {
         log.info("memberForm = {}", memberForm);
         log.info("bindingResult = {}", bindingResult);
@@ -57,7 +57,7 @@ public class MemberController {
         Member member = Member.builder()
                 .email(memberForm.getEmail())
                 .password(memberForm.getPassword())
-                .username(memberForm.getUsername())
+                .nickname(memberForm.getUsername())
                 .age(10)
                 .build();
 
@@ -68,8 +68,8 @@ public class MemberController {
     }
     
     
-    // 사용자 검색
-    @GetMapping
+    // 사용자 검색 : 페이지
+    @GetMapping("/members")
     public String getMemberPage(
             @RequestParam(value = "searchType", required = false) String searchType,
             @RequestParam(value = "searchWord", required = false) String searchWord,
@@ -104,7 +104,7 @@ public class MemberController {
 
 
     // 사용자의 정보와 게시글을 확인 페이지
-    @GetMapping("{id}")
+    @GetMapping("/members/{id}")
     public String getMemberInfoAndPosts(@PathVariable("id") Long id,
             @RequestParam(defaultValue = "1") int postPage,
             @RequestParam(defaultValue = "id") String ps, // postSort
