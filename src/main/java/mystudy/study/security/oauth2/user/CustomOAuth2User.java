@@ -1,6 +1,6 @@
 package mystudy.study.security.oauth2.user;
 
-import mystudy.study.security.oauth2.OAuth2Response;
+import mystudy.study.security.oauth2.dto.OAuth2Response;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 

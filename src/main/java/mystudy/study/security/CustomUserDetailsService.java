@@ -1,10 +1,9 @@
-package mystudy.study.security.oauth2.service;
+package mystudy.study.security;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mystudy.study.domain.member.service.MemberQueryService;
 import mystudy.study.domain.member.entity.Member;
-import mystudy.study.security.oauth2.user.CustomUserDetail;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

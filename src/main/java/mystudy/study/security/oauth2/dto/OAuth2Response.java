@@ -1,4 +1,4 @@
-package mystudy.study.security.oauth2;
+package mystudy.study.security.oauth2.dto;
 
 public interface OAuth2Response {
 
