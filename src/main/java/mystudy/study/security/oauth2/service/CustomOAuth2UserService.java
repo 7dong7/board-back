@@ -62,7 +62,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         
         // 로그인 사용자가 기존의 사용자인지 조회
         Member findMember = memberQueryService.findByProviderId(oAuth2Response.getProviderId());
-        RoleType role = RoleType.USER;
+        RoleType role = RoleType.ROLE_USER;
 
         if( findMember == null ) { // 사용자가 처음인 경우
 
@@ -74,7 +74,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                     .nickname(oAuth2Response.getNickname())
                     .gender(oAuth2Response.getGender())
                     .mobile(oAuth2Response.getMobile())
-                    .role(RoleType.USER)
+                    .role(RoleType.ROLE_USER)
                     .build();
 
             memberService.saveMember(newMember); // 사용자 저장

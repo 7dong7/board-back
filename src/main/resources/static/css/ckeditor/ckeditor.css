@@ -1,0 +1,16 @@
+.ck-editor__editable:not(.ck-editor__nested-editable) {
+    height: 700px;
+}
+
+.ck-editor__editable {
+    height: 400px;
+}
+.ck-editor__editable p {
+    margin: 0;
+}
+.ck-content {
+
+}
+.contentsArea p {
+    margin: 0;
+}

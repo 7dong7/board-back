@@ -5,6 +5,8 @@ import mystudy.study.security.oauth2.service.CustomOAuth2UserService;
 import mystudy.study.security.jwt.JWTUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -26,6 +28,14 @@ public class SecurityConfig {
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
+    }
+
+    // 역할 계층
+    @Bean
+    public RoleHierarchy roleHierarchy() {
+        return RoleHierarchyImpl.withRolePrefix("ROLE_")
+                .role("ADMIN").implies("USER") // ADMIN > USER
+                .build();
     }
 
     // 암호화
@@ -52,11 +62,13 @@ public class SecurityConfig {
         // 인가 설정
         http
                 .authorizeHttpRequests( auth -> auth
+                        .requestMatchers(AccessURL.ADMIN_ROUTE).hasAnyRole("ADMIN")
+                        .requestMatchers(AccessURL.USER_ROUTE).hasAnyRole("USER")
                         .requestMatchers(AccessURL.WHITELIST).permitAll()
-                        .requestMatchers(AccessURL.USER_ROUTE).hasRole("USER")
-                        .requestMatchers(AccessURL.ADMIN_ROUTE).hasRole("ADMIN")
+                        .requestMatchers(AccessURL.BLACKLIST).denyAll()
                         .anyRequest().authenticated()
                 );
+
 
         // 폼 로그인 방식 사용
         http

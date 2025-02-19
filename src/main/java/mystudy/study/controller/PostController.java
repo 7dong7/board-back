@@ -18,17 +18,17 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartRequest;
 
 import java.nio.file.AccessDeniedException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @Controller
@@ -47,27 +47,11 @@ public class PostController {
             @PageableDefault(size = 20, page = 1, sort = "id", direction = Sort.Direction.DESC) Pageable clPageable,
             Model model,
             HttpServletRequest request) {
-//        // == 로그인 세션 정보 확인 == //
-//        log.info("=== 로그인 세션 정보 확인 === ");
-//        HttpSession session = request.getSession(false); // 세션이 존재하면 가져옴 (생성하지 않음)
-//        if(session != null) {
-//            // 세션에 저장된 SecurityContext 꺼내기
-//            SecurityContext context = (SecurityContext) session.getAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY); //
-//            if(context != null) {
-//                // context 안에 있는 인증객체(Authentication) 꺼내기
-//                Authentication authentication = context.getAuthentication();
-//                if (authentication != null) {
-//                    // 인증객체 확인
-//                    log.info("session에 저장된 현재 사용자: {}", authentication.getName());
-//                }
-//            }
-//        }
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        String name = authentication.getName();
-//        CustomOAuth2User principal = (CustomOAuth2User) authentication.getPrincipal();
-//        String memberName = principal.getName();
-//        log.info("securityContextHolder에 저장된 현재 사용자: {}", name);
-//        log.info("MemberName: {}", memberName);
+        Collection<? extends GrantedAuthority> authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+        Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
+        GrantedAuthority next = iterator.next();
+        String role = next.getAuthority();
+        log.info("getPostPage role: {}", role);
 
 
         // pageable 생성
@@ -135,13 +119,13 @@ public class PostController {
     @PostMapping("/posts/new/post")
     public String createPost(@ModelAttribute("newPost") NewPostDto newPostDto,
                              HttpServletRequest request) {
-        log.info("newPostDto: {}", newPostDto);
+        log.info("createPost newPostDto: {}", newPostDto);
 
-        // 사용자 id값
-        HttpSession session = request.getSession(false);
-        LoginSessionInfo loginSessionInfo = (LoginSessionInfo) session.getAttribute(SessionConst.LOGIN_MEMBER_ID);
-
-        postService.createPost(newPostDto, loginSessionInfo.getId());
+        // 게시글 저장
+//        HttpSession session = request.getSession(false);
+//        LoginSessionInfo loginSessionInfo = (LoginSessionInfo) session.getAttribute(SessionConst.LOGIN_MEMBER_ID);
+//
+//        postService.createPost(newPostDto, loginSessionInfo.getId());
 
         return "redirect:/posts";
     }

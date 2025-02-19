@@ -99,6 +99,12 @@
     text-decoration: underline;
 }
 
+/* 라인 */
+.part-line {
+    margin-top:1.3rem;
+    border-bottom:solid 0.13rem #2c3e50;
+}
+
 /* 에러 필드 / 에러 메시지 */
 .field-error-input {
     border: 1px solid #d45555 !important;

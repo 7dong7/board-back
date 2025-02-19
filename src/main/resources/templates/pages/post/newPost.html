@@ -9,6 +9,11 @@
     <title>글 작성</title>
     <!-- CSS 파일 -->
     <link rel="stylesheet" href="/css/pages/post/newPost.css"/>
+    <link rel="stylesheet" href="/css/ckeditor/ckeditor.css"/>
+
+    <!-- JS -->
+        <!-- ckeditor5 -->
+    <script src="/js/ckeditor5-build-classic-39.0.1/ckeditor5-build-classic/ckeditor.js"></script>
 </head>
 
 <body>
@@ -26,7 +31,7 @@
                 <!-- 내용 -->
                 <div class="form-group">
                     <label for="content">내용</label>
-                    <textarea id="content" rows="10" th:field="*{content}" placeholder="내용을 입력하세요" required></textarea>
+                    <textarea id="content" rows="10" th:field="*{content}" placeholder="내용을 입력하세요"></textarea>
                 </div>
 
                 <!-- 버튼 -->
@@ -35,6 +40,21 @@
                     <a href="/posts" class="cancel-button">취소</a>
                 </div>
             </form>
+            <script>
+                ClassicEditor
+                    .create(document.querySelector('#content'), {
+
+                        language: "ko",
+
+                        ckfinder: {
+                            uploadUrl: "/image/upload",
+                            withCredentials: true
+                        }
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+            </script>
         </div>
     </main>
 </body>

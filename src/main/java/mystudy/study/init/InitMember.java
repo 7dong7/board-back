@@ -48,7 +48,7 @@ public class InitMember implements CommandLineRunner {
                     .password(bCryptPasswordEncoder.encode("1234"))
                     .nickname("관리자")
                     .age(0)
-                    .role(RoleType.ADMIN)
+                    .role(RoleType.ROLE_ADMIN)
                     .build();
 
             em.persist(admin);
@@ -58,7 +58,7 @@ public class InitMember implements CommandLineRunner {
                     .password(bCryptPasswordEncoder.encode("test!"))
                     .nickname("member1")
                     .age(10)
-                    .role(RoleType.USER)
+                    .role(RoleType.ROLE_USER)
                     .build();
 
             em.persist(member1);
@@ -70,7 +70,7 @@ public class InitMember implements CommandLineRunner {
                         .password(bCryptPasswordEncoder.encode("test!"))
                         .nickname("member" + i)
                         .age(i)
-                        .role(RoleType.USER)
+                        .role(RoleType.ROLE_USER)
                         .build();
                 em.persist(member);
             }
@@ -81,7 +81,7 @@ public class InitMember implements CommandLineRunner {
                         .password(bCryptPasswordEncoder.encode("test!"))
                         .nickname("user" + i)
                         .age(i)
-                        .role(RoleType.USER)
+                        .role(RoleType.ROLE_USER)
                         .build();
                 em.persist(member);
             }
@@ -92,7 +92,7 @@ public class InitMember implements CommandLineRunner {
                         .password(bCryptPasswordEncoder.encode("test!"))
                         .nickname("postuser" + i)
                         .age(i)
-                        .role(RoleType.USER)
+                        .role(RoleType.ROLE_USER)
                         .build();
                 em.persist(member);
             }
