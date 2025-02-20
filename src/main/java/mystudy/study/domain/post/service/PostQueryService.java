@@ -2,6 +2,7 @@ package mystudy.study.domain.post.service;
 
 import lombok.RequiredArgsConstructor;
 import mystudy.study.domain.post.dto.PostEditForm;
+import mystudy.study.domain.post.dto.ViewPostDto;
 import mystudy.study.domain.post.entity.Post;
 import mystudy.study.domain.post.repository.PostRepository;
 import org.springframework.stereotype.Service;
@@ -29,4 +30,5 @@ public class PostQueryService {
     public PostEditForm findByPostIdAndMemberId(Long postId, Long memberId) {
         return postRepository.findByPostIdAndMemberId(postId, memberId);
     }
+
 }

@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mystudy.study.domain.comment.dto.NewCommentDto;
 import mystudy.study.domain.comment.dto.ParentCommentDto;
+import mystudy.study.domain.post.entity.Post;
 import mystudy.study.security.CustomUserDetail;
 import mystudy.study.security.oauth2.user.CustomOAuth2User;
 import mystudy.study.domain.member.dto.login.LoginSessionInfo;
@@ -80,25 +81,34 @@ public class PostController {
         return "pages/post/posts";
     }
 
-    // 게시글 내용 보기, 댓글, 대댓글 (페이징)
+    // 게시글 조회 : 페이지 (게시글 내용, 댓글&대댓글(페이징))
     @GetMapping("/posts/{id}")
-    public String getPostView(@PathVariable Long id,
+    public String getPostView(@PathVariable("id") Long postId,
                               @PageableDefault(size=20, page=0) Pageable clPageable,
                               Model model) {
-
         // 댓글 Pageable 생성
         Pageable commentPageable = PageRequest.of(
                 Math.max(clPageable.getPageNumber() - 1, 0),
                 20, // pageSize
                 Sort.by("id").descending()); // pageSort
 
+        // 게시글 조회 (postId 사용)
+        ViewPostDto viewPost = postService.getViewPost(postId);
+
+        model.addAttribute("post", viewPost);
+
+        // 댓글 & 대댓글 가져오기
+
+
+
+        
         // 게시글 내용물 가져오기, 댓글 가져오기 (페이징)
-        PostViewDto postViewDto = postService.getPostView(id, commentPageable);
+        PostViewDto postViewDto = postService.getPostView(postId, commentPageable);
 
         List<ParentCommentDto> content = postViewDto.getCommentDtoPage().getContent();
 
         model.addAttribute("newComment", new NewCommentDto());
-        model.addAttribute("post", postViewDto);
+//        model.addAttribute("post", postViewDto);
         return "pages/post/postView";
     }
 

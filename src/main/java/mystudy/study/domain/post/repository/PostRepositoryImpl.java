@@ -102,6 +102,34 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
     }
 
+    // 게시글 조회 - ViewPostDto 직접 조회
+    @Override
+    public ViewPostDto getViewPostDto(Long postId) {
+
+        return queryFactory
+                .select(new QViewPostDto(
+                        post.id,
+                        post.title,
+                        post.content,
+                        post.createdAt,
+                        post.viewCount,
+                        member.id.as("memberId"),
+                        member.nickname)
+                )
+                .from(post)
+                .leftJoin(post.member, member)
+                .where(
+                        post.id.eq(postId)
+                )
+                .fetchOne();
+    }
+
+
+
+
+
+
+    // =========== 삭제 예정 =====================
     // 게시글 보기 - 게시글 내용 가져오기
     @Override
     public PostViewDto getPostView(Long postId) {
@@ -123,6 +151,9 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                 )
                 .fetchOne();
     }
+
+
+
 
     // 게시글 수정 - 게시글 조회 (로그인 Id 와 게시글 Id 비교)
     @Override
