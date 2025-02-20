@@ -23,7 +23,6 @@ public class MemberQueryService {
     
     // email 로 사용자 조회
     public Member findByEmail(String email) {
-        log.info("findByEmail email: {}", email);
         return memberRepository.findByEmail(email);
     }
 

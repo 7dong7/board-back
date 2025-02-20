@@ -12,6 +12,7 @@ import mystudy.study.domain.comment.service.CommentService;
 import mystudy.study.domain.member.service.MemberQueryService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +31,30 @@ public class PostService {
 
     private final PostQueryService postQueryService;
     private final MemberQueryService memberQueryService;
+
+    // 게시글 작성 : 처리
+    @Transactional
+    public void createPost(NewPostDto newPostDto) {
+
+        // 로그인한 사용자 확인
+        String email = SecurityContextHolder.getContext().getAuthentication().getName(); // username 로그인 사용값
+        Member member = memberQueryService.findByEmail(email);
+
+        // 게시글 생성
+        Post post = Post.builder()
+                .title(newPostDto.getTitle())
+                .content(newPostDto.getContent())
+                .member(member)
+                .build();
+
+        // 게시글 연관관계 매핑 cascade 옵션이 있다면 아래의 save 를 사용하지 않아도 DB에 저장된다 (더티체킹)
+        member.addPost(post);
+
+        // 게시글 저장
+        postRepository.save(post);
+    }
+
+
 
     // 게시글 검색해서 가져오기
     public Page<PostDto> getPostPage(Pageable pageable, PostSearchCondition condition) {
@@ -86,21 +111,7 @@ public class PostService {
         return postView;
     }
 
-    // 새로은 게시글 작성
-    @Transactional
-    public void createPost(NewPostDto newPostDto, Long writeMemberId) {
 
-        // 사용자 정보 ( 로그인 정보로 가져옴 )
-        Member member = memberQueryService.findMemberById(writeMemberId);
-
-        Post post = Post.builder()
-                .title(newPostDto.getTitle())
-                .content(newPostDto.getContent())
-                .member(member)
-                .build();
-
-        member.getPosts().add(post);
-    }
 
     // 게시글 수정하기
     @Transactional

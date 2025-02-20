@@ -15,8 +15,6 @@ public class AccessURL {
             "/members", "/members/*",
             "/oauth2/**",
             "/image/upload", // 사용자 변경 예정 role : ROLE_USER
-            "/upload/images/**", // get 방식 요청
-            "/image/upload/**",
             "/posts/new/post" // 사용자 변경 예정 role : ROLE_USER
     };
 

@@ -12,9 +12,8 @@ import java.util.List;
 
 
 @Entity
-@Getter
+@Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString
 @EntityListeners(AuditingEntityListener.class)
 public class Member extends BaseTimeEntity {
     /**
@@ -56,6 +55,11 @@ public class Member extends BaseTimeEntity {
     @Enumerated(EnumType.STRING) // 안붙이면 인덱스로 저장됨 0, 1
     private RoleType role; // 사용자 권한
 
+    /*
+    * CascadeType.PERSIST 또는 CascadeType.ALL 옵션이 Member 엔티티의 posts 연관관계에 설정되어 있다면
+    * 새로 추가된 Post 객체도 자동으로 영속성 컨텍스트에 등록되어, 트랜잭션 커밋 시 DB에 저장된다
+    * posts 객체에 add 로 추가하는걸로 DB에 저장할 수 있다 
+    * */
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> posts = new ArrayList<>();
 

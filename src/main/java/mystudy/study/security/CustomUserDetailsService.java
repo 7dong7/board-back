@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Slf4j
@@ -18,8 +19,8 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        log.info("loadUserByUsername email: {}", email);
         Member loginMember = memberQueryService.findByEmail(email);
+        log.info("loadUserByUsername loginMember [username,email: {}, name: {}, nickname: {}]", loginMember.getEmail(), loginMember.getName(), loginMember.getNickname());
         return new CustomUserDetail(loginMember);
     }
 }

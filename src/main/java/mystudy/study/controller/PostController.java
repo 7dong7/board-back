@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mystudy.study.domain.comment.dto.NewCommentDto;
 import mystudy.study.domain.comment.dto.ParentCommentDto;
+import mystudy.study.security.CustomUserDetail;
 import mystudy.study.security.oauth2.user.CustomOAuth2User;
 import mystudy.study.domain.member.dto.login.LoginSessionInfo;
 import mystudy.study.domain.post.dto.*;
@@ -47,12 +48,6 @@ public class PostController {
             @PageableDefault(size = 20, page = 1, sort = "id", direction = Sort.Direction.DESC) Pageable clPageable,
             Model model,
             HttpServletRequest request) {
-        Collection<? extends GrantedAuthority> authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
-        Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
-        GrantedAuthority next = iterator.next();
-        String role = next.getAuthority();
-        log.info("getPostPage role: {}", role);
-
 
         // pageable 생성
         Pageable pageable = PageRequest.of(
@@ -107,25 +102,21 @@ public class PostController {
         return "pages/post/postView";
     }
 
-    // 새로운 글 작성 페이지
+    // 게시글 작성 : 페이지
     @GetMapping("/posts/new/post")
-    public String createPost(Model model) {
-
-        model.addAttribute("newPost", new NewPostDto());
+    public String createPost(@ModelAttribute("newPost") NewPostDto newPostDto) {
         return "pages/post/newPost";
     }
 
-    // 새로운 게시글 작성
+    // 게시글 작성 : 처리
     @PostMapping("/posts/new/post")
     public String createPost(@ModelAttribute("newPost") NewPostDto newPostDto,
                              HttpServletRequest request) {
         log.info("createPost newPostDto: {}", newPostDto);
+        // createPost newPostDto: NewPostDto(title=ㅁㄴㅇ, content=<p>ㅁㄴㅇ<img src="/upload/images/be9cf97f-0d31-47f2-948d-e3518eca7272.png"></p>)
 
-        // 게시글 저장
-//        HttpSession session = request.getSession(false);
-//        LoginSessionInfo loginSessionInfo = (LoginSessionInfo) session.getAttribute(SessionConst.LOGIN_MEMBER_ID);
-//
-//        postService.createPost(newPostDto, loginSessionInfo.getId());
+        // 게시글 작성
+        postService.createPost(newPostDto);
 
         return "redirect:/posts";
     }
