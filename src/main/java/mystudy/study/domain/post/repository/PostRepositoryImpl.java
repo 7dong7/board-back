@@ -124,25 +124,22 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                 .fetchOne();
     }
 
-
-
-
-
-
-    // =========== 삭제 예정 =====================
-    // 게시글 보기 - 게시글 내용 가져오기
+    // 게시글 수정 - 게시글 조회 PostEditDto (postId 사용)
     @Override
-    public PostViewDto getPostView(Long postId) {
-        
+    public PostEditDto getPostEditDtoByPostId(Long postId) {
+
         return queryFactory
-                .select(new QPostViewDto(
-                        post.id,
-                        post.title,
-                        post.content,
-                        post.createdAt,
-                        post.viewCount,
-                        member.id.as("memberId"),
-                        member.nickname)
+                .select(new QPostEditDto(
+                                post.id,
+                                post.title,
+                                post.content,
+                                post.createdAt,
+                                post.updatedAt,
+                                post.viewCount,
+                                member.id.as("memberId"),
+                                member.email,
+                                member.nickname
+                        )
                 )
                 .from(post)
                 .leftJoin(post.member, member)
@@ -154,29 +151,6 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
 
 
 
-
-    // 게시글 수정 - 게시글 조회 (로그인 Id 와 게시글 Id 비교)
-    @Override
-    public PostEditForm findByPostIdAndMemberId(Long postId, Long memberId) {
-        return queryFactory.select(new QPostEditForm(
-                        post.id.as("postId"),
-                        post.title,
-                        post.content,
-                        post.createdAt,
-                        post.updatedAt,
-                        post.viewCount,
-                        member.id.as("memberId"),
-                        member.nickname
-                        )
-                )
-                .from(post)
-                .leftJoin(post.member, member)
-                .where(
-                        post.id.eq(postId),
-                        post.member.id.eq(memberId)
-                )
-                .fetchOne();
-    }
 
     // postId로 게시글 조회 fetch join
     @Override
@@ -246,5 +220,32 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
         } else {
             return null;
         }
+    }
+
+
+
+
+
+    // =========== 삭제 예정 =====================
+    // 게시글 보기 - 게시글 내용 가져오기
+    @Override
+    public PostViewDto getPostView(Long postId) {
+
+        return queryFactory
+                .select(new QPostViewDto(
+                        post.id,
+                        post.title,
+                        post.content,
+                        post.createdAt,
+                        post.viewCount,
+                        member.id.as("memberId"),
+                        member.nickname)
+                )
+                .from(post)
+                .leftJoin(post.member, member)
+                .where(
+                        post.id.eq(postId)
+                )
+                .fetchOne();
     }
 }

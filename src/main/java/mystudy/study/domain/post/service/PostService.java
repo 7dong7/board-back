@@ -10,8 +10,10 @@ import mystudy.study.domain.post.dto.*;
 import mystudy.study.domain.post.repository.PostRepository;
 import mystudy.study.domain.comment.service.CommentService;
 import mystudy.study.domain.member.service.MemberQueryService;
+import mystudy.study.security.CustomUserDetail;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -78,6 +80,41 @@ public class PostService {
         return postRepository.getViewPostDto(postId);
     }
 
+    // 게시글 수정 : 페이지 - 게시글 조회 (postId 사용)
+    public PostEditDto viewPostEdit(Long postId) {
+        /**
+         * 게시글을 수정하기 위해 수정 페이지를 요천한다
+         * 페이지 요청시 게시글의 작성자와 현재 로그인한 사용자의 id를 비교해 적절한 요청인지 확인한다
+         */
+        // 게시글을 조회 (PostEditDto) 직접 조회
+        return postRepository.getPostEditDtoByPostId(postId);
+    }
+
+    // 게시글 수정 : 처리 - 게시글 수정하기
+    public void postEdit(PostEditDto postEditDto) throws AccessDeniedException {
+        // 게시글 조회
+        Post post = postQueryService.findByPostId(postEditDto.getPostId());
+
+        // 로그인 Member 확인
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        Long memberId = null;
+            // principal 의 객체가 UserDetails 인지 OAuth2User 인지 확인
+        if (principal instanceof CustomUserDetail customUser) {
+            memberId = customUser.getMemberId();
+        }
+
+        // 게시글의 주인과 로그인 사용자 비교
+        if (post.getMember().getId().equals(memberId)) {// 같은 경우 (정상)
+            post.updateContent(postEditDto.getContent());
+        } else { // 작성자가 일치하지 않음
+            throw new AccessDeniedException("수정 권한이 없습니다.");
+        }
+
+    }
+
+
+
 
     // 게시글 조회 // ======================= 삭제 예정
     public PostViewDto getPostView(Long postId, Pageable commentPageable) { // 조회수 증가
@@ -121,37 +158,31 @@ public class PostService {
 
 
 
+
+
+
+
+
+
+
+
+
+
     // 게시글 검색해서 가져오기
     public Page<PostDto> getPostPage(Pageable pageable, PostSearchCondition condition) {
         return postRepository.getPostPage(pageable, condition);
     }
-    
+
     // 게시글 수 가져오기
     public Long getPostCountByMemberId(Long id) {
         return postRepository.getPostCountByMemberId(id);
     }
-    
+
     // 사용자가 작성한 게시글 가져오기, 사용자 정보에서 사용
     public Page<PostDto> getPostByMemberId(Long id, Pageable pageable) {
         return postRepository.getPostByMemberId(id, pageable);
     }
 
-
-
-
-
-    // 게시글 수정하기
-    @Transactional
-    public void postEdit(PostEditForm postEditForm, Long memberId, Long postId) throws AccessDeniedException {
-        Post post = postQueryService.findByPostId(postId);
-        
-        if (!post.getMember().getId().equals(memberId)) { // 로그인 사용자와 게시글의 사용자가 일치하지 않음
-            throw new AccessDeniedException("해당 게시글의 수정 권한이 없습니다");
-        }
-
-        // 게시글 수정
-        post.editContent(postEditForm.getContent());
-    }
 
 
 }

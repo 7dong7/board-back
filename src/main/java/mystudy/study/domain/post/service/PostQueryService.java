@@ -26,9 +26,4 @@ public class PostQueryService {
         return postRepository.findByPostId(postId);
     }
     
-    // postId 와 memberId로 게시글 조회
-    public PostEditForm findByPostIdAndMemberId(Long postId, Long memberId) {
-        return postRepository.findByPostIdAndMemberId(postId, memberId);
-    }
-
 }

@@ -14,8 +14,11 @@ public class AccessURL {
             "/posts", "/posts/*",
             "/members", "/members/*",
             "/oauth2/**",
+
             "/image/upload", // 사용자 변경 예정 role : ROLE_USER
-            "/posts/new/post" // 사용자 변경 예정 role : ROLE_USER
+
+            "/posts/new/post", // 사용자 변경 예정 role : ROLE_USER
+            "/posts/*/edit" // 사용자 변경 예정 role : ROLE_USER
     };
 
     public static final String[] BLACKLIST = { // 접근 불가

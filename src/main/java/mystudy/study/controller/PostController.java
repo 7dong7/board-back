@@ -1,14 +1,12 @@
 package mystudy.study.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mystudy.study.domain.comment.dto.NewCommentDto;
 import mystudy.study.domain.comment.dto.ParentCommentDto;
-import mystudy.study.domain.post.entity.Post;
-import mystudy.study.security.CustomUserDetail;
-import mystudy.study.security.oauth2.user.CustomOAuth2User;
 import mystudy.study.domain.member.dto.login.LoginSessionInfo;
 import mystudy.study.domain.post.dto.*;
 import mystudy.study.domain.post.service.PostQueryService;
@@ -19,15 +17,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartRequest;
 
 import java.nio.file.AccessDeniedException;
 import java.util.*;
@@ -40,6 +33,99 @@ public class PostController {
 
     private final PostService postService;
     private final PostQueryService postQueryService;
+
+    // 게시글 작성 : 페이지
+    @GetMapping("/posts/new/post")
+    public String createPost(@ModelAttribute("newPost") NewPostDto newPostDto) {
+        return "pages/post/newPost";
+    }
+
+    // 게시글 작성 : 처리
+    @PostMapping("/posts/new/post")
+    public String createPost(@ModelAttribute("newPost") NewPostDto newPostDto,
+                             HttpServletRequest request) {
+        log.info("createPost newPostDto: {}", newPostDto);
+// createPost newPostDto: NewPostDto(title=ㅁㄴㅇ, content=<p>ㅁㄴㅇ<img src="/upload/images/be9cf97f-0d31-47f2-948d-e3518eca7272.png"></p>)
+
+        // 게시글 작성
+        postService.createPost(newPostDto);
+
+        return "redirect:/posts";
+    }
+
+    // 게시글 조회 : 페이지 (게시글 내용, 댓글&대댓글(페이징))
+    @GetMapping("/posts/{id}")
+    public String getPostView(@PathVariable("id") Long postId,
+                              @PageableDefault(size=20, page=0) Pageable clPageable,
+                              Model model) {
+        // 댓글 Pageable 생성
+        Pageable commentPageable = PageRequest.of(
+                Math.max(clPageable.getPageNumber() - 1, 0),
+                20, // pageSize
+                Sort.by("id").descending()); // pageSort
+
+        // 게시글 조회 (postId 사용)
+        ViewPostDto viewPost = postService.getViewPost(postId);
+
+        model.addAttribute("post", viewPost);
+
+        // 댓글 & 대댓글 가져오기
+
+
+
+
+        // 게시글 내용물 가져오기, 댓글 가져오기 (페이징)
+        PostViewDto postViewDto = postService.getPostView(postId, commentPageable);
+
+        List<ParentCommentDto> content = postViewDto.getCommentDtoPage().getContent();
+
+        model.addAttribute("newComment", new NewCommentDto());
+//        model.addAttribute("post", postViewDto);
+        return "pages/post/postView";
+    }
+
+    // 게시글 수정 : 페이지
+    @GetMapping("/posts/{id}/edit")
+    public String postEditPage(@PathVariable("id") Long postId,
+                               HttpServletResponse response,
+                               Model model) {
+
+        // 게시글 조회 (postId 사용)
+        PostEditDto postEditDto = postService.viewPostEdit(postId);
+
+        // 로그인한 사용자 정보
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        // 게시글 작성자와 로그인한 사용자 일치 여부 확인
+        if (email.equals(postEditDto.getEmail())) { // 일치하는 경우
+            log.info("postEditPage postEditDto: {}", postEditDto);
+            model.addAttribute("post", postEditDto);
+            return "pages/post/postEdit";
+        }
+
+        // 일치하지 않는 경우
+        return "redirect:/posts/" + postId;
+    }
+
+    // 게시글 수정 : 처리
+    @PostMapping("/posts/{id}/edit")
+    public String postEdit(@PathVariable("id") Long postId,
+                           @ModelAttribute("postEditDto") PostEditDto postEditDto) throws AccessDeniedException {
+        log.info("postEdit postEditDto: {}", postEditDto);
+
+        // 게시글 수정
+        try {
+            postService.postEdit(postEditDto);
+        } catch (AccessDeniedException e) { // 로그인 사용자와 게시글 주인이 다른 경우
+            return "redirect:/posts/";
+        }
+        return "redirect:/posts/" + postId;
+    }
+
+
+
+
+
 
     // 게시글 검색 조건 페이징
     @GetMapping("/posts")
@@ -81,89 +167,9 @@ public class PostController {
         return "pages/post/posts";
     }
 
-    // 게시글 조회 : 페이지 (게시글 내용, 댓글&대댓글(페이징))
-    @GetMapping("/posts/{id}")
-    public String getPostView(@PathVariable("id") Long postId,
-                              @PageableDefault(size=20, page=0) Pageable clPageable,
-                              Model model) {
-        // 댓글 Pageable 생성
-        Pageable commentPageable = PageRequest.of(
-                Math.max(clPageable.getPageNumber() - 1, 0),
-                20, // pageSize
-                Sort.by("id").descending()); // pageSort
-
-        // 게시글 조회 (postId 사용)
-        ViewPostDto viewPost = postService.getViewPost(postId);
-
-        model.addAttribute("post", viewPost);
-
-        // 댓글 & 대댓글 가져오기
 
 
 
-        
-        // 게시글 내용물 가져오기, 댓글 가져오기 (페이징)
-        PostViewDto postViewDto = postService.getPostView(postId, commentPageable);
 
-        List<ParentCommentDto> content = postViewDto.getCommentDtoPage().getContent();
 
-        model.addAttribute("newComment", new NewCommentDto());
-//        model.addAttribute("post", postViewDto);
-        return "pages/post/postView";
-    }
-
-    // 게시글 작성 : 페이지
-    @GetMapping("/posts/new/post")
-    public String createPost(@ModelAttribute("newPost") NewPostDto newPostDto) {
-        return "pages/post/newPost";
-    }
-
-    // 게시글 작성 : 처리
-    @PostMapping("/posts/new/post")
-    public String createPost(@ModelAttribute("newPost") NewPostDto newPostDto,
-                             HttpServletRequest request) {
-        log.info("createPost newPostDto: {}", newPostDto);
-        // createPost newPostDto: NewPostDto(title=ㅁㄴㅇ, content=<p>ㅁㄴㅇ<img src="/upload/images/be9cf97f-0d31-47f2-948d-e3518eca7272.png"></p>)
-
-        // 게시글 작성
-        postService.createPost(newPostDto);
-
-        return "redirect:/posts";
-    }
-
-    // 글 수정 페이지
-    @GetMapping("/posts/{id}/edit")
-    public String updatePostPage(@PathVariable("id") Long postId,
-                                 HttpServletRequest request,
-                                 Model model) {
-        // 수정 게시글 로그인 사용자의 게시글인지 확인
-        HttpSession session = request.getSession(false);
-        LoginSessionInfo loginSessionInfo = (LoginSessionInfo) session.getAttribute(SessionConst.LOGIN_MEMBER_ID);
-
-        // 수정하고자 하는 게시글 내용
-        PostEditForm postEditForm = postQueryService.findByPostIdAndMemberId(postId, loginSessionInfo.getId());
-        log.info("postEditForm = " + postEditForm);
-        if (postEditForm == null) { // 게시글을 사용자가 작성하지 않음
-            return "redirect:/posts/" + postId;
-        }
-
-        model.addAttribute("postEditForm", postEditForm);
-        return "pages/post/updatePost";
-    }
-
-    // 글 수정 페이지
-    @PostMapping("/posts/{id}/edit")
-    public String updatePost(@PathVariable("id") Long postId,
-                             @ModelAttribute("postEditForm") PostEditForm postEditForm,
-                             HttpServletRequest request) throws AccessDeniedException {
-        log.info("postEditForm = " + postEditForm);
-
-        // 수정 게시글 로그인 사용자의 게시글인지 확인
-        HttpSession session = request.getSession(false);
-        LoginSessionInfo loginSessionInfo = (LoginSessionInfo) session.getAttribute(SessionConst.LOGIN_MEMBER_ID);
-
-        postService.postEdit(postEditForm, loginSessionInfo.getId(), postId);
-
-        return "redirect:/posts/" + postId;
-    }
 }

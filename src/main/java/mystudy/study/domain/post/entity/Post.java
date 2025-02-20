@@ -47,7 +47,7 @@ public class Post extends BaseEntity {
     }
 
     // 게시글 내용 수정
-    public void editContent(String content) {
+    public void updateContent(String content) {
         this.content = content;
     }
     
