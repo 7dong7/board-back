@@ -36,7 +36,7 @@ public class PostController {
 
     // 게시글 작성 : 페이지
     @GetMapping("/posts/new/post")
-    public String createPost(@ModelAttribute("newPost") NewPostDto newPostDto) {
+    public String createPostPage(@ModelAttribute("newPost") NewPostDto newPostDto) {
         return "pages/post/newPost";
     }
 
@@ -75,12 +75,11 @@ public class PostController {
 
 
         // 게시글 내용물 가져오기, 댓글 가져오기 (페이징)
-        PostViewDto postViewDto = postService.getPostView(postId, commentPageable);
+//        PostViewDto postViewDto = postService.getPostView(postId, commentPageable);
+//
+//        List<ParentCommentDto> content = postViewDto.getCommentDtoPage().getContent();
 
-        List<ParentCommentDto> content = postViewDto.getCommentDtoPage().getContent();
-
-        model.addAttribute("newComment", new NewCommentDto());
-//        model.addAttribute("post", postViewDto);
+//        model.addAttribute("newComment", new NewCommentDto());
         return "pages/post/postView";
     }
 
@@ -117,11 +116,25 @@ public class PostController {
         try {
             postService.postEdit(postEditDto);
         } catch (AccessDeniedException e) { // 로그인 사용자와 게시글 주인이 다른 경우
-            return "redirect:/posts/";
+            return "redirect:/posts";
         }
         return "redirect:/posts/" + postId;
     }
 
+    // 게시글 삭제 : 처리
+    @PostMapping("/posts/{id}/delete")
+    public String postDelete(@PathVariable("id") Long postId) {
+        log.info("postDelete postId: {}", postId);
+        
+        // 게시글 삭제
+        try {
+            postService.deletePost(postId);
+        } catch (Exception e) {
+            // 잘못된 삭제 요청
+            return "redirect:/posts";
+        }
+        return "redirect:/posts";
+    }
 
 
 

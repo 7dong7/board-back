@@ -7,6 +7,7 @@ import mystudy.study.domain.comment.dto.ReplyCommentDto;
 import mystudy.study.domain.member.entity.Member;
 import mystudy.study.domain.post.entity.Post;
 import mystudy.study.domain.post.dto.*;
+import mystudy.study.domain.post.entity.PostStatus;
 import mystudy.study.domain.post.repository.PostRepository;
 import mystudy.study.domain.comment.service.CommentService;
 import mystudy.study.domain.member.service.MemberQueryService;
@@ -113,10 +114,35 @@ public class PostService {
 
     }
 
+    // 게시글 삭제
+    public void deletePost(Long postId) throws AccessDeniedException {
+        // 게시글 조회
+        Post post = postQueryService.findByPostId(postId);
+
+        // 로그인 Member 확인
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        Long memberId = null;
+        // principal 의 객체가 UserDetails 인지 OAuth2User 인지 확인
+        if (principal instanceof CustomUserDetail customUser) {
+            memberId = customUser.getMemberId();
+        }
+
+        // 게시글 주인 로그인 사용자 비교
+        if (post.getMember().getId().equals(memberId)) {// 같은 경우 (정상)
+            // 게시글 삭제 (소프트 삭제)
+            post.deletePost();
+        } else { // 작성자가 일치하지 않음
+            throw new AccessDeniedException("삭제 권한이 없습니다.");
+        }
+    }
 
 
 
-    // 게시글 조회 // ======================= 삭제 예정
+
+
+
+    // 게시글 조회 // ======================= 삭제 예정 =========================
     public PostViewDto getPostView(Long postId, Pageable commentPageable) { // 조회수 증가
 
         // 조회수 증가

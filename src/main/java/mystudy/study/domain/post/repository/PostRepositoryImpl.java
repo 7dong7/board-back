@@ -8,6 +8,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import mystudy.study.domain.post.dto.*;
 import mystudy.study.domain.post.entity.Post;
+import mystudy.study.domain.post.entity.PostStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -43,7 +44,8 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                 .from(post)
                 .leftJoin(post.member, member)
                 .where(
-                        transformPostSearchCondition(condition) // 검색 조건 변환
+                        transformPostSearchCondition(condition), // 검색 조건 변환
+                        post.status.eq(PostStatus.ACTIVE)
                 )
                 .orderBy(
                         postSort(pageable)
@@ -63,7 +65,10 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
         return queryFactory
                 .select(post.count())
                 .from(post)
-                .where(post.member.id.eq(id))
+                .where(
+                        post.member.id.eq(id),
+                        post.status.eq(PostStatus.ACTIVE)
+                )
                 .fetchOne();
     }
 
@@ -82,7 +87,8 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                 .from(post)
                 .leftJoin(post.member, member)
                 .where(
-                        post.member.id.eq(id)
+                        post.member.id.eq(id),
+                        post.status.eq(PostStatus.ACTIVE)
                 )
                 .orderBy(
                         postSort(pageable)
@@ -96,7 +102,8 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                 .from(post)
                 .leftJoin(post.member, member)
                 .where(
-                        post.member.id.eq(id)
+                        post.member.id.eq(id),
+                        post.status.eq(PostStatus.ACTIVE)
                 );
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
@@ -119,7 +126,8 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                 .from(post)
                 .leftJoin(post.member, member)
                 .where(
-                        post.id.eq(postId)
+                        post.id.eq(postId),
+                        post.status.eq(PostStatus.ACTIVE)
                 )
                 .fetchOne();
     }
@@ -144,7 +152,8 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                 .from(post)
                 .leftJoin(post.member, member)
                 .where(
-                        post.id.eq(postId)
+                        post.id.eq(postId),
+                        post.status.eq(PostStatus.ACTIVE)
                 )
                 .fetchOne();
     }
@@ -160,7 +169,8 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                 .from(post)
                 .leftJoin(post.member, member).fetchJoin()
                 .where(
-                        post.id.eq(postId)
+                        post.id.eq(postId),
+                        post.status.eq(PostStatus.ACTIVE)
                 )
                 .fetchOne();
     }
@@ -197,7 +207,8 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                 .from(post)
                 .leftJoin(post.member, member)
                 .where(
-                        transformPostSearchCondition(condition)
+                        transformPostSearchCondition(condition),
+                        post.status.eq(PostStatus.ACTIVE)
                 );
     }
 

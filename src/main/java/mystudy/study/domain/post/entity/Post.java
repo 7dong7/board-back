@@ -22,8 +22,10 @@ public class Post extends BaseEntity {
 
     @Lob
     private String content;
-
     private Integer viewCount = 0;
+
+    @Enumerated(EnumType.STRING)
+    private PostStatus status = PostStatus.ACTIVE;
 
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
@@ -49,6 +51,11 @@ public class Post extends BaseEntity {
     // 게시글 내용 수정
     public void updateContent(String content) {
         this.content = content;
+    }
+
+    // 게시글 삭제
+    public void deletePost() {
+        this.status = PostStatus.DELETE;
     }
     
 }

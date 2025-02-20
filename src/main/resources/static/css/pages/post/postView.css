@@ -70,17 +70,25 @@ body {
     font-size: 16px;
     line-height: 1.8;
     color: #000000;
+    margin-bottom:7rem;
 }
 
 /* 게시글 수정하기 버튼 */
-.edit-btn-div {
-    margin:4rem 0 1rem 0;
-    display:flex;
-    justify-content: center;
+.btn-container {
+    /* 그리드 설정 */
+    display:grid;
+    grid-template-columns: repeat(5, 1fr); /* 5등분 1fr크기*/
+    column-gap:0.5rem;
+
+    font-weight:bold;
+    margin:0 0 1rem 0;
 }
 
 .edit-btn {
-    display:inline-block;
+    /* 그리드 설정 */
+    grid-column:3; /* 3번째 열부터 시작 */
+
+    line-height: 1.8;
     padding: 0.3rem 1rem;
     background-color: #6c757d;
     color: white;
@@ -91,6 +99,28 @@ body {
 
 .edit-btn:hover {
     background-color: #5a6268;
+}
+
+/* 게시글 삭제 버튼 */
+.delete-form {
+    /* 그리드 설정 */
+    grid-column:5; /* 3번째 열부터 시작 */
+    justify-self:end;
+
+}
+
+.delete-btn {
+    all: unset; /* 버튼 초기화 */
+    line-height: 1.8;
+    padding: 0.3rem 1rem;
+    background-color: #f74d39;
+    color: white;
+    border-radius: 5px;
+}
+
+.delete-btn:hover {
+    background-color: #d74534;
+    cursor:pointer;
 }
 
 
