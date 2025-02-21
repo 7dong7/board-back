@@ -16,6 +16,6 @@ public interface MemberRepositoryCustom {
     // 사용자 페이징, 조건 검색, 정렬
     Page<SearchMemberDto> getMemberPage(MemberSearchCondition condition, Pageable pageable);
 
-    // 사용자 로그인
+    // 사용자 로그인 // =============== 삭제 예정 ==================
     Member login(String loginId, String password);
 }

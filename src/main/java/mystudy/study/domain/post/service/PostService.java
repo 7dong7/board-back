@@ -137,7 +137,10 @@ public class PostService {
         }
     }
 
-
+    // 사용자 정보 조회 - 사용자가 작성한 게시글 조회 (페이징)
+    public Page<PostDto> getPostByMemberId(Long id, Pageable pageable) {
+        return postRepository.getPostByMemberId(id, pageable);
+    }
 
 
 
@@ -204,10 +207,7 @@ public class PostService {
         return postRepository.getPostCountByMemberId(id);
     }
 
-    // 사용자가 작성한 게시글 가져오기, 사용자 정보에서 사용
-    public Page<PostDto> getPostByMemberId(Long id, Pageable pageable) {
-        return postRepository.getPostByMemberId(id, pageable);
-    }
+
 
 
 

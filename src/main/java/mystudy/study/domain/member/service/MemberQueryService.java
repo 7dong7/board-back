@@ -18,7 +18,7 @@ public class MemberQueryService {
     // id로 사용자 조회
     public Member findMemberById(Long memberId) {
         return memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("사용자가 존재하지 않습니다"+memberId));
+                .orElseThrow(() -> new IllegalArgumentException("사용자가 존재하지 않습니다. memberId: "+memberId));
     }
     
     // email 로 사용자 조회

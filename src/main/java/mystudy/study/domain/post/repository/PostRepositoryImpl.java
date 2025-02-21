@@ -72,7 +72,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                 .fetchOne();
     }
 
-    // 사용자 id에 해당하는 게시글 페이징
+    // 사용자 정보 조회 - 사용자가 작성한 게시글 조회 (페이징)
     @Override
     public Page<PostDto> getPostByMemberId(Long id, Pageable pageable) {
 
@@ -87,8 +87,8 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                 .from(post)
                 .leftJoin(post.member, member)
                 .where(
-                        post.member.id.eq(id),
-                        post.status.eq(PostStatus.ACTIVE)
+                        post.member.id.eq(id),      // 사용자가 작성한 게시글 조회
+                        post.status.eq(PostStatus.ACTIVE) // 삭제되지 않은 게시글 조회
                 )
                 .orderBy(
                         postSort(pageable)

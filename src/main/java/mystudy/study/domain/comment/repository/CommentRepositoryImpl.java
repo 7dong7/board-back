@@ -6,6 +6,7 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import mystudy.study.domain.comment.dto.*;
+import mystudy.study.domain.post.entity.PostStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -36,7 +37,7 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
                 .fetchOne();
     }
 
-    // 사용자 id를 사용해서 댓글 조회 (페이징)
+    // 사용자 정보 조회 - 사용자가 작성한 댓글 조회 (페이징)
     @Override
     public Page<CommentDto> getCommentByMemberId(Long memberId, Pageable pageable) {
 
@@ -46,12 +47,15 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
                         comment.content,
                         member.nickname,
                         comment.createdAt,
-                        comment.post.id.as("postId"))
+                        comment.post.id.as("postId")
+                        )
                 )
                 .from(comment)
-                .leftJoin(comment.member, member)
+                .join(comment.member, member)
+                .join(comment.post, post)
                 .where(
-                        comment.member.id.eq(memberId)
+                        comment.member.id.eq(memberId),
+                        post.status.eq(PostStatus.ACTIVE)
                 )
                 .orderBy(
                         commentSort(pageable)
@@ -63,9 +67,11 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
         JPAQuery<Long> countQuery = queryFactory
                 .select(comment.count())
                 .from(comment)
-                .leftJoin(comment.member, member)
+                .join(comment.member, member)
+                .join(comment.post, post)
                 .where(
-                        comment.member.id.eq(memberId)
+                        comment.member.id.eq(memberId),
+                        post.status.eq(PostStatus.ACTIVE)
                 );
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);

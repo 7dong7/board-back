@@ -2,10 +2,7 @@ package mystudy.study.domain.member.service;
 
 import lombok.RequiredArgsConstructor;
 import mystudy.study.domain.comment.dto.CommentDto;
-import mystudy.study.domain.member.dto.MemberInfoDto;
-import mystudy.study.domain.member.dto.MemberSearchCondition;
-import mystudy.study.domain.member.dto.RegisterMemberForm;
-import mystudy.study.domain.member.dto.SearchMemberDto;
+import mystudy.study.domain.member.dto.*;
 import mystudy.study.domain.post.dto.PostDto;
 import mystudy.study.domain.member.entity.Member;
 import mystudy.study.domain.member.repository.MemberRepository;
@@ -16,6 +13,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 
 @Service
 @Transactional
@@ -63,10 +62,51 @@ public class MemberService {
     // 회원 등록
     public void saveMember(Member member) {
         memberRepository.save(member);
+
     }
 
+    // 사용자 정보 조회
+    public InfoMemberDto getInfoMemberDto(Long memberId) {
+        // 사용자 정보
+        Member member = memberQueryService.findMemberById(memberId);
+        
+        // 작성한 게시글 수
+        Long postCount = postService.getPostCountByMemberId(memberId);
 
+        // 작성한 댓글 수
+        Long commentCount = commentService.getCommentCountByMemberId(memberId);
 
+        // 반환 dto 생성
+        InfoMemberDto infoMemberDto = new InfoMemberDto();
+        infoMemberDto.setMemberId(member.getId());
+        infoMemberDto.setEmail(member.getEmail());
+        infoMemberDto.setNickname(member.getNickname());
+        infoMemberDto.setCreatedAt(member.getCreatedAt());
+
+        infoMemberDto.setPostCount(postCount); // 게시글 수
+        infoMemberDto.setCommentCount(commentCount); // 댓글 수
+
+        return infoMemberDto;
+    }
+
+    // 사용자 정보 조회 - 사용자가 작성한 게시글 조회 (페이징)
+    public Page<PostDto> getMemberPosts(Long memberId, Pageable postPageable) {
+        /**
+         *  사용자 정보 조회시 사용자의 게시글을 같이 볼 수 있게 만든다
+         *  게시글 검색의 조건으로 memberId를 사용해서 사용자의 게시글을 페이징 처리해서 조회한다
+         */
+        // 게시글 페이징
+        return postService.getPostByMemberId(memberId, postPageable);
+    }
+
+    // 사용자 정보 조회 - 사용자가 작성한 댓글 조회 (페이징)
+    public Page<CommentDto> getMemberComments(Long memberId, Pageable commentPageable) {
+        /**
+         *  게시글 검색의 조건으로 memberId를 사용해서 사용자의 댓글을 페이징 처리해서 조회한다
+         */
+        // 댓글 페이징
+        return commentService.getCommentByMemberId(memberId, commentPageable);
+    }
 
 
 
@@ -77,36 +117,5 @@ public class MemberService {
     public Page<SearchMemberDto> getMemberPage(MemberSearchCondition condition, Pageable pageable) {
         return memberRepository.getMemberPage(condition, pageable);
     }
-
-    // 사용자 하나의 정보와 게시글 댓글 페이징 처리 가져오기
-    public MemberInfoDto getMemberInfo(Long memberId, Pageable postPageable, Pageable commentPageable) {
-
-        // 사용자 id로 사용자 조회
-        Member member = memberQueryService.findMemberById(memberId);
-
-        // 게시글 수 가져오기
-        Long postCount = postService.getPostCountByMemberId(memberId);
-        // 댓글 수 가져오기
-        Long commentCount = commentService.getCommentCountByMemberId(memberId);
-
-        // 게시글 페이징
-        Page<PostDto> postPage = postService.getPostByMemberId(memberId, postPageable);
-        // 댓글 페이징
-        Page<CommentDto> commentPage = commentService.getCommentByMemberId(memberId, commentPageable);
-
-        // 사용자 정보 반환
-        // 반환 dto 채우기
-        return MemberInfoDto.builder()
-                .id(memberId)
-                .nickname(member.getNickname())
-                .email(member.getEmail())
-                .createdAt(member.getCreatedAt())
-                .postCount(postCount)
-                .commentCount(commentCount)
-                .postPage(postPage)
-                .commentPage(commentPage)
-                .build();
-    }
-
 
 }

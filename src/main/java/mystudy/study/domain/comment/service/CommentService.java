@@ -34,7 +34,7 @@ public class CommentService {
         return commentRepository.getCommentCountByMemberId(id);
     }
 
-    // 사용자 id를 사용해서 댓글 조회 (페이징)
+    // 사용자 정보 조회 - 사용자가 작성한 댓글 조회 (페이징)
     public Page<CommentDto> getCommentByMemberId(Long id, Pageable pageable) {
         return commentRepository.getCommentByMemberId(id, pageable);
     };
