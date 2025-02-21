@@ -2,10 +2,7 @@ package mystudy.study.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import mystudy.study.domain.member.dto.MemberInfoDto;
-import mystudy.study.domain.member.dto.MemberRegisterForm;
-import mystudy.study.domain.member.dto.MemberSearchCondition;
-import mystudy.study.domain.member.dto.SearchMemberDto;
+import mystudy.study.domain.member.dto.*;
 import mystudy.study.domain.member.entity.Member;
 import mystudy.study.domain.member.service.MemberService;
 import org.springframework.data.domain.Page;
@@ -33,13 +30,13 @@ public class MemberController {
 
     // 회원 가입 : 페이지
     @GetMapping("/members/new")
-    public String newMemberForm(@ModelAttribute("memberForm") MemberRegisterForm memberForm) {
+    public String newMemberForm(@ModelAttribute("memberForm") RegisterMemberForm memberForm) {
         return "pages/member/memberRegister";
     }
 
     // 회원 가입 : 기능
     @PostMapping("/members/new")
-    public String saveMember(@Validated @ModelAttribute("memberForm") MemberRegisterForm memberForm, BindingResult bindingResult) {
+    public String saveMember(@Validated @ModelAttribute("memberForm") RegisterMemberForm memberForm, BindingResult bindingResult) {
         log.info("memberForm = {}", memberForm);
         log.info("bindingResult = {}", bindingResult);
 
@@ -53,18 +50,14 @@ public class MemberController {
             return "pages/member/memberRegister";
         }
 
-        // 멤버 생성
-        Member member = Member.builder()
-                .email(memberForm.getEmail())
-                .password(memberForm.getPassword())
-                .nickname(memberForm.getUsername())
-                .age(10)
-                .build();
-
-        // 회원 가입
-        memberService.saveMember(member);
-
-        return "redirect:/members";
+        // 회원 가입 서비스
+        try {
+            memberService.registerMember(memberForm);
+            return "redirect:/posts";
+        } catch (IllegalArgumentException e) { // 이미 회원이 존재하는 경우
+            bindingResult.reject("existMember","이미 사용중인 이메일입니다");
+            return "pages/member/memberRegister";
+        }
     }
     
     

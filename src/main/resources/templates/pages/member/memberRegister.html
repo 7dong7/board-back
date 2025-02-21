@@ -15,9 +15,9 @@
         <form class="signup-form" action="/members/new" method="POST" th:object="${memberForm}">
             <div>
                 <label for="username">이름</label>
-                <input type="text" id="username" th:field="*{username}" th:errorclass="field-error-input"
+                <input type="text" id="username" th:field="*{name}" th:errorclass="field-error-input"
                        placeholder="이름을 입력하세요" required />
-                <div class="field-error" th:errors="*{username}">닉네임 에러</div>
+                <div class="field-error" th:errors="*{name}">이름 에러</div>
             </div>
             <div>
                 <label for="email">이메일</label>
@@ -36,6 +36,36 @@
                 <input type="password" id="confirm-password" th:field="*{confirmPassword}" th:errorclass="field-error-input"
                        placeholder="비밀번호를 다시 입력하세요" required />
                 <div class="field-error" th:errors="*{confirmPassword}"></div>
+            </div>
+            <div>
+                <label for="nickname">닉네임</label>
+                <input type="text" id="nickname" th:field="*{nickname}" th:errorclass="field-error-input"
+                       placeholder="닉네임" required />
+                <div class="field-error" th:errors="*{nickname}"></div>
+            </div>
+            <div>
+                <label for="age">나이</label>
+                <input type="number" id="age" th:field="*{age}" th:errorclass="field-error-input"
+                       placeholder="나이" required />
+                <div class="field-error" th:errors="*{age}"></div>
+            </div>
+            <div>
+                <label for="mobile">휴대폰 번호</label>
+                <input type="text" id="mobile" th:field="*{mobile}" th:errorclass="field-error-input"
+                       placeholder="010-0000-0000" required />
+                <div class="field-error" th:errors="*{mobile}"></div>
+            </div>
+            <div>
+                <label for="gender">성별</label>
+                <input type="text" id="gender" th:field="*{gender}" th:errorclass="field-error-input"
+                       placeholder="성별" required />
+                <div class="field-error" th:errors="*{gender}"></div>
+            </div>
+            <div>
+                <label for="birthday">생일</label>
+                <input type="text" id="birthday" th:field="*{birthday}" th:errorclass="field-error-input"
+                       placeholder="0325" required />
+                <div class="field-error" th:errors="*{birthday}"></div>
             </div>
             <br>
             <button type="submit">가입하기</button>

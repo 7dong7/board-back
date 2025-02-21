@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mystudy.study.domain.member.entity.Member;
 import mystudy.study.domain.member.entity.RoleType;
+import mystudy.study.domain.member.repository.MemberRepository;
 import mystudy.study.domain.member.service.MemberQueryService;
 import mystudy.study.domain.member.service.MemberService;
 import mystudy.study.security.oauth2.dto.GoogleResponse;
@@ -77,7 +78,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                     .role(RoleType.ROLE_USER)
                     .build();
 
-            memberService.saveMember(newMember); // 사용자 저장
+            memberService.saveMember(newMember);
         }
         else { // 기존 사용자인 경우 -> DB에 등록된 사용자 정보를 외부서버의 최신 정보로 업데이트
 

@@ -8,17 +8,16 @@ public class AccessURL {
     };
 
     public static final String[] WHITELIST = { // 권한이 없어도 접근 가능한
-            "/",
-            "/login",
-            "/logout",
-            "/posts", "/posts/*",
-            "/members", "/members/*",
-            "/oauth2/**",
+            "/",        // 메인 페이지
+            "/login", "/logout",        // 로그인 & 로그아웃
+            "/members", "/members/*",   // 회원
+            "/posts", "/posts/*",       // 게시글
+            "/oauth2/**",               // oauth2 로그인
 
-            "/image/upload", // 사용자 변경 예정 role : ROLE_USER
+            "/image/upload",    // 사용자 변경 예정 role : ROLE_USER
 
-            "/posts/new/post", // 사용자 변경 예정 role : ROLE_USER
-            "/posts/*/edit" // 사용자 변경 예정 role : ROLE_USER
+            "/posts/new/post",  // 사용자 변경 예정 role : ROLE_USER
+            "/posts/*/edit"     // 사용자 변경 예정 role : ROLE_USER
     };
 
     public static final String[] BLACKLIST = { // 접근 불가

@@ -25,6 +25,8 @@ public class SecurityConfig {
     private final JWTUtil jwtUtil;
     private final CustomOAuth2UserService customOAuth2UserService;
 
+
+
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
@@ -36,12 +38,6 @@ public class SecurityConfig {
         return RoleHierarchyImpl.withRolePrefix("ROLE_")
                 .role("ADMIN").implies("USER") // ADMIN > USER
                 .build();
-    }
-
-    // 암호화
-    @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder() {
-        return new BCryptPasswordEncoder();
     }
 
     // 리소스 접근 설정 (모든 필터 체인에 적용)
@@ -117,7 +113,4 @@ public class SecurityConfig {
 
         return http.build();
     }
-
-
-
 }

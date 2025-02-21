@@ -38,13 +38,13 @@ public class Member extends BaseTimeEntity {
     private Long id;
 
     @Column(unique = true)
-    private String email;
-    private String password;
+    private String email;       // 아이디
+    private String password;    // 비밀번호
 
     private String name;        // 사용자 본명
     private String nickname;    // 닉네임
     private int age;            // 나이대 ( 20-30 )
-    private String mobile;      // 번호 (asdknmqwiour)
+    private String mobile;      // 번호
     private String gender;      // 성볋 (남,여)
     private String birthday;    // 생일
 

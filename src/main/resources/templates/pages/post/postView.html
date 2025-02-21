@@ -80,8 +80,7 @@
                     여기에 게시글 본문이 들어갑니다.
                 </p>
             </div>
-            <!-- sec:authorize="isAuthenticated()" th:if="${post.memberId == #authentication.principal.memberId}" -->
-            <div th:class="btn-container" >
+            <div th:class="btn-container" sec:authorize="isAuthenticated()" th:if="${post.memberId == #authentication.principal.memberId}">
                 <!-- 글 수정 링크 -->
                 <a th:class="edit-btn" th:href="@{/posts/{id}/edit(id=${post.postId})}">작성글 수정하기</a>
                 <!-- 글 삭제 폼/버튼-->
