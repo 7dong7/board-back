@@ -133,11 +133,47 @@ public class MemberController {
         return "pages/member/viewMember";
     }
     
+    // 사용자 정보 수정 (본인만) : 페이지
+    @GetMapping("/members/{id}/edit")
+    public String editMemberPage(@PathVariable("id") Long memberId,
+                                 Model model) {
+        log.info("editMemberPage memberId = {}", memberId);
+        /**
+         *  회원정보 수정 페이지
+         *  보인의 정보만 수정 가능하게 (로그인 본인 체크)
+         *  수정 가능한 정보만 수정할 수 있게
+         */
+        EditMemberDto memberDto = memberQueryService.getEditMemberDto(memberId);
+
+        model.addAttribute("member", memberDto);
+        return "pages/member/editMember";
+    }
+
+    // 사용자 정보 수정 (본인만) : 처리
+    @PostMapping("/members/{id}/edit")
+    public String editMember(@PathVariable("id") Long memberId,
+                             @ModelAttribute("member") EditMemberDto memberDto) {
+        /**
+         *  보인의 정보만 수정 가능하게 (로그인 본인 체크)
+         *  수정 가능한 정보만 수정할 수 있게
+         */
+        // 정보 수정 처리
+        memberService.editMember(memberId, memberDto);
+
+        return "redirect:/members/"+memberId;
+    }
+
+
     
     
+    
 
 
 
+    
+    
+    
+    
     // 사용자 검색 : 페이지
     @GetMapping("/members")
     public String getMemberPage(

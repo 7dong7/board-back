@@ -8,9 +8,16 @@ import mystudy.study.domain.member.entity.Member;
 import mystudy.study.domain.member.repository.MemberRepository;
 import mystudy.study.domain.post.service.PostService;
 import mystudy.study.domain.comment.service.CommentService;
+import mystudy.study.security.CustomUserDetail;
+import mystudy.study.security.CustomUserDetailsService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +36,9 @@ public class MemberService {
     private final CommentService commentService;
 
     private final MemberQueryService memberQueryService;
+
+    // 로그인 사용자를 위한 service
+    private final CustomUserDetailsService customUserDetailsService;
     
     // 암호화
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -62,7 +72,6 @@ public class MemberService {
     // 회원 등록
     public void saveMember(Member member) {
         memberRepository.save(member);
-
     }
 
     // 사용자 정보 조회
@@ -108,6 +117,56 @@ public class MemberService {
         return commentService.getCommentByMemberId(memberId, commentPageable);
     }
 
+    // 사용자 정보 수정
+    public void editMember(Long memberId, EditMemberDto memberDto) {
+
+        // 수정하려는 member 엔티티 조회 -> 없는 경우 예외 처리
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("해당하는 사용자가 없습니다. memberId: " + memberId));
+
+        // 현재 로그인한 사용자의 authentication 객체
+        Authentication currentAuth = SecurityContextHolder.getContext().getAuthentication();
+
+        // 사용자 로그인 email
+        String email = currentAuth.getName();
+
+        // 로그인한 사용자가 다른 사람의 정보를 수정하려는 경우
+        if (!member.getEmail().equals(email)) { // 같지 않은 경우
+            throw new IllegalArgumentException("잘못된 요청입니다. 사용자: "+email+ "가 다른 사용자: "+member.getEmail()+"의 정보를 수정하려고 접근했습니다.");
+        }
+        
+    // 사용자 정보 수정
+        boolean memberUpdate = false; // 사용자의 정보가 변경되지 않음
+        // 닉네임 수정
+        if (!memberDto.getNickname().equals(member.getNickname())) { // 다른 경우 수정
+            member.updateNickname(memberDto.getNickname()); // 닉네임 변경
+            memberUpdate = true; // 사용자의 정보가 변경됨
+        }
+        // 휴대폰 번호 수정
+        if (!memberDto.getMobile().equals(member.getMobile())) { // 다른 경우
+            member.updateMobile(memberDto.getMobile());
+            memberUpdate = true; // 사용자의 정보가 변경됨
+        }
+        /**
+         *  사용자의 정보가 변경된 경우
+         *  기존의 session 에 저장된 정보와 DB의 저장된 정보가 차이가 생긴다
+         *  따라서, 다시 DB 에서 사용자의 정보를 조회해 session에 저장해 최신화 시킨다
+         */
+        if (memberUpdate) { // 사용자의 정보가 변경된 경우 session 에 저장된 정보를 변경
+            // 변경된 정보 DB 에서 조회
+            CustomUserDetail updateUserDetails = (CustomUserDetail) customUserDetailsService.loadUserByUsername(email);
+            // 인증 객체 생성
+            Authentication newAuth = new UsernamePasswordAuthenticationToken(
+                    updateUserDetails,
+                    currentAuth.getCredentials(),
+                    updateUserDetails.getAuthorities()
+            );
+            // 변경된 사용자 정보 세션에서 변경
+            SecurityContextHolder.getContext().setAuthentication(newAuth);
+        }
+    }
+
+
 
 
 
@@ -117,5 +176,7 @@ public class MemberService {
     public Page<SearchMemberDto> getMemberPage(MemberSearchCondition condition, Pageable pageable) {
         return memberRepository.getMemberPage(condition, pageable);
     }
+
+
 
 }

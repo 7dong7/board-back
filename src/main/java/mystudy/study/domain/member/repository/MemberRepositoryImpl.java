@@ -17,6 +17,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.support.PageableExecutionUtils;
 
 import java.util.List;
+import java.util.Optional;
 
 import static mystudy.study.domain.member.entity.QMember.member;
 import static org.springframework.util.StringUtils.hasText;
@@ -70,7 +71,32 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
     }
 
-    // 사용자 로그인
+
+    // 사용자 정보 수정 (본인만) - 사용자 정보 조회
+    @Override
+    public Optional<EditMemberDto> getEditMember(Long memberId) {
+        
+        EditMemberDto editMember = queryFactory
+                .select(new QEditMemberDto(
+                        member.id.as("memberId"),
+                        member.email,
+                        member.createdAt,
+                        member.nickname,
+                        member.mobile)
+                )
+                .from(member)
+                .where(
+                        member.id.eq(memberId)
+                )
+                .fetchOne();
+        // Optional 반환 - 본인의 Id 값이 아닐 수 있음 (변조)
+        return Optional.ofNullable(editMember);
+    }
+
+
+
+
+    // 사용자 로그인 / =================== 삭제 예정 =====================
     @Override
     public Member login(String loginId, String password) {
         return queryFactory.select(member)

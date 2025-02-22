@@ -34,6 +34,7 @@ public class PostController {
     private final PostService postService;
     private final PostQueryService postQueryService;
 
+
     // 게시글 작성 : 페이지
     @GetMapping("/posts/new/post")
     public String createPostPage(@ModelAttribute("newPost") NewPostDto newPostDto) {
@@ -136,11 +137,7 @@ public class PostController {
         return "redirect:/posts";
     }
 
-
-
-
-
-    // 게시글 검색 조건 페이징
+    // 게시글 목록 : 페이지
     @GetMapping("/posts")
     public String getPostPage(
             @RequestParam(value = "searchType", required = false) String searchType,
@@ -179,6 +176,10 @@ public class PostController {
         model.addAttribute("searchParam", map);
         return "pages/post/posts";
     }
+
+
+
+
 
 
 

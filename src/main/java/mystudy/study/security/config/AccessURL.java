@@ -14,10 +14,13 @@ public class AccessURL {
             "/posts", "/posts/*",       // 게시글
             "/oauth2/**",               // oauth2 로그인
 
-            "/image/upload",    // 사용자 변경 예정 role : ROLE_USER
+            // 사용자 변경 예정 role : ROLE_USER
+            "/members/*/edit",
+            "/image/upload",
+            "/posts/new/post",
+            "/posts/*/edit"
 
-            "/posts/new/post",  // 사용자 변경 예정 role : ROLE_USER
-            "/posts/*/edit"     // 사용자 변경 예정 role : ROLE_USER
+            // 사용자 변경 예정 role : ROLE_ADMIN
     };
 
     public static final String[] BLACKLIST = { // 접근 불가

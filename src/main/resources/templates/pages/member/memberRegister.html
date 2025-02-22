@@ -14,8 +14,8 @@
         <h1>회원가입</h1>
         <form class="signup-form" action="/members/new" method="POST" th:object="${memberForm}">
             <div>
-                <label for="username">이름</label>
-                <input type="text" id="username" th:field="*{name}" th:errorclass="field-error-input"
+                <label for="name">이름</label>
+                <input type="text" id="name" th:field="*{name}" th:errorclass="field-error-input"
                        placeholder="이름을 입력하세요" required />
                 <div class="field-error" th:errors="*{name}">이름 에러</div>
             </div>

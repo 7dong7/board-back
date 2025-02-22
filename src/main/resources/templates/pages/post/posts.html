@@ -25,7 +25,7 @@
                 <!-- 검색 타입-->
                 <select name="searchType">
                     <option value="title" th:selected="${searchParam.searchType == 'title'}">제목</option>
-                    <option value="username" th:selected="${searchParam.searchType == 'username'}">작성자</option>
+                    <option value="nickname" th:selected="${searchParam.searchType == 'nickname'}">작성자</option>
                     <option value="content" th:selected="${searchParam.searchType == 'content'}">내용</option>
                     <option value="title_content" th:selected="${searchParam.searchType == 'title_content'}">제목+내용</option>
                 </select>
@@ -62,7 +62,7 @@
                         <a th:href="@{/posts/{id}(id=${post.postId})}" th:text="${post.title}"></a>
                     </td>
                     <td th:text="${post.viewCount}">조회수</td>
-                    <td th:text="${post.username}">작성자</td>
+                    <td th:text="${post.nickname}">작성자</td>
                     <td th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}">2024-06-17 15:30</td>
                 </tr>
                 <tr th:if="${postPage.totalElements == 0}">

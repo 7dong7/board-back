@@ -221,7 +221,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
 
             // 검색 조건에 따른 데이터베이스 조회 쿼리
             return switch (searchType) {
-                case "username" -> member.nickname.containsIgnoreCase(searchWord);
+                case "nickname" -> member.nickname.containsIgnoreCase(searchWord);
                 case "title" -> post.title.containsIgnoreCase(searchWord);
                 case "content" -> post.content.containsIgnoreCase(searchWord);
                 case "title_content" -> post.title.containsIgnoreCase(searchWord)

@@ -1,6 +1,5 @@
 package mystudy.study.controller;
 
-import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +22,7 @@ public class UploadController {
     @ResponseBody
     @PostMapping("/image/upload")
     public Map<String, Object> uploadImage(MultipartRequest multiRequest,
-                                           HttpServletRequest request) throws Exception {
+                                           HttpServletRequest request) {
         log.info("uploadImage: {}", multiRequest);
         log.info("ContextPath: {}", request.getContextPath());
         // 반환할 값
