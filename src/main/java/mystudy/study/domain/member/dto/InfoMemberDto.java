@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 public class InfoMemberDto {
 
     // member
-    private Long memberId;      // 사용자 번호
+    private Long memberId;      // 회원 번호
     private String nickname;    // 닉네임
     private String email;       // 이메일 (아이디) (OAuth2의 경우 아이디가 아님)
     private LocalDateTime createdAt; // 계정 생성일

@@ -59,7 +59,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
     }
 
-    // 사용자 id 에 해당하는 게시글 수
+    // 회원 id 에 해당하는 게시글 수
     @Override
     public Long getPostCountByMemberId(Long id) {
         return queryFactory
@@ -72,7 +72,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                 .fetchOne();
     }
 
-    // 사용자 정보 조회 - 사용자가 작성한 게시글 조회 (페이징)
+    // 회원 정보 조회 - 회원가 작성한 게시글 조회 (페이징)
     @Override
     public Page<PostDto> getPostByMemberId(Long id, Pageable pageable) {
 
@@ -87,7 +87,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                 .from(post)
                 .leftJoin(post.member, member)
                 .where(
-                        post.member.id.eq(id),      // 사용자가 작성한 게시글 조회
+                        post.member.id.eq(id),      // 회원가 작성한 게시글 조회
                         post.status.eq(PostStatus.ACTIVE) // 삭제되지 않은 게시글 조회
                 )
                 .orderBy(

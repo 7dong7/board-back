@@ -16,6 +16,32 @@ body {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
+/* 회원 정보 header */
+.member-info-header {
+    /* grid */
+    display:grid;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.edit-link {
+    text-decoration:none;
+    padding: 10px 11px;
+    font-size: 10pt;
+    font-weight: bold;
+    color: #fff;
+    background-color: #f56666;
+    border-radius: 5px;
+    transition: background-color 0.2s;
+
+    /* grid */
+    justify-self:end;  /* 끝 정렬 */
+    align-self:center; /* 수직 정렬 */
+}
+
+.edit-link:hover {
+    background-color: #ee4848;
+}
+
 h1, h2 {
     color: #333;
     margin-bottom: 0.5rem;
@@ -34,7 +60,7 @@ th, td {
 }
 
 
-/* 사용자 정보*/
+/* 회원 정보*/
 .member-info table {
     margin-bottom: 4rem;
 }

@@ -29,8 +29,8 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
         
         // 로그인 체크
         if (session == null || session.getAttribute(SessionConst.LOGIN_MEMBER_ID) == null ) {
-        // session 이 null 이거나 session 안에 저장된 loginMemberId의 값이 null 인 경우는 미인증 사용자
-            log.info("비 로그인 사용자의 요청");
+        // session 이 null 이거나 session 안에 저장된 loginMemberId의 값이 null 인 경우는 미인증 회원
+            log.info("비 로그인 회원의 요청");
 
             if ("POST".equals(requestMethod)) {
                 String referer = request.getHeader("Referer");
@@ -46,7 +46,7 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
             return false; // preHandle 의 리턴 값이 false 이면 더 이상 로직진행 금지
         }
 
-        // 인증 사용자의 경우 preHandle 의 값이 true 로 이후 로직을 진행
+        // 인증 회원의 경우 preHandle 의 값이 true 로 이후 로직을 진행
         return true; // 로직이 작성되었다면 WebConfig 에 addInterceptors 에 interceptor 추가
     }
 

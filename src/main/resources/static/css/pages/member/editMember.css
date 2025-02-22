@@ -6,7 +6,7 @@ main {
     background: #f3f5f7;
 }
 
-/* 회원가입 컨테이너 */
+/* 회원 수정 컨테이너 */
 .edit-container {
     background-color: #fff;
     width: 500px;
@@ -28,13 +28,50 @@ main {
 }
 
 /* 헤더(타이틀) */
-.edit-container h1 {
-    text-align: center;
-    margin: 0 0 3rem 0;
-    padding:0 0 1rem 0;
+.delete-header {
     border-bottom:solid 0.13rem #2c3e50;
+    padding:0 0 2rem 0;
+    margin: 0 0 3rem 0;
+
+    /* grid */
+    display:grid;
+    grid-template-columns:1fr 3fr 1fr;
 }
 
+.edit-container .delete-title {
+    text-align: center;
+    margin:0;
+
+    /* grid */
+    grid-column:2;
+}
+
+.delete-form {
+    /* grid */
+    grid-column:3;
+    justify-self:end;
+}
+
+.delete-btn {
+    all:unset;
+    font-size:10pt;
+    padding:7px 10px;
+
+    position:relative;
+    top:2rem;
+    cursor:pointer;
+    background-color:#db9494;
+    color:#ffffff;
+    border:2px solid #816363;
+    font-weight:bold;
+    border-radius: 4px;
+    transition: 0.1s;
+}
+
+.delete-btn:hover {
+    background-color:#d55c5c;
+    color:#d4d3d3;
+}
 
 /* 입력폼 스타일 */
 .edit-form {
@@ -43,7 +80,14 @@ main {
     gap: 1rem; /* 각 필드 간 간격 */
 }
 
-.member-detial {
+.member-attribute {
+    display:block;
+    font-weight: 600;
+    font-size:12pt;
+    margin-bottom: 0.6rem;
+}
+
+.member-detail {
     box-sizing:border-box;
     padding: 0.6rem;
     width:100%;
@@ -53,13 +97,6 @@ main {
     border-radius: 4px;
     font-size: 1rem;
     transition: border-color 0.3s;
-}
-
-.member-attribute{
-    display:block;
-    font-weight: 600;
-    font-size:12pt;
-    margin-bottom: 0.6rem;
 }
 
 .edit-form label {

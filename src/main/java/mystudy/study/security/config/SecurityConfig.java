@@ -79,7 +79,7 @@ public class SecurityConfig {
                         .userInfoEndpoint( userInfoEndpointConfig -> userInfoEndpointConfig
                                 .userService(customOAuth2UserService))
                         // 외부 인증 제공자 엔드포인트 지정
-                        // 사용자의 프로필 정보를 조회할 때 사용
+                        // 회원의 프로필 정보를 조회할 때 사용
                 );
         
         // 로그아웃

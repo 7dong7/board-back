@@ -93,10 +93,10 @@ public class PostController {
         // 게시글 조회 (postId 사용)
         PostEditDto postEditDto = postService.viewPostEdit(postId);
 
-        // 로그인한 사용자 정보
+        // 로그인한 회원 정보
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        // 게시글 작성자와 로그인한 사용자 일치 여부 확인
+        // 게시글 작성자와 로그인한 회원 일치 여부 확인
         if (email.equals(postEditDto.getEmail())) { // 일치하는 경우
             log.info("postEditPage postEditDto: {}", postEditDto);
             model.addAttribute("post", postEditDto);
@@ -116,7 +116,7 @@ public class PostController {
         // 게시글 수정
         try {
             postService.postEdit(postEditDto);
-        } catch (AccessDeniedException e) { // 로그인 사용자와 게시글 주인이 다른 경우
+        } catch (AccessDeniedException e) { // 로그인 회원와 게시글 주인이 다른 경우
             return "redirect:/posts";
         }
         return "redirect:/posts/" + postId;

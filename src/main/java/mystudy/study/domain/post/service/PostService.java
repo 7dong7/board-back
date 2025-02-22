@@ -38,7 +38,7 @@ public class PostService {
     // 게시글 작성 : 처리
     public void createPost(NewPostDto newPostDto) {
 
-        // 로그인한 사용자 확인
+        // 로그인한 회원 확인
         String email = SecurityContextHolder.getContext().getAuthentication().getName(); // username 로그인 사용값
         Member member = memberQueryService.findByEmail(email);
 
@@ -85,7 +85,7 @@ public class PostService {
     public PostEditDto viewPostEdit(Long postId) {
         /**
          * 게시글을 수정하기 위해 수정 페이지를 요천한다
-         * 페이지 요청시 게시글의 작성자와 현재 로그인한 사용자의 id를 비교해 적절한 요청인지 확인한다
+         * 페이지 요청시 게시글의 작성자와 현재 로그인한 회원의 id를 비교해 적절한 요청인지 확인한다
          */
         // 게시글을 조회 (PostEditDto) 직접 조회
         return postRepository.getPostEditDtoByPostId(postId);
@@ -105,7 +105,7 @@ public class PostService {
             memberId = customUser.getMemberId();
         }
 
-        // 게시글의 주인과 로그인 사용자 비교
+        // 게시글의 주인과 로그인 회원 비교
         if (post.getMember().getId().equals(memberId)) {// 같은 경우 (정상)
             post.updateContent(postEditDto.getContent());
         } else { // 작성자가 일치하지 않음
@@ -128,7 +128,7 @@ public class PostService {
             memberId = customUser.getMemberId();
         }
 
-        // 게시글 주인 로그인 사용자 비교
+        // 게시글 주인 로그인 회원 비교
         if (post.getMember().getId().equals(memberId)) {// 같은 경우 (정상)
             // 게시글 삭제 (소프트 삭제)
             post.deletePost();
@@ -137,7 +137,7 @@ public class PostService {
         }
     }
 
-    // 사용자 정보 조회 - 사용자가 작성한 게시글 조회 (페이징)
+    // 회원 정보 조회 - 회원가 작성한 게시글 조회 (페이징)
     public Page<PostDto> getPostByMemberId(Long id, Pageable pageable) {
         return postRepository.getPostByMemberId(id, pageable);
     }

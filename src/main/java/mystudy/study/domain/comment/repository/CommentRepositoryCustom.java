@@ -10,10 +10,10 @@ import java.util.List;
 
 public interface CommentRepositoryCustom{
 
-    // 사용자 id를 사용해서 작성한 전체 댓글 수 조회
+    // 회원 id를 사용해서 작성한 전체 댓글 수 조회
     Long getCommentCountByMemberId(Long id);
 
-    // 사용자 정보 조회 - 사용자가 작성한 댓글 조회 (페이징)
+    // 회원 정보 조회 - 회원가 작성한 댓글 조회 (페이징)
     Page<CommentDto> getCommentByMemberId(Long memberId, Pageable pageable);
 
     // 게시글 id를 사용해서 댓글 조회 (페이징)

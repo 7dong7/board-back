@@ -1,9 +1,9 @@
 package mystudy.study.domain.member.entity;
 
-// 사용자의 권한
+// 회원의 권한
 public enum RoleType {
     
-    ROLE_USER("사용자"),
+    ROLE_USER("회원"),
     ROLE_ADMIN("관리자");
 
     private final String description;

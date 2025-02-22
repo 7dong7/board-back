@@ -36,7 +36,7 @@ class PostRepositoryTest {
         // member 찾아보기
         Optional<Member> optMember = memberRepository.findByNickname("member1");
 
-        Member member = optMember.orElseThrow(() -> new IllegalArgumentException("사용자가 없습니다"));
+        Member member = optMember.orElseThrow(() -> new IllegalArgumentException("회원가 없습니다"));
 
         List<Post> posts = member.getPosts();
 
@@ -52,7 +52,7 @@ class PostRepositoryTest {
         member.removePost(member.getPosts().get(0));
         Optional<Member> optMember2 = memberRepository.findByNickname("member1");
 
-        Member member2 = optMember.orElseThrow(() -> new IllegalArgumentException("사용자가 없습니다"));
+        Member member2 = optMember.orElseThrow(() -> new IllegalArgumentException("회원가 없습니다"));
         List<Post> posts2 = member2.getPosts();
 
         for (Post post : posts2) {

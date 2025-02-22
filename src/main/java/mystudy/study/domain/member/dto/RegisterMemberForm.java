@@ -23,7 +23,7 @@ public class RegisterMemberForm {
     private String confirmPassword; // 비밀번호 재입력
 
     @NotBlank(message = "공백은 사용할 수 없습니다.")
-    private String name;        // 사용자 본명
+    private String name;        // 회원 본명
 
     @NotBlank(message = "공백은 사용할 수 없습니다.")
     private String nickname;    // 닉네임

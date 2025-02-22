@@ -21,9 +21,9 @@ public class MemberInfoDto {
     // comment 엔티티
     private Long commentCount; // 댓글 수
 
-    // 사용자의 게시글
+    // 회원의 게시글
     private Page<PostDto> postPage;
-    // 사용자의 댓글
+    // 회원의 댓글
     private Page<CommentDto> commentPage;
 
 }

@@ -2,6 +2,7 @@
 <html lang="ko"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       layout:decorate="~{layout/layout}">
 
 
@@ -15,19 +16,32 @@
 <body>
     <main class="main-content" layout:fragment="content">
     <div class="edit-container">
-        <h1>회원 정보 수정</h1>
+
+        <div class="delete-header">
+            <h1 class="delete-title">
+                회원 정보 수정
+            </h1>
+            <form th:class="delete-form"
+                  th:action="@{/members/{id}/delete(id=${member.memberId})}"
+                  method="POST"
+                  sec:authorize="isAuthenticated()"
+                  th:if="${member.memberId == #authentication.principal.memberId}"
+                  th:href="@{/members/{id}/edit(id=${member.memberId})}">
+                <button class="delete-btn" type="submit">회원 탈퇴</button>
+            </form>
+        </div>
         <form class="edit-form" th:action="@{/members/{id}/edit(id=${member.memberId})}" method="POST" th:object="${member}">
             <div>
                 <div th:class="member-attribute">회원번호</div>
-                <div th:class="member-detial" th:id="memberId" th:text="*{memberId}"></div>
+                <div th:class="member-detail" th:id="memberId" th:text="*{memberId}"></div>
             </div>
             <div>
                 <div th:class="member-attribute">이메일</div>
-                <div th:class="member-detial" th:id="email" th:text="*{email}"></div>
+                <div th:class="member-detail" th:id="email" th:text="*{email}"></div>
             </div>
             <div>
                 <div th:class="member-attribute">가입일</div>
-                <div th:class="member-detial" th:id="createdAt" th:text="*{#temporals.format(createdAt, 'yyyy-MM-dd')}"></div>
+                <div th:class="member-detail" th:id="createdAt" th:text="*{#temporals.format(createdAt, 'yyyy-MM-dd')}"></div>
             </div>
             <div>
                 <label for="nickname">닉네임</label>

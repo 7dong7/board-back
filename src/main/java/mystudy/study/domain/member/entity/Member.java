@@ -41,7 +41,7 @@ public class Member extends BaseTimeEntity {
     private String email;       // 아이디
     private String password;    // 비밀번호
 
-    private String name;        // 사용자 본명
+    private String name;        // 회원 본명
     private String nickname;    // 닉네임
     private int age;            // 나이대 ( 20-30 )
     private String mobile;      // 번호
@@ -49,11 +49,14 @@ public class Member extends BaseTimeEntity {
     private String birthday;    // 생일
 
     @Column(name = "provider_id")
-    private String providerId;  // OAuth2 로그인시 사용자 식별자 값
+    private String providerId;  // OAuth2 로그인시 회원 식별자 값
     private String provider;    // OAuth2 로그인 서버
 
+    @Enumerated(EnumType.STRING)
+    private MemberStatus status = MemberStatus.ACTIVE; // 회원 탈퇴 여부
+
     @Enumerated(EnumType.STRING) // 안붙이면 인덱스로 저장됨 0, 1
-    private RoleType role; // 사용자 권한
+    private RoleType role; // 회원 권한
 
     /*
     * CascadeType.PERSIST 또는 CascadeType.ALL 옵션이 Member 엔티티의 posts 연관관계에 설정되어 있다면
@@ -109,5 +112,9 @@ public class Member extends BaseTimeEntity {
         posts.remove(post);
     }
 
+    // 회원 탈퇴
+    public void deleteMember() {
+        this.status = MemberStatus.DELETE;
+    }
 
 }

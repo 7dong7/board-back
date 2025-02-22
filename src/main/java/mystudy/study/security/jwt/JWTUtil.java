@@ -22,7 +22,7 @@ public class JWTUtil {
     // === 토큰 생성 ===
     public String createJWT(String category, String username, String role, Long expiredMs) {
         // category -> "refresh", "access" 토큰 종류
-        // username -> 사용자이름
+        // username -> 회원이름
         // role -> 권한
         // expiredMs -> 만료식나
 
@@ -43,7 +43,7 @@ public class JWTUtil {
     
     // === 토큰 검증 ===
 
-    // 토큰 사용자 이름 추출
+    // 토큰 회원 이름 추출
     public String getUsername(String token) {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("username", String.class);
     }

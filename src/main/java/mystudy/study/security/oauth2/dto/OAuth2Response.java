@@ -10,7 +10,7 @@ public interface OAuth2Response {
 
     String getEmail();      // email
 
-    String getName();       // 사용자 이름
+    String getName();       // 회원 이름
 
     String getNickname();   // 별명
 

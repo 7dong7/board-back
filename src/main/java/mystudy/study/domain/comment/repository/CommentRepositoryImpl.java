@@ -26,7 +26,7 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
         this.queryFactory = new JPAQueryFactory(em);
     }
 
-    // 사용자 id를 사용해서 작성한 전체 댓글 수 조회
+    // 회원 id를 사용해서 작성한 전체 댓글 수 조회
     @Override
     public Long getCommentCountByMemberId(Long id) {
 
@@ -37,7 +37,7 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
                 .fetchOne();
     }
 
-    // 사용자 정보 조회 - 사용자가 작성한 댓글 조회 (페이징)
+    // 회원 정보 조회 - 회원가 작성한 댓글 조회 (페이징)
     @Override
     public Page<CommentDto> getCommentByMemberId(Long memberId, Pageable pageable) {
 

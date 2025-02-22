@@ -29,12 +29,12 @@ public class CommentService {
     private final MemberQueryService memberQueryService;
     private final CommentQueryService commentQueryService;
 
-    // 사용자가 작성한 댓글 수 조회
+    // 회원가 작성한 댓글 수 조회
     public Long getCommentCountByMemberId(Long id) {
         return commentRepository.getCommentCountByMemberId(id);
     }
 
-    // 사용자 정보 조회 - 사용자가 작성한 댓글 조회 (페이징)
+    // 회원 정보 조회 - 회원가 작성한 댓글 조회 (페이징)
     public Page<CommentDto> getCommentByMemberId(Long id, Pageable pageable) {
         return commentRepository.getCommentByMemberId(id, pageable);
     };
@@ -53,7 +53,7 @@ public class CommentService {
     @Transactional
     public void newComment(NewCommentDto newCommentDto, Long loginMemberId) {
 
-        // 글 작성자   로그인 사용자
+        // 글 작성자   로그인 회원
         Member member = memberQueryService.findMemberById(loginMemberId);
 
         // 게시글 조회

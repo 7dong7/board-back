@@ -41,7 +41,7 @@ public class CommentController {
     @PostMapping("/replies/new")
     public String newCommentReply(@ModelAttribute("newComment")NewCommentDto newCommentDto,
                                   HttpServletRequest request) {
-        // 로그인 사용자 정보
+        // 로그인 회원 정보
         HttpSession session = request.getSession(false);
         LoginSessionInfo loginSessionInfo = (LoginSessionInfo) session.getAttribute(SessionConst.LOGIN_MEMBER_ID);
 

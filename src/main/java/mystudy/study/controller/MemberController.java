@@ -1,5 +1,7 @@
 package mystudy.study.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mystudy.study.domain.comment.dto.CommentDto;
@@ -63,7 +65,7 @@ public class MemberController {
         }
     }
 
-    // 사용자 정보 조회 (아무나) : 페이지
+    // 회원 정보 조회 (아무나) : 페이지
     @GetMapping("/members/{id}")
     public String getMemberInfoAndPosts(@PathVariable("id") Long memberId,
                                         @RequestParam(defaultValue = "1") int postPage, // 게시글 페이지 번호
@@ -86,13 +88,13 @@ public class MemberController {
             cs = "id";
         }
 
-    // 사용자 정보 조회
+    // 회원 정보 조회
         try {
             InfoMemberDto InfoMemberDto = memberService.getInfoMemberDto(memberId);
-            // 사용자 정보 담기
+            // 회원 정보 담기
             model.addAttribute("member", InfoMemberDto);
-        } catch (IllegalArgumentException e) { // 존재하지 않은 사용자
-            log.info("잘못된 사용자 memberId = {}", memberId);
+        } catch (IllegalArgumentException e) { // 존재하지 않은 회원
+            log.info("잘못된 회원 memberId = {}", memberId);
             return "redirect:/posts";
         }
         
@@ -108,7 +110,7 @@ public class MemberController {
         
         // 게시글 페이징
         Page<PostDto> pagePost = memberService.getMemberPosts(memberId, postPageable);
-        // 사용자 게시글 담기
+        // 회원 게시글 담기
         model.addAttribute("pagePost", pagePost);
 
     // 작성 댓글 페이징
@@ -122,7 +124,7 @@ public class MemberController {
         );
         // 댓글 페이징
         Page<CommentDto> PageComment = memberService.getMemberComments(memberId, commentPageable);
-        // 사용자 댓글 담기
+        // 회원 댓글 담기
         model.addAttribute("pageComment", PageComment);
 
         // 정렬 조건 담기
@@ -133,7 +135,7 @@ public class MemberController {
         return "pages/member/viewMember";
     }
     
-    // 사용자 정보 수정 (본인만) : 페이지
+    // 회원 정보 수정 (본인만) : 페이지
     @GetMapping("/members/{id}/edit")
     public String editMemberPage(@PathVariable("id") Long memberId,
                                  Model model) {
@@ -143,13 +145,17 @@ public class MemberController {
          *  보인의 정보만 수정 가능하게 (로그인 본인 체크)
          *  수정 가능한 정보만 수정할 수 있게
          */
-        EditMemberDto memberDto = memberQueryService.getEditMemberDto(memberId);
+        try {
+            EditMemberDto memberDto = memberQueryService.getEditMemberDto(memberId);
+            model.addAttribute("member", memberDto);
+        } catch (IllegalArgumentException e) {
+            return "redirect:/posts";
+        }
 
-        model.addAttribute("member", memberDto);
         return "pages/member/editMember";
     }
 
-    // 사용자 정보 수정 (본인만) : 처리
+    // 회원 정보 수정 (본인만) : 처리
     @PostMapping("/members/{id}/edit")
     public String editMember(@PathVariable("id") Long memberId,
                              @ModelAttribute("member") EditMemberDto memberDto) {
@@ -158,9 +164,30 @@ public class MemberController {
          *  수정 가능한 정보만 수정할 수 있게
          */
         // 정보 수정 처리
-        memberService.editMember(memberId, memberDto);
-
+        try {
+            memberService.editMember(memberId, memberDto);
+        } catch (IllegalArgumentException e) {
+            return "redirect:/posts";
+        }
         return "redirect:/members/"+memberId;
+    }
+
+    // 회원 탈퇴 : 처리
+    @PostMapping("/members/{id}/delete")
+    public String deleteMember(@PathVariable("id") Long memberId,
+                               HttpServletRequest request,
+                               HttpServletResponse response) {
+        log.info("deleteMember memberId = {}", memberId);
+
+        try {
+            memberService.deleteMember(memberId, request, response);
+        } catch (IllegalArgumentException e) { // 잘못된 memberId가 넘어옴 (존재하지 않음)
+            return "redirect:/posts";
+        } catch (IllegalStateException e2) { // 다른 사람의 계정을 탈퇴시키려는 경우
+            return "redirect:/posts";
+        }
+
+        return "redirect:/posts";
     }
 
 
@@ -174,7 +201,7 @@ public class MemberController {
     
     
     
-    // 사용자 검색 : 페이지
+    // 회원 검색 : 페이지
     @GetMapping("/members")
     public String getMemberPage(
             @RequestParam(value = "searchType", required = false) String searchType,
@@ -189,13 +216,13 @@ public class MemberController {
                 clPageable.getSort() // default 정렬 @PageableDefault 어노테이션으로 설정
         );
 
-        // 사용자 검색 조건
+        // 회원 검색 조건
         MemberSearchCondition condition = MemberSearchCondition.builder()
                 .searchType(searchType)
                 .searchWord(searchWord)
                 .build();
 
-        // 사용자 검색
+        // 회원 검색
         Page<SearchMemberDto> memberList = memberService.getMemberPage(condition, pageable);
 
         Map<String, Object> map = new HashMap<>();

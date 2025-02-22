@@ -49,7 +49,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         // == 다중 토큰 == //
         log.info("loginFilter successfulAuthentication 중");
 
-        // 사용자 정보
+        // 회원 정보
         String username = authentication.getName();
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();

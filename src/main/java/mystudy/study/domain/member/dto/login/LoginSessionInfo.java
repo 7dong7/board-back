@@ -7,6 +7,6 @@ import lombok.Data;
 @Builder
 public class LoginSessionInfo {
 
-    private Long id; // 사용자 id
+    private Long id; // 회원 id
     private String username;
 }

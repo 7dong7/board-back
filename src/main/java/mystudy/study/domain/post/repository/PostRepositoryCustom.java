@@ -10,10 +10,10 @@ public interface PostRepositoryCustom {
     // 전체 게시글 페이징으로 가져오기
     Page<PostDto> getPostPage(Pageable pageable, PostSearchCondition condition);
 
-    // 사용자가 작성한 게시글 수
+    // 회원가 작성한 게시글 수
     Long getPostCountByMemberId(Long id);
 
-    // 사용자 정보 조회 - 사용자가 작성한 게시글 조회 (페이징)
+    // 회원 정보 조회 - 회원가 작성한 게시글 조회 (페이징)
     Page<PostDto> getPostByMemberId(Long id, Pageable pageable);
 
     // 게시글 postId로 조회 - fetch join

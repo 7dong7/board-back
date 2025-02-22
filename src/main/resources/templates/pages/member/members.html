@@ -6,7 +6,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>사용자 목록</title>
+    <title>회원 목록</title>
 </head>
 
 <script>
@@ -22,7 +22,7 @@
         <form id="searchForm" th:action="@{/members}" method="get">
             <!-- 검색 타입-->
             <select name="searchType">
-                <option value="username" th:selected="${searchParam.searchType == 'username'}">사용자명</option>
+                <option value="username" th:selected="${searchParam.searchType == 'username'}">회원명</option>
                 <option value="email" th:selected="${searchParam.searchType == 'email'}">이메일</option>
             </select>
 
@@ -41,7 +41,7 @@
 
 
 
-    <!-- 검색된 사용자 표시 -->
+    <!-- 검색된 회원 표시 -->
     <table>
         <thead>
         <tr>

@@ -47,7 +47,7 @@ class MemberRepositoryTest {
                     .build();
             em.persist(member);
         }
-        // 사용자 등록
+        // 회원 등록
 
         // 글 작성
         Post post1 = new Post("새로운 글작성", "새로운 글이 작성되었습니다.", member1);
@@ -71,15 +71,15 @@ class MemberRepositoryTest {
     @Test
     public void optionalTest() throws Exception{
 
-        // 이메일로 사용자 찾기
-            // 이메일에 해당하는 사용자가 있을수도 없을수도 있음
+        // 이메일로 회원 찾기
+            // 이메일에 해당하는 회원가 있을수도 없을수도 있음
         Optional<Member> findMember = memberRepository.findByNickname("member1");
         Optional<Member> findMember2 = memberRepository.findByNickname("memb");
 
         System.out.println("findMember = " + findMember);
 
         Member member = findMember.orElseGet(() -> null);
-//        Member nonMember = findMember2.orElseThrow(() -> new IllegalArgumentException("사용자 없음")); // 오류를 발생시킴
+//        Member nonMember = findMember2.orElseThrow(() -> new IllegalArgumentException("회원 없음")); // 오류를 발생시킴
 
         System.out.println("member = " + member);
 //        System.out.println("nonMember = " + nonMember);
@@ -91,12 +91,12 @@ class MemberRepositoryTest {
 
         Optional<Member> findMemberOption = memberRepository.findByNickname("member1");
 
-        Member member = findMemberOption.orElseThrow(() -> new IllegalArgumentException("사용자가 없음"));
+        Member member = findMemberOption.orElseThrow(() -> new IllegalArgumentException("회원가 없음"));
 
         System.out.println("member = " + member);
 
         assertThat(member.getNickname()).isEqualTo("member1");
-//        assertThat(member.getUsername()).as("찾는 사용자가 아닙니다.").isEqualTo("member2");
+//        assertThat(member.getUsername()).as("찾는 회원가 아닙니다.").isEqualTo("member2");
     }
 
 
@@ -174,11 +174,11 @@ class MemberRepositoryTest {
             System.out.println("member = " + member);
         }
 
-        assertThat(members).hasSize(7); // 전체 사용자 수 7
+        assertThat(members).hasSize(7); // 전체 회원 수 7
 
         assertThat(members)
                 .filteredOn(member -> member.getNickname().toLowerCase().contains("member"))
-                .hasSize(4); // 7명 중 username 이 member 가 포함되는 사용자는 4명
+                .hasSize(4); // 7명 중 username 이 member 가 포함되는 회원는 4명
     }
 
     @Test
@@ -190,7 +190,7 @@ class MemberRepositoryTest {
             System.out.println("member = " + member);
         }
 
-        assertThat(members).hasSize(7); // 전체 사용자 수 7
+        assertThat(members).hasSize(7); // 전체 회원 수 7
 
         assertThat(members)
                 .filteredOn(member -> member.getNickname().toLowerCase().contains("member"))

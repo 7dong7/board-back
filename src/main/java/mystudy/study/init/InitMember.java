@@ -63,7 +63,7 @@ public class InitMember implements CommandLineRunner {
 
             em.persist(member1);
 
-            // 새로운 사용자 추가
+            // 새로운 회원 추가
             for (int i = 2; i < 51; i++) {
                 Member member = Member.builder()
                         .email("member" + i + "@naver.com")

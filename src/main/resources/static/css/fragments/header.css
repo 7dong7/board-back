@@ -44,7 +44,7 @@ header {
 .header-right form {
     display: flex;              /* span과 form을 flex 컨테이너로 설정 */
     align-items: center;        /* 수직 중앙 정렬 */
-    gap: 0.5rem;                /* 사용자명과 버튼 사이 간격 */
+    gap: 0.5rem;                /* 회원명과 버튼 사이 간격 */
 }
 
 .header-left a,

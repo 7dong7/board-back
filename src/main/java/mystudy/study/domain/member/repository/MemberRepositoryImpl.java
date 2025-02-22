@@ -11,6 +11,7 @@ import mystudy.study.domain.member.dto.MemberSearchCondition;
 import mystudy.study.domain.member.dto.*;
 import mystudy.study.domain.member.dto.SearchMemberDto;
 import mystudy.study.domain.member.entity.Member;
+import mystudy.study.domain.member.entity.MemberStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -30,7 +31,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
         this.queryFactory = new JPAQueryFactory(em);
     }
 
-    // 사용자 조건 검색
+    // 회원 조건 검색
     @Override
     public List<Member> searchMember(MemberSearchCondition condition) {
         return queryFactory
@@ -43,7 +44,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
                 .fetch();
     }
 
-    // 사용자 조건 검색 (페이징)
+    // 회원 조건 검색 (페이징)
     @Override
     public Page<SearchMemberDto> getMemberPage(MemberSearchCondition condition, Pageable pageable) {
 
@@ -57,7 +58,8 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
                 )
                 .from(member)
                 .where(
-                        transformMemberSearchCondition(condition)
+                        transformMemberSearchCondition(condition),
+                        member.status.eq(MemberStatus.ACTIVE)
                 )
                 .orderBy(
                         memberSort(pageable)
@@ -72,7 +74,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
     }
 
 
-    // 사용자 정보 수정 (본인만) - 사용자 정보 조회
+    // 회원 정보 수정 (본인만) - 회원 정보 조회
     @Override
     public Optional<EditMemberDto> getEditMember(Long memberId) {
         
@@ -96,7 +98,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
 
 
 
-    // 사용자 로그인 / =================== 삭제 예정 =====================
+    // 회원 로그인 / =================== 삭제 예정 =====================
     @Override
     public Member login(String loginId, String password) {
         return queryFactory.select(member)
@@ -118,7 +120,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
                 Order direction = order.getDirection().isAscending() ? Order.ASC : Order.DESC;
 
                 switch (order.getProperty()) {
-                    case "username" :
+                    case "nickname" :
                         return new OrderSpecifier<>(direction, member.nickname);
                     case "email" :
                         return new OrderSpecifier<>(direction, member.email);
@@ -130,14 +132,15 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
         return null;
     }
 
-    // 조건에 맞는 사용자 수
+    // 조건에 맞는 회원 수
     private JPAQuery<Long> countQuery(MemberSearchCondition condition) {
 
         return queryFactory
                 .select(member.count())
                 .from(member)
                 .where(
-                        transformMemberSearchCondition(condition)
+                        transformMemberSearchCondition(condition),
+                        member.status.eq(MemberStatus.ACTIVE)
                 );
     }
 
@@ -149,7 +152,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
             String searchWord = condition.getSearchWord(); // 검색어
 
             return switch (searchType) {
-                case "username" -> member.nickname.containsIgnoreCase(searchWord);
+                case "nickname" -> member.nickname.containsIgnoreCase(searchWord);
                 case "email" -> member.email.containsIgnoreCase(searchWord);
                 default -> null; // 검색 조건이 있으나 사전에 정의된 조건이 아닌 경우
             };
@@ -160,8 +163,8 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
 
     
     // ---
-    private BooleanExpression usernameEq(String username) {
-        return hasText(username) ? member.nickname.containsIgnoreCase(username) : null;
+    private BooleanExpression usernameEq(String nickname) {
+        return hasText(nickname) ? member.nickname.containsIgnoreCase(nickname) : null;
     }
 
     private Predicate emailEq(String email) {

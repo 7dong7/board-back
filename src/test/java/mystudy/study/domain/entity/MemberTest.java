@@ -50,7 +50,7 @@ class MemberTest {
         }
     }
     
-    // 사용자 회원가입 테스트
+    // 회원 회원가입 테스트
     @Test
     public void saveMemberTest() throws Exception{
         Member member = Member.builder()
@@ -59,7 +59,7 @@ class MemberTest {
                 .nickname("testuser")
                 .age(10)
                 .build();
-        // 사용자 등록
+        // 회원 등록
         memberRepository.save(member);
 
         Member findMember = memberRepository.findByNickname("testuser")
