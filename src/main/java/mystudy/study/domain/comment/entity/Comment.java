@@ -21,6 +21,9 @@ public class Comment extends BaseEntity {
 
     private String content;
 
+    @Enumerated(EnumType.STRING)
+    private CommentStatus status = CommentStatus.ACTIVE;
+
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", nullable = false)
@@ -61,4 +64,8 @@ public class Comment extends BaseEntity {
         this.member.getComments().add(this);
     }
 
+    // 댓글 삭제하기
+    public void delete() {
+        this.status = CommentStatus.DELETE;
+    }
 }

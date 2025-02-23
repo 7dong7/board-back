@@ -8,8 +8,10 @@ import mystudy.study.domain.post.entity.Post;
 import mystudy.study.domain.comment.repository.CommentRepository;
 import mystudy.study.domain.member.service.MemberQueryService;
 import mystudy.study.domain.post.service.PostQueryService;
+import mystudy.study.security.CustomUserDetail;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,6 +55,33 @@ public class CommentService {
         
         // 댓글 저장
         commentRepository.save(comment);
+    }
+
+    // 댓글 삭제(comment)
+    public void deleteComment(Long commentId) {
+        /**
+         * commentId 를 가지고 삭제 -> 소프트 딜리트
+         * 내가 작성한 댓글인지 확인
+         */
+        // 작성한 댓글 조회
+        Comment comment = commentQueryService.findCommentById(commentId); // 잘못된 접근시 예외 발생
+        
+        // 회원 정보
+        Long memberId = null;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication instanceof CustomUserDetail userDetail) { // 폼 로그인 사용자의 정보
+            memberId = userDetail.getMemberId(); // 폼 로그인 사용자의 memberId
+        }
+        
+        // 로그인회원 댓글작성자 비교
+        if (!comment.getMember().getId().equals(memberId)) { // 다른 경우
+        // ** 지연로딩 방식으로 쿼리문 발생 **
+            // 다른 경우는 정삭적인 접근이 아니기때문에 예외 발생
+            throw new IllegalArgumentException("정상적인 접근이 아닙니다.");
+        }
+        
+        // 회원 삭제
+        comment.delete(); // dirty checking
     }
 
 

@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mystudy.study.domain.comment.dto.NewCommentDto;
 import mystudy.study.domain.comment.dto.WriteCommentForm;
+import mystudy.study.domain.comment.service.CommentQueryService;
 import mystudy.study.domain.member.dto.login.LoginSessionInfo;
 import mystudy.study.domain.comment.service.CommentService;
 import mystudy.study.session.SessionConst;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class CommentController {
 
     private final CommentService commentService;
+    private final CommentQueryService commentQueryService;
 
     // 댓글 작성(comment) : 처리
     @PostMapping("/comments/{id}/new")
@@ -46,14 +48,29 @@ public class CommentController {
         return "redirect:/posts/" + postId;
     }
 
+    // 댓글 삭제(comment) : 처리
+    @PostMapping("/comments/{postId}/delete/{commentId}")
+    public String deleteComment(@PathVariable("postId") Long postId,
+                                @PathVariable("commentId") Long commentId) {
+        // 댓글 삭제하기
+        try {
+            commentService.deleteComment(commentId);
+        } catch (IllegalArgumentException e) { // 정상적인 이용이 아닌경우 (조작)
+            return "redirect:/posts" + postId;
+        }
+        return "redirect:/posts/" + postId;
+    }
+
+
 
 
 
 
     // 대댓글 작성(reply) : 처리
     @PostMapping("/comments/replies/new")
-    public String newCommentReply(@ModelAttribute("newComment")NewCommentDto newCommentDto,
+    public String newCommentReply(@ModelAttribute("newComment") NewCommentDto newCommentDto,
                                   HttpServletRequest request) {
+
         // 로그인 회원 정보
         HttpSession session = request.getSession(false);
         LoginSessionInfo loginSessionInfo = (LoginSessionInfo) session.getAttribute(SessionConst.LOGIN_MEMBER_ID);
