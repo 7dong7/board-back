@@ -76,8 +76,8 @@
             </div>
 
             <div class="post-content">
-                <p th:utext="${post.content}"><!-- utext 사용-->
-                    여기에 게시글 본문이 들어갑니다.
+                <p th:utext="${post.content}">
+                    게시글 본문
                 </p>
             </div>
             <div th:class="btn-container" sec:authorize="isAuthenticated()" th:if="${post.memberId == #authentication.principal.memberId}">
@@ -92,28 +92,61 @@
             <hr class="divider below-divider">
 
             <h2>댓글</h2>
-<!--            <div class="comments" >-->
-<!--                <ul class="comment-list">-->
-<!--                    &lt;!&ndash; 댓글 &ndash;&gt;-->
-<!--                    <li class="comment-li" th:each="comment : ${post.commentDtoPage}">-->
-<!--                        <div class="comment-info">-->
-<!--                            <span class="comment-author" th:text="${comment.author}">작성자</span>-->
-<!--                            <span class="comment-date" th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm:ss')}">작성일</span>-->
-<!--                        </div>-->
-<!--                        <div class="comment-content content" th:text="${comment.content}"></div>-->
+            <div class="comments" >
+                <ul class="comment-list">
+                    <!-- 댓글 -->
+                    <li class="comment-li" th:each="comment : ${commentPage}">
+                        <div class="comment-info">
+                            <span class="comment-author" th:text="${comment.author}">작성자</span>
+                            <div th:class="comment-right">
+                                <form sec:authorize="isAuthenticated()"
+                                      th:if="${comment.memberId == #authentication.principal.memberId and comment.status.name() == 'ACTIVE'}"
+                                      th:class="comment-delete-form"
+                                      th:action="@{/comments/{postId}/delete/{commentId}(postId=${post.postId}, commentId=${comment.commentId})}"
+                                      method="post">
+                                    <button type="submit">삭제</button>
+                                </form>
+                                <span class="comment-date" th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm:ss')}">작성일</span>
+                            </div>
+                        </div>
+                        <!-- if -> true 인 경우 출력 -->
+                        <div class="comment-content content"
+                             th:if="${comment.status.name() == 'ACTIVE'}"
+                             th:text="${comment.content}">
+                        </div>
+                        <!-- unless -> false 인 경우 출력 -->
+                        <div class="comment-content content delete-comment"
+                             th:unless="${comment.status.name() != 'DELETE'}">
+                            작성자가 삭제한 글입니다.
+                        </div>
 
-<!--                        &lt;!&ndash; 대댓글 &ndash;&gt;-->
-<!--                        <ul class="reply-list">-->
-<!--                            <li th:each="reply : ${comment.replies}">-->
-<!--                                <div class="reply-info">-->
-<!--                                    <span class="reply-author" th:text="${reply.author}">작성자</span>-->
-<!--                                    <span class="reply-date" th:text="${#temporals.format(reply.createdAt, 'yyyy-MM-dd HH:mm:ss')}">작성일</span>-->
-<!--                                </div>-->
-<!--                                <div class="reply-content content" th:text="${reply.content}"></div>-->
-<!--                            </li>-->
-<!--                        </ul>-->
+                        <!-- 대댓글 -->
+                        <ul class="reply-list">
+                            <li th:each="reply : ${comment.replies}">
+                                <div class="reply-info">
+                                    <span class="reply-author" th:text="${reply.author}">작성자</span>
+                                    <div th:class="reply-right">
+                                        <form sec:authorize="isAuthenticated()"
+                                              th:if="${reply.memberId == #authentication.principal.memberId and reply.status == 'ACTIVE'}"
+                                              th:class="reply-delete-form"
+                                              th:action="@{/comments/{postId}/delete/{commentId}(postId=${post.postId}, commentId=${reply.commentId})}">
+                                            <button type="submit">삭제</button>
+                                        </form>
+                                        <span class="reply-date" th:text="${#temporals.format(reply.createdAt, 'yyyy-MM-dd HH:mm:ss')}">작성일</span>
+                                    </div>
+                                </div>
+                                <div class="reply-content content"
+                                     th:unless="${reply.status == 'ACTIVE'}"
+                                     th:text="${reply.content}">
+                                </div>
+                                <div class="reply-content content"
+                                     th:if="${reply.status == 'DELETE'}">
+                                    작성자가 삭제한 글입니다.
+                                </div>
+                            </li>
+                        </ul>
 
-<!--                        &lt;!&ndash; 대댓글 작성 폼 &ndash;&gt;-->
+                        <!-- 대댓글 작성 폼 -->
 <!--                        <div class="reply-form" id="reply-form-${comment.id}" style="display: none;">-->
 <!--                            <form th:action="@{/comments/replies/new}" method="post" th:object="${newComment}">-->
 <!--                                <textarea class="reply-textarea" th:field="*{content}" rows="3" placeholder="댓글 내용을 입력하세요" required></textarea>-->
@@ -122,8 +155,8 @@
 <!--                                <input th:type="hidden" class="parentId" th:field="*{parentId}"/> &lt;!&ndash; 부모 댓글 id&ndash;&gt;-->
 <!--                            </form>-->
 <!--                        </div>-->
-<!--                    </li>-->
-<!--                </ul>-->
+                    </li>
+                </ul>
 
                 <!-- 작성된 댓글이 없는 경우-->
                 <div class="no-comment" th:if="${post.content.isEmpty()}">
@@ -132,8 +165,7 @@
                 </div>
 
                 <!-- 댓글 작성 폼 -->
-                <!-- sec:authorize="isAuthenticated()" -->
-                <div class="comment-form" >
+                <div class="comment-form" sec:authorize="isAuthenticated()">
                     <h3>댓글 작성</h3>
                     <form th:action="@{/comments/{id}/new(id=${post.postId})}" th:object="${commentForm}" method="post">
                         <textarea id="comment-content" th:field="*{content}" rows="3" required></textarea>
@@ -141,35 +173,34 @@
                     </form>
                 </div>
 
-
                 <!-- 페이지네이션 -->
-<!--                <div class="pagination" th:if="${post.commentDtoPage.totalPages > 0}">-->
-<!--                    &lt;!&ndash; 처음 페이지 &ndash;&gt;-->
-<!--                    <a th:href="@{/posts/{id}(id=${post.postId}, page=1)}"-->
-<!--                       th:if="${!post.commentDtoPage.first}">처음</a>-->
+                <div class="pagination" th:if="${commentPage.totalPages > 0}">
+                    <!-- 처음 페이지 -->
+                    <a th:href="@{/posts/{id}(id=${post.postId}, page=1)}"
+                       th:if="${!commentPage.first}">처음</a>
 
-<!--                    &lt;!&ndash; 이전 페이지 &ndash;&gt;-->
-<!--                    <a th:href="@{/posts/{id}(id=${post.postId}, page=${post.commentDtoPage.number})}"-->
-<!--                       th:if="${post.commentDtoPage.hasPrevious()}">이전</a>-->
+                    <!-- 이전 페이지 -->
+                    <a th:href="@{/posts/{id}(id=${post.postId}, page=${commentPage.number})}"
+                       th:if="${commentPage.hasPrevious()}">이전</a>
 
-<!--                    &lt;!&ndash; 페이지 번호 반복 출력 &ndash;&gt;-->
-<!--                    <div th:if="${post.commentDtoPage.totalPages > 0}">-->
-<!--                        <span th:each="page : ${#numbers.sequence(1, post.commentDtoPage.totalPages)}"-->
-<!--                              th:if="${page >= post.commentDtoPage.number + 1 - 3 and page <= post.commentDtoPage.number + 1 + 3}">-->
-<!--                            <a th:href="@{/posts/{id}(id=${post.postId}, page=${page})}"-->
-<!--                               th:text="${page}"-->
-<!--                               th:classappend="${page == post.commentDtoPage.number + 1} ? 'active'">1</a>-->
-<!--                        </span>-->
-<!--                    </div>-->
-<!--                    &lt;!&ndash; 다음 페이지 &ndash;&gt;-->
-<!--                    <a th:href="@{/posts/{id}(id=${post.postId}, page=${post.commentDtoPage.number + 2})}"-->
-<!--                       th:if="${post.commentDtoPage.hasNext()}">다음</a>-->
+                    <!-- 페이지 번호 반복 출력 -->
+                    <div th:if="${commentPage.totalPages > 0}">
+                        <span th:each="page : ${#numbers.sequence(1, commentPage.totalPages)}"
+                              th:if="${page >= commentPage.number + 1 - 3 and page <= commentPage.number + 1 + 3}">
+                            <a th:href="@{/posts/{id}(id=${post.postId}, page=${page})}"
+                               th:text="${page}"
+                               th:classappend="${page == commentPage.number + 1} ? 'active'">1</a>
+                        </span>
+                    </div>
+                    <!-- 다음 페이지 -->
+                    <a th:href="@{/posts/{id}(id=${post.postId}, page=${commentPage.number + 2})}"
+                       th:if="${commentPage.hasNext()}">다음</a>
 
-<!--                    &lt;!&ndash; 마지막 페이지 &ndash;&gt;-->
-<!--                    <a th:href="@{/posts/{id}(id=${post.postId}, page=${post.commentDtoPage.totalPages})}"-->
-<!--                       th:if="${!post.commentDtoPage.last}">마지막</a>-->
-<!--                </div>-->
-<!--            </div>-->
+                    <!-- 마지막 페이지 -->
+                    <a th:href="@{/posts/{id}(id=${post.postId}, page=${commentPage.totalPages})}"
+                       th:if="${!commentPage.last}">마지막</a>
+                </div>
+            </div>
 
             <div class="footer">
                 <a href="/post" class="back-link">목록으로 돌아가기</a>

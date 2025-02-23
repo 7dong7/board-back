@@ -52,14 +52,22 @@ public class CommentController {
     @PostMapping("/comments/{postId}/delete/{commentId}")
     public String deleteComment(@PathVariable("postId") Long postId,
                                 @PathVariable("commentId") Long commentId) {
+        log.info("deleteComment postId: {}, commentId: {}", postId, commentId);
+
         // 댓글 삭제하기
         try {
             commentService.deleteComment(commentId);
         } catch (IllegalArgumentException e) { // 정상적인 이용이 아닌경우 (조작)
-            return "redirect:/posts" + postId;
+            return "redirect:/posts";
         }
-        return "redirect:/posts/" + postId;
+        return "redirect:/posts";
     }
+
+
+
+
+
+
 
 
 

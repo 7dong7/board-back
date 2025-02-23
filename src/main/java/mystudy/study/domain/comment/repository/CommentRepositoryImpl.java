@@ -6,6 +6,8 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import mystudy.study.domain.comment.dto.*;
+import mystudy.study.domain.comment.entity.Comment;
+import mystudy.study.domain.comment.entity.QComment;
 import mystudy.study.domain.post.entity.PostStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,7 +39,7 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
                 .fetchOne();
     }
 
-    // 회원 정보 조회 - 회원가 작성한 댓글 조회 (페이징)
+    // 회원 정보 조회 - 회원이 작성한 댓글 조회 (페이징)
     @Override
     public Page<CommentDto> getCommentByMemberId(Long memberId, Pageable pageable) {
 
@@ -77,7 +79,79 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
     }
 
-    // 게시글 id를 사용해서 댓글 조회 (페이징)
+    // 게시글 조회 - 댓글 조회 (페이징) : 댓글 페이징 조회후  대댓글 배치 조회
+    public Page<ViewCommentDto> getViewComment(Long postId, Pageable commentPageable) {
+
+        List<ViewCommentDto> result = queryFactory
+                .select(new QViewCommentDto(
+                        comment.id.as("commentId"),
+                        comment.content,
+                        member.nickname,
+                        comment.createdAt,
+                        comment.status,
+                        comment.member.id.as("memberId")
+                        )
+                )
+                .from(comment)
+                .join(comment.post, post)
+                .leftJoin(comment.member, member)
+                .where(
+                        post.status.eq(PostStatus.ACTIVE),  // 삭제되지 않은 게시판의 댓글 조회
+                        post.id.eq(postId),      // 게시글에 해당하는 댓글 조회
+                        comment.parent.isNull() // 부모댓글 조회
+                )
+                .orderBy(
+                        comment.id.asc() // 생성순서 오름차순 1 2 3 4 5
+                )
+                .offset(commentPageable.getOffset()) //
+                .limit(15)      // 댓글 15개 조회 고정
+                .fetch();
+
+        JPAQuery<Long> countQuery = queryFactory
+                .select(comment.count())
+                .from(comment)
+                .join(comment.post, post)
+                .leftJoin(comment.member, member)
+                .where(
+                        post.status.eq(PostStatus.ACTIVE),  // 삭제되지 않은 게시판의 댓글 조회
+                        post.id.eq(postId),      // 게시글에 해당하는 댓글 조회
+                        comment.parent.isNull() // 부모댓글 조회
+                );
+
+        return PageableExecutionUtils.getPage(result, commentPageable, countQuery::fetchOne);
+    }
+
+    // 게시글 조회 - 대댓글 조회 : 댓글 부모Id 사용 배치 조회
+    @Override
+    public List<ViewReplyDto> getViewReply(List<Long> parentIdList) {
+
+        return queryFactory
+                .select(new QViewReplyDto(
+                        comment.id.as("commentId"),
+                        comment.parent.id,
+                        comment.content,
+                        comment.member.nickname.as("author"),
+                        comment.createdAt,
+                        comment.status,
+                        comment.member.id.as("memberId")
+                        )
+                )
+                .from(comment)
+                .leftJoin(comment.post, post)
+                .leftJoin(comment.member, member)
+                .where(
+                        comment.parent.id.in(parentIdList)
+                )
+                .orderBy(
+                        comment.id.asc() // 최신 대댓글은 아래로
+                )
+                .fetch();
+    }
+
+
+
+
+    // 게시글 조회 - 댓글 & 대댓글 조회 (페이징)  // ================= 삭제 예정 ================ //
     @Override
     public Page<ParentCommentDto> getCommentByPostId(Long postId, Pageable commentPageable) {
 

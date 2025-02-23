@@ -1,6 +1,7 @@
 package mystudy.study.domain.comment.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import mystudy.study.domain.comment.dto.*;
 import mystudy.study.domain.comment.entity.Comment;
 import mystudy.study.domain.member.entity.Member;
@@ -21,6 +22,7 @@ import java.util.List;
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class CommentService {
 
     private final CommentRepository commentRepository;
@@ -65,14 +67,15 @@ public class CommentService {
          */
         // 작성한 댓글 조회
         Comment comment = commentQueryService.findCommentById(commentId); // 잘못된 접근시 예외 발생
-        
+
         // 회원 정보
         Long memberId = null;
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication instanceof CustomUserDetail userDetail) { // 폼 로그인 사용자의 정보
-            memberId = userDetail.getMemberId(); // 폼 로그인 사용자의 memberId
-        }
-        
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof CustomUserDetail CustomUserDetail) { // 폼 로그인 사용자의 정보
+            memberId = CustomUserDetail.getMemberId(); // 폼 로그인 사용자의 memberId
+        } // oauth2 방식 추가
+
+        log.info("memberId: {}, securityMember: {}", comment.getMember().getId(), memberId);
         // 로그인회원 댓글작성자 비교
         if (!comment.getMember().getId().equals(memberId)) { // 다른 경우
         // ** 지연로딩 방식으로 쿼리문 발생 **
@@ -88,7 +91,7 @@ public class CommentService {
 
 
 
-    // 댓글 id를 parentId 로 사용하는 댓글 조회 (대댓글 조회, where 절에서 in 사용해서 한번에 조회)
+    // 댓글 id를 parentId 로 사용하는 댓글 조회 (대댓글 조회, where 절에서 in 사용해서 한번에 조회) ============== 삭제 예정 ================
     public List<ReplyCommentDto> getCommentByParentId(List<Long> parentIdList) {
         return commentRepository.getCommentByParentId(parentIdList);
     }
@@ -99,20 +102,20 @@ public class CommentService {
     public void newComment(NewCommentDto newCommentDto, Long loginMemberId) {
 
         // 글 작성자   로그인 회원
-        Member member = memberQueryService.findMemberById(loginMemberId);
-
-        // 게시글 조회
-        Post post = postQueryService.findById(newCommentDto.getPostId());
+//        Member member = memberQueryService.findMemberById(loginMemberId);
+//
+//         게시글 조회
+//        Post post = postQueryService.findById(newCommentDto.getPostId());
 
         // 새로운 댓글(comment) 생성
-        Comment comment = Comment.builder()
-                .content(newCommentDto.getContent())
-                .member(member)
-                .post(post)
-                .build();
+//        Comment comment = Comment.builder()
+//                .content(newCommentDto.getContent())
+//                .member(member)
+//                .post(post)
+//                .build();
 
         // 댓글 저장
-        commentRepository.save(comment);
+//        commentRepository.save(comment);
     }
 
     // 게시물 대댓글 작성하기

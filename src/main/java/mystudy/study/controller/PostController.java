@@ -7,7 +7,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mystudy.study.domain.comment.dto.NewCommentDto;
 import mystudy.study.domain.comment.dto.ParentCommentDto;
+import mystudy.study.domain.comment.dto.ViewCommentDto;
 import mystudy.study.domain.comment.dto.WriteCommentForm;
+import mystudy.study.domain.comment.service.CommentQueryService;
 import mystudy.study.domain.member.dto.login.LoginSessionInfo;
 import mystudy.study.domain.post.dto.*;
 import mystudy.study.domain.post.service.PostQueryService;
@@ -34,6 +36,7 @@ public class PostController {
 
     private final PostService postService;
     private final PostQueryService postQueryService;
+    private final CommentQueryService commentQueryService;
 
 
     // 게시글 작성 : 페이지
@@ -58,12 +61,12 @@ public class PostController {
     // 게시글 조회 : 페이지 (게시글 내용, 댓글&대댓글(페이징))
     @GetMapping("/posts/{id}")
     public String getPostView(@PathVariable("id") Long postId,
-                              @PageableDefault(size=20, page=0) Pageable clPageable,
+                              @PageableDefault(size=15, page=0) Pageable clPageable,
                               Model model) {
         // 댓글 Pageable 생성
         Pageable commentPageable = PageRequest.of(
                 Math.max(clPageable.getPageNumber() - 1, 0),
-                20, // pageSize
+                15, // pageSize
                 Sort.by("id").descending()); // pageSort
 
         // 게시글 조회 (postId 사용)
@@ -71,16 +74,12 @@ public class PostController {
 
         model.addAttribute("post", viewPost);
 
-        // 댓글 & 대댓글 가져오기
-
-
-
-
-        // 게시글 내용물 가져오기, 댓글 가져오기 (페이징)
-//        PostViewDto postViewDto = postService.getPostView(postId, commentPageable);
-//
-//        List<ParentCommentDto> content = postViewDto.getCommentDtoPage().getContent();
-
+        // 댓글 & 대댓글 조회 (페이징)
+        Page<ViewCommentDto> viewComment = commentQueryService.getViewComment(postId, commentPageable);
+        
+        // 댓글 담기
+        model.addAttribute("commentPage", viewComment);
+        // 댓글 작성 폼
         model.addAttribute("commentForm", new WriteCommentForm());
         return "pages/post/postView";
     }

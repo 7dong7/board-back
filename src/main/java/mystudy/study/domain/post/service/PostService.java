@@ -167,7 +167,7 @@ public class PostService {
         List<ReplyCommentDto> replies = commentService.getCommentByParentId(parentIdList);
 
 
-        // 조회한 대댓글 parentId 변로 구분
+        // 조회한 대댓글 parentId 별로 구분
         Map<Long, List<ReplyCommentDto>> groupReplyMap = replies.stream()
                 .collect(Collectors.groupingBy(ReplyCommentDto::getParentId));
 

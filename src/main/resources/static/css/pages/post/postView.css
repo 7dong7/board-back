@@ -106,7 +106,6 @@ body {
     /* 그리드 설정 */
     grid-column:5; /* 3번째 열부터 시작 */
     justify-self:end;
-
 }
 
 .delete-btn {
@@ -164,6 +163,12 @@ body {
     margin-bottom:1rem;
 }
 
+.delete-comment {
+    color:#b5b5b5;
+    font-weight:bold;
+    font-style:italic;
+}
+
 /* 대댓글 */
 .reply-list {
     margin-left:3rem;
@@ -200,6 +205,35 @@ body {
 /* 댓글 대댓글 공통*/
 .content:hover {
     cursor:pointer;
+}
+
+/* 댓글 삭제 버튼 */
+.comment-info,
+.reply-info {
+    /* grid */
+    display:grid;
+    grid-template-columns:1fr 1fr
+}
+
+.comment-right,
+.reply-right {
+    justify-self:end;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+}
+
+.comment-delete-form,
+.reply-delete-form {
+    grid-column:1;
+    justify-self:end;
+    margin-right:20px;
+}
+
+.comment-date,
+.reply-date {
+    /* grid */
+    grid-column:2;
+    justify-self:end;
 }
 
 /* 페이지네이션 */
@@ -293,7 +327,6 @@ body {
 .comment-form .btn-comment:hover {
     background-color: #0056b3;
 }
-
 
 .footer {
     margin-top: 20px;
