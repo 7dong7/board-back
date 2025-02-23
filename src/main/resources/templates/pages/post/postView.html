@@ -126,17 +126,21 @@
 <!--                </ul>-->
 
                 <!-- 작성된 댓글이 없는 경우-->
-<!--                <div class="no-comment" th:if="${post.commentDtoPage.content.isEmpty()}">작성된 댓글이 없습니다.</div>-->
+                <div class="no-comment" th:if="${post.content.isEmpty()}">
+                    작성된 댓글이 없습니다.
+                    댓글은 로그인 후 작성할 수 있습니다.
+                </div>
 
-<!--                &lt;!&ndash; 댓글 작성 폼 &ndash;&gt;-->
-<!--                <div class="comment-form">-->
-<!--                    <h3>댓글 작성</h3>-->
-<!--                    <form th:action="@{/comments/new}" th:object="${newComment}" method="post">-->
-<!--                        <textarea id="comment-content" th:field="*{content}" rows="3" required></textarea>-->
-<!--                        <button type="submit" class="btn-comment" th:attr="data-post-id=${post.postId}">등록</button>-->
-<!--                        <input th:type="hidden" class="postId" th:field="*{postId}" />-->
-<!--                    </form>-->
-<!--                </div>-->
+                <!-- 댓글 작성 폼 -->
+                <!-- sec:authorize="isAuthenticated()" -->
+                <div class="comment-form" >
+                    <h3>댓글 작성</h3>
+                    <form th:action="@{/comments/{id}/new(id=${post.postId})}" th:object="${commentForm}" method="post">
+                        <textarea id="comment-content" th:field="*{content}" rows="3" required></textarea>
+                        <button type="submit" class="btn-comment">등록</button>
+                    </form>
+                </div>
+
 
                 <!-- 페이지네이션 -->
 <!--                <div class="pagination" th:if="${post.commentDtoPage.totalPages > 0}">-->

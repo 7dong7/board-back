@@ -16,6 +16,7 @@ import org.springframework.data.support.PageableExecutionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static mystudy.study.domain.member.entity.QMember.member;
 import static mystudy.study.domain.post.entity.QPost.post;
@@ -159,13 +160,11 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
     }
 
 
-
-
     // postId로 게시글 조회 fetch join
     @Override
-    public Post findByPostId(Long postId) {
+    public Optional<Post> findByPostId(Long postId) {
 
-        return queryFactory.select(post)
+        Post result = queryFactory.select(post)
                 .from(post)
                 .leftJoin(post.member, member).fetchJoin()
                 .where(
@@ -173,6 +172,8 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                         post.status.eq(PostStatus.ACTIVE)
                 )
                 .fetchOne();
+
+        return Optional.ofNullable(result);
     }
 
 

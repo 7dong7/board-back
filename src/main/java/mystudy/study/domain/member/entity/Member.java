@@ -104,7 +104,7 @@ public class Member extends BaseTimeEntity {
 
     // 글 작성
     public void addPost(Post post) {
-        posts.add(post);
+        this.posts.add(post);
     }
 
     // 글 삭제

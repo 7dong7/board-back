@@ -1,10 +1,7 @@
 package mystudy.study.domain.comment.service;
 
 import lombok.RequiredArgsConstructor;
-import mystudy.study.domain.comment.dto.CommentDto;
-import mystudy.study.domain.comment.dto.NewCommentDto;
-import mystudy.study.domain.comment.dto.ParentCommentDto;
-import mystudy.study.domain.comment.dto.ReplyCommentDto;
+import mystudy.study.domain.comment.dto.*;
 import mystudy.study.domain.comment.entity.Comment;
 import mystudy.study.domain.member.entity.Member;
 import mystudy.study.domain.post.entity.Post;
@@ -13,13 +10,14 @@ import mystudy.study.domain.member.service.MemberQueryService;
 import mystudy.study.domain.post.service.PostQueryService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 @RequiredArgsConstructor
 public class CommentService {
 
@@ -29,28 +27,46 @@ public class CommentService {
     private final MemberQueryService memberQueryService;
     private final CommentQueryService commentQueryService;
 
-    // 회원가 작성한 댓글 수 조회
-    public Long getCommentCountByMemberId(Long id) {
-        return commentRepository.getCommentCountByMemberId(id);
+    // 댓글 작성(comment)
+    public void writeComment(Long postId, WriteCommentForm writeCommentForm) {
+        /**
+         *  1. 로그인 여부 확인 -> AccessURL 설정
+         *  2. 게시글 존재 여부 확인 -> 존재하지 않는 게시글에 임의적으로 댓글을 작성하려고 하는 경우 (정상적이지 않은 경우 - postId 조작)
+         *  3. 댓글 작성
+         */
+        // 게시글 조회
+        Post post = postQueryService.findByPostId(postId); // 정상적이지 않은 경우 예외 발생
+        
+        // 로그인 회원 DB 에서 조회
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Member member = memberQueryService.findByEmail(email);
+        
+    // 댓글 작성 처리
+        // 댓글 생성
+        Comment comment = Comment.builder()
+                .content(writeCommentForm.getContent())
+                .build();
+
+        // 댓글 연관관계 매핑
+        comment.addPost(post); // 양방향 설정 -> DB와 entity 객체의 동기화
+        comment.addMember(member); // 양방향 설정
+        
+        // 댓글 저장
+        commentRepository.save(comment);
     }
 
-    // 회원 정보 조회 - 회원가 작성한 댓글 조회 (페이징)
-    public Page<CommentDto> getCommentByMemberId(Long id, Pageable pageable) {
-        return commentRepository.getCommentByMemberId(id, pageable);
-    };
 
-    // 게시글 id를 사용해서 댓글 조회 (페이징)
-    public Page<ParentCommentDto> getCommentByPostId(Long postId, Pageable commentPageable) {
-        return commentRepository.getCommentByPostId(postId, commentPageable);
-    }
+
+
 
     // 댓글 id를 parentId 로 사용하는 댓글 조회 (대댓글 조회, where 절에서 in 사용해서 한번에 조회)
     public List<ReplyCommentDto> getCommentByParentId(List<Long> parentIdList) {
         return commentRepository.getCommentByParentId(parentIdList);
     }
 
-    // 게시물에 댓글 작성
-    @Transactional
+
+
+    // 게시물에 댓글 작성  ============= 삭제 예정 =================
     public void newComment(NewCommentDto newCommentDto, Long loginMemberId) {
 
         // 글 작성자   로그인 회원
@@ -94,4 +110,6 @@ public class CommentService {
         // 댓글 저장
         commentRepository.save(newComment);
     }
+
+
 }

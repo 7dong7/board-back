@@ -58,4 +58,6 @@ public class MemberQueryService {
         // 요청정보 반환
         return editMemberDto;
     }
+
+
 }

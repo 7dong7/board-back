@@ -2,8 +2,11 @@ package mystudy.study.domain.post.repository;
 
 import mystudy.study.domain.post.dto.*;
 import mystudy.study.domain.post.entity.Post;
+import mystudy.study.domain.post.entity.PostStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
+import java.util.Optional;
 
 public interface PostRepositoryCustom {
 
@@ -17,7 +20,7 @@ public interface PostRepositoryCustom {
     Page<PostDto> getPostByMemberId(Long id, Pageable pageable);
 
     // 게시글 postId로 조회 - fetch join
-    Post findByPostId(Long postId);
+    Optional<Post> findByPostId(Long postId);
 
     // 게시글 조회 - ViewPostDto 직접 조회
     ViewPostDto getViewPostDto(Long postId);

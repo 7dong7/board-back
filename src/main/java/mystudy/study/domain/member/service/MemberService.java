@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import mystudy.study.domain.comment.dto.CommentDto;
+import mystudy.study.domain.comment.service.CommentQueryService;
 import mystudy.study.domain.member.dto.*;
 import mystudy.study.domain.member.entity.MemberStatus;
 import mystudy.study.domain.post.dto.PostDto;
@@ -46,6 +47,7 @@ public class MemberService {
     
     // 암호화
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final CommentQueryService commentQueryService;
 
     // 회원 가입 : 서비스
     public void registerMember(RegisterMemberForm memberForm) {
@@ -93,7 +95,7 @@ public class MemberService {
         Long postCount = postService.getPostCountByMemberId(memberId);
 
         // 작성한 댓글 수
-        Long commentCount = commentService.getCommentCountByMemberId(memberId);
+        Long commentCount = commentQueryService.getCommentCountByMemberId(memberId);
 
         // 반환 dto 생성
         InfoMemberDto infoMemberDto = new InfoMemberDto();
@@ -124,7 +126,7 @@ public class MemberService {
          *  게시글 검색의 조건으로 memberId를 사용해서 회원의 댓글을 페이징 처리해서 조회한다
          */
         // 댓글 페이징
-        return commentService.getCommentByMemberId(memberId, commentPageable);
+        return commentQueryService.getCommentByMemberId(memberId, commentPageable);
     }
 
     // 회원 정보 수정
@@ -195,7 +197,7 @@ public class MemberService {
 
         // 로그인 회원과 탈퇴 하려는 회원의 정보가 일치하는지 확인
         if (!member.getEmail().equals(email)) { // 로그인 회원정보가 다른 경우
-            throw new IllegalStateException("잘못된 회원 삭제");
+            throw new IllegalStateException("잘못된 회원 탈퇴");
         }
         
         // 회원 탈퇴

@@ -4,17 +4,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mystudy.study.domain.comment.dto.ParentCommentDto;
 import mystudy.study.domain.comment.dto.ReplyCommentDto;
+import mystudy.study.domain.comment.service.CommentQueryService;
 import mystudy.study.domain.member.entity.Member;
 import mystudy.study.domain.post.entity.Post;
 import mystudy.study.domain.post.dto.*;
-import mystudy.study.domain.post.entity.PostStatus;
 import mystudy.study.domain.post.repository.PostRepository;
 import mystudy.study.domain.comment.service.CommentService;
 import mystudy.study.domain.member.service.MemberQueryService;
 import mystudy.study.security.CustomUserDetail;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +33,7 @@ public class PostService {
 
     private final PostQueryService postQueryService;
     private final MemberQueryService memberQueryService;
+    private final CommentQueryService commentQueryService;
 
     // 게시글 작성 : 처리
     public void createPost(NewPostDto newPostDto) {
@@ -156,7 +156,7 @@ public class PostService {
         PostViewDto postView = postRepository.getPostView(postId);
 
         // 댓글 조회 ( 페이징 )
-        Page<ParentCommentDto> parentCommentDtoPage = commentService.getCommentByPostId(postId, commentPageable);
+        Page<ParentCommentDto> parentCommentDtoPage = commentQueryService.getCommentByPostId(postId, commentPageable);
 
         // 조횐된 댓글 id 리스트
         List<Long> parentIdList = parentCommentDtoPage.stream()

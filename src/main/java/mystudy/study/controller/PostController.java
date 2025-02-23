@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mystudy.study.domain.comment.dto.NewCommentDto;
 import mystudy.study.domain.comment.dto.ParentCommentDto;
+import mystudy.study.domain.comment.dto.WriteCommentForm;
 import mystudy.study.domain.member.dto.login.LoginSessionInfo;
 import mystudy.study.domain.post.dto.*;
 import mystudy.study.domain.post.service.PostQueryService;
@@ -80,7 +81,7 @@ public class PostController {
 //
 //        List<ParentCommentDto> content = postViewDto.getCommentDtoPage().getContent();
 
-//        model.addAttribute("newComment", new NewCommentDto());
+        model.addAttribute("commentForm", new WriteCommentForm());
         return "pages/post/postView";
     }
 

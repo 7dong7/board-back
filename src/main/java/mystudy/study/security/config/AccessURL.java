@@ -14,12 +14,16 @@ public class AccessURL {
             "/posts", "/posts/*",       // 게시글
             "/oauth2/**",               // oauth2 로그인
 
+            
+            // 로그인한 사용자
+            "/comments/*/new",
+            
             // 회원 변경 예정 role : ROLE_USER
             "/members/*/edit", "/members/*/delete",
 
             "/image/upload",
             "/posts/new/post",
-            "/posts/*/edit"
+            "/posts/*/edit",
 
             // 회원 변경 예정 role : ROLE_ADMIN
     };
