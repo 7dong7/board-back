@@ -59,6 +59,34 @@ public class CommentService {
         commentRepository.save(comment);
     }
 
+    // 대댓글 작성(reply)
+    public void writeReply(Long postId, Long commentId, WriteCommentForm writeCommentForm) {
+
+        // 게시글 조회
+        Post post = postQueryService.findByPostId(postId); // 정상적이지 않은 경우 예외 발생
+
+        // 부모 댓글 조회
+        Comment parentComment = commentQueryService.findCommentById(commentId);
+        
+        // 로그인 회원 DB 에서 조회
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Member member = memberQueryService.findByEmail(email);
+
+    // 대댓글 작성 처리
+        // 대댓글 생성
+        Comment reply = Comment.builder()
+                .content(writeCommentForm.getContent())
+                .build();
+
+        // 대댓글 연관관계 매핑
+        reply.addPost(post); // 양방향 설정 -> DB와 entity 객체의 동기화
+        reply.addMember(member); // 양방향 설정
+        reply.addComment(parentComment); // 부모댓글 자식댓글 설정
+
+        // 댓글 저장
+        commentRepository.save(reply);
+    }
+
     // 댓글 삭제(comment)
     public void deleteComment(Long commentId) {
         /**
@@ -75,7 +103,6 @@ public class CommentService {
             memberId = CustomUserDetail.getMemberId(); // 폼 로그인 사용자의 memberId
         } // oauth2 방식 추가
 
-        log.info("memberId: {}, securityMember: {}", comment.getMember().getId(), memberId);
         // 로그인회원 댓글작성자 비교
         if (!comment.getMember().getId().equals(memberId)) { // 다른 경우
         // ** 지연로딩 방식으로 쿼리문 발생 **

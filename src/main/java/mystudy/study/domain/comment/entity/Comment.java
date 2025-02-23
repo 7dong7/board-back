@@ -64,6 +64,16 @@ public class Comment extends BaseEntity {
         this.member.getComments().add(this);
     }
 
+    /**
+     * @param comment - 대댓글 작성시
+     * 대댓글을 작성하기 위한 부모 댓글에 대댓글을 추가한다
+     */
+    // 부모 댓글 추가
+    public void addComment(Comment comment) {
+        this.parent = comment;
+        comment.getReplies().add(this);
+    }
+
     // 댓글 삭제하기
     public void delete() {
         this.status = CommentStatus.DELETE;

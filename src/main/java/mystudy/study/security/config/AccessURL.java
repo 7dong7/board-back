@@ -16,9 +16,10 @@ public class AccessURL {
 
             
             // 로그인한 사용자
-            "/comments/*/new",
-            
-            // 회원 변경 예정 role : ROLE_USER
+            "/comments/*/new", "/comments/*/new/*",
+
+
+            // 권한 변경 예정 role : ROLE_USER
             "/members/*/edit", "/members/*/delete",
 
             "/image/upload",

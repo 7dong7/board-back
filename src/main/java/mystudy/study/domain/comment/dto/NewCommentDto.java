@@ -8,7 +8,7 @@ import lombok.ToString;
 @Data
 @NoArgsConstructor
 @ToString
-public class NewCommentDto {
+public class NewCommentDto { // ======== 삭제 예정 ========= //
 
     private Long postId;    // 게시글 id
     private String content; // 대글 내용

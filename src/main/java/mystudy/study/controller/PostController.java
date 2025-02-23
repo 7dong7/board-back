@@ -60,7 +60,7 @@ public class PostController {
 
     // 게시글 조회 : 페이지 (게시글 내용, 댓글&대댓글(페이징))
     @GetMapping("/posts/{id}")
-    public String getPostView(@PathVariable("id") Long postId,
+    public String postViewPage(@PathVariable("id") Long postId,
                               @PageableDefault(size=15, page=0) Pageable clPageable,
                               Model model) {
         // 댓글 Pageable 생성

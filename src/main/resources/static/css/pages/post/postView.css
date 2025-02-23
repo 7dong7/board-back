@@ -155,6 +155,10 @@ body {
 .comment-date {
     padding-right:1rem;
     font-size:9pt;
+
+    /* grid 내용물 가운데 */
+    display:grid; /* flex도 됨*/
+    align-items:center;
 }
 
 .comment-content {
@@ -163,7 +167,8 @@ body {
     margin-bottom:1rem;
 }
 
-.delete-comment {
+.delete-comment,
+.delete-reply {
     color:#b5b5b5;
     font-weight:bold;
     font-style:italic;
@@ -270,7 +275,7 @@ body {
 .no-comment {
     color: #777;
     font-style: italic;
-    padding: 1rem 0 5rem 0;
+    margin:1rem 0 5rem 0;
 }
 
 /* 댓글 작성 폼, 대댓글 작성 폼 */
@@ -327,6 +332,22 @@ body {
 .comment-form .btn-comment:hover {
     background-color: #0056b3;
 }
+
+/* 댓글 삭제 버튼 */
+.comment-delete-btn {
+    all:unset;
+    background-color:#e08f86;
+    border-radius: 5px;
+    padding:1px 6px;
+    font-size:9pt;
+    font-weight:bold;
+    color:#ffffff;
+}
+
+.comment-delete-btn:hover {
+    background-color:#b85f55;
+}
+
 
 .footer {
     margin-top: 20px;

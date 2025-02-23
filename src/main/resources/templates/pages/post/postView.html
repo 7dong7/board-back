@@ -13,26 +13,6 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
 
-            // 대댓글 작성 버튼 클릭시
-            document.querySelectorAll(".btn-reply").forEach(button => {
-                button.addEventListener("click", function() {
-                    const postId = this.dataset.postId;
-                    const parentId = this.dataset.parentId;
-
-                    const parentForm = this.parentElement
-
-                    parentForm.querySelector(".postId").value = postId;
-                    parentForm.querySelector(".parentId").value = parentId;
-                });
-            }); // 대댓글 작성 버튼 클릭시 끝
-
-            // 댓글 작성 버튼 클릭 시
-            document.querySelector(".btn-comment").addEventListener("click", function() {
-                const postId = this.dataset.postId;
-
-                this.parentElement.querySelector(".postId").value = postId;
-            }); // 댓글 작성 버튼 클릭 시 끝
-
             // 댓글, 대댓글 내용 클릭시 대댓글 작성폼 보이기 및 내용 없애기
             document.querySelectorAll(".content").forEach(content => {
 
@@ -104,7 +84,7 @@
                                       th:class="comment-delete-form"
                                       th:action="@{/comments/{postId}/delete/{commentId}(postId=${post.postId}, commentId=${comment.commentId})}"
                                       method="post">
-                                    <button type="submit">삭제</button>
+                                    <button th:class="comment-delete-btn" type="submit">삭제</button>
                                 </form>
                                 <span class="comment-date" th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm:ss')}">작성일</span>
                             </div>
@@ -127,40 +107,39 @@
                                     <span class="reply-author" th:text="${reply.author}">작성자</span>
                                     <div th:class="reply-right">
                                         <form sec:authorize="isAuthenticated()"
-                                              th:if="${reply.memberId == #authentication.principal.memberId and reply.status == 'ACTIVE'}"
+                                              th:if="${reply.memberId == #authentication.principal.memberId and reply.status.name() == 'ACTIVE'}"
                                               th:class="reply-delete-form"
-                                              th:action="@{/comments/{postId}/delete/{commentId}(postId=${post.postId}, commentId=${reply.commentId})}">
-                                            <button type="submit">삭제</button>
+                                              th:action="@{/comments/{postId}/delete/{commentId}(postId=${post.postId}, commentId=${reply.commentId})}"
+                                              method="post">
+                                            <button th:class="comment-delete-btn" type="submit">삭제</button>
                                         </form>
                                         <span class="reply-date" th:text="${#temporals.format(reply.createdAt, 'yyyy-MM-dd HH:mm:ss')}">작성일</span>
                                     </div>
                                 </div>
                                 <div class="reply-content content"
-                                     th:unless="${reply.status == 'ACTIVE'}"
+                                     th:if="${reply.status.name() == 'ACTIVE'}"
                                      th:text="${reply.content}">
                                 </div>
-                                <div class="reply-content content"
-                                     th:if="${reply.status == 'DELETE'}">
+                                <div class="reply-content content delete-reply"
+                                     th:unless="${reply.status.name() != 'DELETE'}">
                                     작성자가 삭제한 글입니다.
                                 </div>
                             </li>
                         </ul>
 
                         <!-- 대댓글 작성 폼 -->
-<!--                        <div class="reply-form" id="reply-form-${comment.id}" style="display: none;">-->
-<!--                            <form th:action="@{/comments/replies/new}" method="post" th:object="${newComment}">-->
-<!--                                <textarea class="reply-textarea" th:field="*{content}" rows="3" placeholder="댓글 내용을 입력하세요" required></textarea>-->
-<!--                                <button class="btn-reply" type="submit" th:attr="data-post-id=${post.postId}, data-parent-id=${comment.commentId}">등록</button>-->
-<!--                                <input th:type="hidden" class="postId" th:field="*{postId}" /> &lt;!&ndash; 게시글 id&ndash;&gt;-->
-<!--                                <input th:type="hidden" class="parentId" th:field="*{parentId}"/> &lt;!&ndash; 부모 댓글 id&ndash;&gt;-->
-<!--                            </form>-->
-<!--                        </div>-->
+                        <div class="reply-form" style="display: none;">
+                            <form th:action="@{/comments/{postId}/new/{commentId}(postId=${post.postId}, commentId=${comment.commentId})}" method="post" th:object="${commentForm}">
+                                <textarea class="reply-textarea" th:field="*{content}" rows="3" placeholder="댓글 내용을 입력하세요" required></textarea>
+                                <button class="btn-reply" type="submit">등록</button>
+                            </form>
+                        </div>
                     </li>
                 </ul>
 
                 <!-- 작성된 댓글이 없는 경우-->
-                <div class="no-comment" th:if="${post.content.isEmpty()}">
-                    작성된 댓글이 없습니다.
+                <div class="no-comment" th:if="${commentPage.content.isEmpty()}">
+                    작성된 댓글이 없습니다.<br>
                     댓글은 로그인 후 작성할 수 있습니다.
                 </div>
 
@@ -203,7 +182,7 @@
             </div>
 
             <div class="footer">
-                <a href="/post" class="back-link">목록으로 돌아가기</a>
+                <a href="/posts" class="back-link">목록으로 돌아가기</a>
             </div>
         </div>
     </main>
