@@ -234,13 +234,9 @@ public class MemberController {
 //         model 속성 추가
 //        model.addAttribute("memberList", memberList);
 
-
         // 변경된 검색 조건과 페이징된 회원 리스트 전달
         model.addAttribute("memberSearch", memberSearch);
         return "pages/member/members";
     }
-
-
-    
 
 }

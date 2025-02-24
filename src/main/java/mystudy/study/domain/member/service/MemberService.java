@@ -8,6 +8,7 @@ import mystudy.study.domain.comment.service.CommentQueryService;
 import mystudy.study.domain.member.dto.*;
 import mystudy.study.domain.member.dto.search.MemberSearchCondition;
 import mystudy.study.domain.member.entity.MemberStatus;
+import mystudy.study.domain.member.entity.RoleType;
 import mystudy.study.domain.post.dto.PostDto;
 import mystudy.study.domain.member.entity.Member;
 import mystudy.study.domain.member.repository.MemberRepository;
@@ -19,11 +20,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Collection;
 
 @Service
 @Transactional
@@ -83,10 +87,15 @@ public class MemberService {
         Member member = memberQueryService.findMemberById(memberId);
         MemberStatus status = member.getStatus();
         
-        if (status == MemberStatus.DELETE) {
-            throw new IllegalArgumentException("탈퇴한 회원입니다.");
-        }
+        if (status == MemberStatus.DELETE) { // 관리자는 탈퇴한 회원 조회 가능
+            Collection<? extends GrantedAuthority> authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+            GrantedAuthority grantedAuthority = authorities.iterator().next();
+            String role = grantedAuthority.getAuthority();
 
+            if (!role.equals(RoleType.ROLE_ADMIN.name())) { // 권한이 관리자가 아닌 경우
+                throw new IllegalArgumentException("탈퇴한 회원입니다.");
+            }
+        }
 
         // 작성한 게시글 수
         Long postCount = postService.getPostCountByMemberId(memberId);

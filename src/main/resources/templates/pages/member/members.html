@@ -68,13 +68,18 @@
         </thead>
         <!-- 테이블 바디-->
         <tbody>
-            <tr th:each="member : ${memberSearch.searchMembers.content}">
+            <tr th:each="member : ${memberSearch.searchMembers.content}" th:classappend="${member.status.name() == 'ACTIVE'} ? 'active' : 'delete'"}>
                 <td th:text="${member.memberId}">회원번호</td>
                 <td>
                     <a th:href="@{/members/{id}(id=${member.memberId})}" th:text="${member.nickname}">닉네임</a>
                 </td>
                 <td th:text="${member.name}">이름</td>
-                <td th:text="${member.email}">이메일</td>
+                <td>
+                    <span class="members-email" th:text="${member.email}">이메일</span>
+                    <span class="members-status" th:classappend="${member.status.name() == 'ACTIVE'} ? 'active-class':'delete-class'">
+                        [<span th:text="${member.status.name() == 'ACTIVE'} ? '활성':'탈퇴'"></span>]
+                    </span>
+                </td>
                 <td th:text="${#temporals.format(member.createdAt, 'yyyy-MM-dd HH:mm:ss')}">2024-06-17 15:30:45</td>
             </tr>
             <tr th:if="${memberSearch.searchMembers.totalElements == 0}">

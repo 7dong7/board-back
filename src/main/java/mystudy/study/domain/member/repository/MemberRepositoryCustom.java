@@ -27,7 +27,6 @@ public interface MemberRepositoryCustom {
     // 회원 정보 수정 (본인만) - 회원 정보 조회
     Optional<EditMemberDto> getEditMember(Long memberId);
 
-
     // 회원 페이징, 조건 검색, 정렬  // ============= 삭제 예정 ===============//
     Page<SearchMemberDto> getMemberPage(MemberSearchCondition condition, Pageable pageable);
 
