@@ -10,7 +10,7 @@ public class AccessURL {
     public static final String[] WHITELIST = { // 권한이 없어도 접근 가능한
             "/",        // 메인 페이지
             "/login", "/logout",        // 로그인 & 로그아웃
-            "/members", "/members/*",   // 회원
+            "/members/*",               // 회원 정보 보기
             "/posts", "/posts/*",       // 게시글
             "/oauth2/**",               // oauth2 로그인
 
@@ -27,6 +27,7 @@ public class AccessURL {
             "/posts/*/edit",
 
             // 회원 변경 예정 role : ROLE_ADMIN
+            "/members" // 회원 검색 기능
     };
 
     public static final String[] BLACKLIST = { // 접근 불가

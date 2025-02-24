@@ -7,7 +7,10 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
-import mystudy.study.domain.member.dto.MemberSearchCondition;
+import mystudy.study.domain.member.dto.search.QSearchMemberInfoDto;
+import mystudy.study.domain.member.dto.search.SearchMemberInfoDto;
+import mystudy.study.domain.member.dto.MemberSearch;
+import mystudy.study.domain.member.dto.search.MemberSearchCondition;
 import mystudy.study.domain.member.dto.*;
 import mystudy.study.domain.member.dto.SearchMemberDto;
 import mystudy.study.domain.member.entity.Member;
@@ -31,49 +34,6 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
         this.queryFactory = new JPAQueryFactory(em);
     }
 
-    // 회원 조건 검색
-    @Override
-    public List<Member> searchMember(MemberSearchCondition condition) {
-        return queryFactory
-                .select(member)
-                .from(member)
-                .where(
-//                        usernameEq(condition.getUsername()),
-//                        emailEq(condition.getEmail())
-                )
-                .fetch();
-    }
-
-    // 회원 조건 검색 (페이징)
-    @Override
-    public Page<SearchMemberDto> getMemberPage(MemberSearchCondition condition, Pageable pageable) {
-
-        List<SearchMemberDto> content = queryFactory
-                .select(
-                        new QSearchMemberDto(
-                                member.id.as("member_id"),
-                                member.nickname,
-                                member.email,
-                                member.createdAt)
-                )
-                .from(member)
-                .where(
-                        transformMemberSearchCondition(condition),
-                        member.status.eq(MemberStatus.ACTIVE)
-                )
-                .orderBy(
-                        memberSort(pageable)
-                )
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
-
-        JPAQuery<Long> countQuery = countQuery(condition);
-
-        return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
-    }
-
-
     // 회원 정보 수정 (본인만) - 회원 정보 조회
     @Override
     public Optional<EditMemberDto> getEditMember(Long memberId) {
@@ -95,22 +55,52 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
         return Optional.ofNullable(editMember);
     }
 
-
-
-
-    // 회원 로그인 / =================== 삭제 예정 =====================
+    // 회원 리스트 조회 (조건에 맞는) - 페이징 처리
     @Override
-    public Member login(String loginId, String password) {
-        return queryFactory.select(member)
+    public Page<SearchMemberInfoDto> getSearchMemberPage(String searchType, MemberSearch memberSearch, Pageable pageable) {
+
+        List<SearchMemberInfoDto> result = queryFactory
+                .select(new QSearchMemberInfoDto(
+                                member.id.as("memberId"),
+                                member.email,
+                                member.nickname,
+                                member.name,
+                                member.createdAt,
+                                member.status)
+                )
                 .from(member)
                 .where(
-                        member.email.eq(loginId),
-                        member.password.eq(password)
+                        transSearchCondition(memberSearch.getSearchWord(), searchType)
                 )
-                .fetchOne();
+                .orderBy(
+                        memberSort(pageable)
+                )
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        //
+        JPAQuery<Long> countQuery = queryFactory
+                .select(member.count())
+                .from(member)
+                .where(
+                        transSearchCondition(memberSearch.getSearchWord(), searchType)
+                );
+
+        return PageableExecutionUtils.getPage(result, pageable, countQuery::fetchOne);
     }
 
-    // 정렬 조건 변환
+    // 검색 조건 동적 변환
+    private BooleanExpression transSearchCondition(String searchWord, String searchType) {
+        return switch (searchType) {
+            case "name" -> member.name.containsIgnoreCase(searchWord);
+            case "nickname" -> member.nickname.containsIgnoreCase(searchWord);
+            case "email" -> member.email.containsIgnoreCase(searchWord);
+            default -> null; // 검색 조건이 있으나 사전에 정의된 조건이 아닌 경우
+        };
+    }
+
+    // 동적 정렬 조건 변환
     private OrderSpecifier<?> memberSort(Pageable pageable) {
 
         if (pageable.getSort().isSorted()) {
@@ -119,33 +109,39 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
 
                 Order direction = order.getDirection().isAscending() ? Order.ASC : Order.DESC;
 
-                switch (order.getProperty()) {
-                    case "nickname" :
-                        return new OrderSpecifier<>(direction, member.nickname);
-                    case "email" :
-                        return new OrderSpecifier<>(direction, member.email);
-                    case "id":
-                        return new OrderSpecifier<>(direction, member.id);
-                }
+                return switch (order.getProperty()) {
+                    case "nickname" -> new OrderSpecifier<>(direction, member.nickname);
+                    case "name" -> new OrderSpecifier<>(direction, member.name);
+                    case "email" -> new OrderSpecifier<>(direction, member.email);
+                    case "id" -> new OrderSpecifier<>(direction, member.id);
+                    default -> null;
+                };
             }
         }
         return null;
     }
 
-    // 조건에 맞는 회원 수
+
+
+
+
+
+
+
+    // 조건에 맞는 회원 수 ============== 삭제 예정 ============
     private JPAQuery<Long> countQuery(MemberSearchCondition condition) {
 
         return queryFactory
                 .select(member.count())
                 .from(member)
                 .where(
-                        transformMemberSearchCondition(condition),
+                        tran(condition),
                         member.status.eq(MemberStatus.ACTIVE)
                 );
     }
 
-    // 검색 조건 변환
-    private BooleanExpression transformMemberSearchCondition(MemberSearchCondition condition) {
+    // 검색 조건 변환  // ============= 삭제 예정 ================
+    private BooleanExpression tran(MemberSearchCondition condition) {
 
         if (hasText(condition.getSearchType())) {
             String searchType = condition.getSearchType(); // 검색 조건
@@ -160,6 +156,67 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
             return null;
         }
     }
+
+
+    
+    // 회원 조건 검색
+    @Override
+    public List<Member> searchMember(MemberSearchCondition condition) {
+        return queryFactory
+                .select(member)
+                .from(member)
+                .where(
+//                        usernameEq(condition.getUsername()),
+//                        emailEq(condition.getEmail())
+                )
+                .fetch();
+    }
+
+    // 회원 조건 검색 (페이징) // ============== 삭제 예정 ============= //
+    @Override
+    public Page<SearchMemberDto> getMemberPage(MemberSearchCondition condition, Pageable pageable) {
+
+        List<SearchMemberDto> content = queryFactory
+                .select(
+                        new QSearchMemberDto(
+                                member.id.as("member_id"),
+                                member.nickname,
+                                member.email,
+                                member.createdAt)
+                )
+                .from(member)
+                .where(
+                        tran(condition),
+                        member.status.eq(MemberStatus.ACTIVE)
+                )
+                .orderBy(
+                        memberSort(pageable)
+                )
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        JPAQuery<Long> countQuery = countQuery(condition);
+
+        return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
+    }
+
+
+    // 회원 로그인 / =================== 삭제 예정 =====================
+    @Override
+    public Member login(String loginId, String password) {
+        return queryFactory.select(member)
+                .from(member)
+                .where(
+                        member.email.eq(loginId),
+                        member.password.eq(password)
+                )
+                .fetchOne();
+    }
+
+
+
+
 
     
     // ---

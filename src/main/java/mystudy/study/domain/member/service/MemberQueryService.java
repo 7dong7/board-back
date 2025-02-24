@@ -2,15 +2,16 @@ package mystudy.study.domain.member.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import mystudy.study.domain.member.dto.search.SearchMemberInfoDto;
 import mystudy.study.domain.member.dto.EditMemberDto;
+import mystudy.study.domain.member.dto.MemberSearch;
 import mystudy.study.domain.member.entity.Member;
 import mystudy.study.domain.member.repository.MemberRepository;
-import org.springframework.security.core.context.SecurityContext;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -59,5 +60,8 @@ public class MemberQueryService {
         return editMemberDto;
     }
 
-
+    // 회원 검색 조건에 맞는 회원 조회 (페이징)
+    public Page<SearchMemberInfoDto> getMemberList(String searchType, MemberSearch memberSearch, Pageable pageable) {
+        return memberRepository.getSearchMemberPage(searchType, memberSearch, pageable);
+    }
 }

@@ -56,6 +56,7 @@ public class InitMember implements CommandLineRunner {
             Member member1 = Member.builder()
                     .email("member1@naver.com")
                     .password(bCryptPasswordEncoder.encode("test!"))
+                    .name("유저1")
                     .nickname("member1")
                     .age(10)
                     .role(RoleType.ROLE_USER)
@@ -68,6 +69,7 @@ public class InitMember implements CommandLineRunner {
                 Member member = Member.builder()
                         .email("member" + i + "@naver.com")
                         .password(bCryptPasswordEncoder.encode("test!"))
+                        .name("유저"+i)
                         .nickname("member" + i)
                         .age(i)
                         .role(RoleType.ROLE_USER)
@@ -80,6 +82,7 @@ public class InitMember implements CommandLineRunner {
                         .email("user" + i + "@gmail.com")
                         .password(bCryptPasswordEncoder.encode("test!"))
                         .nickname("user" + i)
+                        .name("유저"+i)
                         .age(i)
                         .role(RoleType.ROLE_USER)
                         .build();
@@ -91,6 +94,7 @@ public class InitMember implements CommandLineRunner {
                         .email("postuser" + i + "@daum.com")
                         .password(bCryptPasswordEncoder.encode("test!"))
                         .nickname("postuser" + i)
+                        .name("유저"+i)
                         .age(i)
                         .role(RoleType.ROLE_USER)
                         .build();

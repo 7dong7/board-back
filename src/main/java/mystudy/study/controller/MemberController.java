@@ -5,7 +5,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mystudy.study.domain.comment.dto.CommentDto;
+import mystudy.study.domain.member.dto.search.SearchMemberInfoDto;
 import mystudy.study.domain.member.dto.*;
+import mystudy.study.domain.member.dto.MemberSearch;
+import mystudy.study.domain.member.dto.search.MemberSearchCondition;
+import mystudy.study.domain.member.dto.search.MemberSearchType;
 import mystudy.study.domain.member.service.MemberQueryService;
 import mystudy.study.domain.member.service.MemberService;
 import mystudy.study.domain.post.dto.PostDto;
@@ -20,8 +24,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
 @Slf4j
@@ -189,25 +191,25 @@ public class MemberController {
 
         return "redirect:/posts";
     }
-
-
-    
-    
-    
-
-
-
-    
-    
-    
     
     // 회원 검색 : 페이지
     @GetMapping("/members")
     public String getMemberPage(
-            @RequestParam(value = "searchType", required = false) String searchType,
+            @ModelAttribute("memberSearch") MemberSearch memberSearch,
+//            @RequestParam(value = "searchType", required = false) String searchType,
             @RequestParam(value = "searchWord", required = false) String searchWord,
-            Model model,
-            @PageableDefault(size = 5, page = 1, sort = "id", direction = Sort.Direction.DESC) Pageable clPageable) {
+            @PageableDefault(size = 10, page = 1, sort = "id", direction = Sort.Direction.DESC) Pageable clPageable,
+            Model model) {
+        log.info("getMemberPage memberSearch = {}", memberSearch);
+        log.info("clPageable: {}", clPageable);
+
+        // 검색 타입 검증
+        String searchType = switch (memberSearch.getSearchType()) {
+            case "NAME" -> MemberSearchType.NAME.name().toLowerCase();
+            case "EMAIL" -> MemberSearchType.EMAIL.name().toLowerCase();
+            case "NICKNAME" -> MemberSearchType.NICKNAME.name().toLowerCase();
+            default -> "id";
+        };
 
         // pageable 생성
         Pageable pageable = PageRequest.of(
@@ -216,22 +218,25 @@ public class MemberController {
                 clPageable.getSort() // default 정렬 @PageableDefault 어노테이션으로 설정
         );
 
+        // 검색 조건에 맞는 회원리스트 조회
+        Page<SearchMemberInfoDto> memberListPage = memberQueryService.getMemberList(searchType, memberSearch, pageable);
+
+        // 검색결과를 모델에 넣을 dto 에 넣기
+        memberSearch.addSearchMembers(memberListPage);
+
         // 회원 검색 조건
-        MemberSearchCondition condition = MemberSearchCondition.builder()
-                .searchType(searchType)
-                .searchWord(searchWord)
-                .build();
+//        MemberSearchCondition condition = MemberSearchCondition.builder()
+//                .searchType(searchType)
+//                .searchWord(searchWord)
+//                .build();
+//         회원 검색
+//        Page<SearchMemberDto> memberList = memberService.getMemberPage(condition, pageable);
+//         model 속성 추가
+//        model.addAttribute("memberList", memberList);
 
-        // 회원 검색
-        Page<SearchMemberDto> memberList = memberService.getMemberPage(condition, pageable);
 
-        Map<String, Object> map = new HashMap<>();
-        map.put("searchType", searchType);
-        map.put("searchWord", searchWord);
-
-        // model 속성 추가
-        model.addAttribute("memberList", memberList);
-        model.addAttribute("searchParam", map);
+        // 변경된 검색 조건과 페이징된 회원 리스트 전달
+        model.addAttribute("memberSearch", memberSearch);
         return "pages/member/members";
     }
 

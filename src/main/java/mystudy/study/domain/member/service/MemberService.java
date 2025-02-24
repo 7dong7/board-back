@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import mystudy.study.domain.comment.dto.CommentDto;
 import mystudy.study.domain.comment.service.CommentQueryService;
 import mystudy.study.domain.member.dto.*;
+import mystudy.study.domain.member.dto.search.MemberSearchCondition;
 import mystudy.study.domain.member.entity.MemberStatus;
 import mystudy.study.domain.post.dto.PostDto;
 import mystudy.study.domain.member.entity.Member;
@@ -19,14 +20,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
 
 @Service
 @Transactional
@@ -212,7 +209,7 @@ public class MemberService {
 
 
 
-    // 회원 페이징
+    // 회원 페이징 // ============ 삭제 예정 ============= //
     public Page<SearchMemberDto> getMemberPage(MemberSearchCondition condition, Pageable pageable) {
         return memberRepository.getMemberPage(condition, pageable);
     }

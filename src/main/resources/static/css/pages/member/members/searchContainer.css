@@ -1,0 +1,119 @@
+/* 전체 페이지 스타일 */
+body {
+    font-family: Arial, sans-serif;
+    margin:0;
+    padding:0 2rem;
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+h1 {
+    text-align: center;
+    margin: 20px 0;
+    font-size: 24px;
+}
+
+/* 회원 검색창 */
+.members-search-container {
+    margin: 5rem 0 1rem 0;
+}
+
+#searchForm {
+    /* grid */
+    display:grid;
+    grid-template-columns:repeat(4, 1fr); /* 5등분 1fr 크기 */
+
+}
+
+/* form 안의 조건 태그 설정*/
+.members-select {
+    grid-column:1;
+    margin-right:10px;
+}
+
+.members-searchWord {
+    grid-column:2;
+    margin-right:10px;
+}
+
+/* 찾기, 초기화 버튼 */
+.btn-a {
+    grid-column:3;
+    justify-self:start;
+
+    display:grid;
+}
+
+.members-btn {
+    grid-column:1;
+}
+
+.members-a { /* 초기화 */
+    grid-column:2;
+
+    font-size: 11pt;
+    font-weight:bold;
+    text-decoration:none;
+
+    margin-left:10px;
+    padding: 10px 20px;
+
+    background-color: #f47575;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.members-a:hover { /* 초기화 */
+    background-color: #b54747;
+}
+
+
+
+.members-page-size-container {
+    grid-column:4;
+}
+
+/* form안에 공통 설정 */
+.members-select,
+.members-searchWord,
+.members-page-size-container{ /* 셀렉트, 인풋 */
+    padding: 10px;
+    font-size: 12pt;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.members-searchWord:focus,
+.members-select:focus,
+.members-page-size-container:focus { /* 셀렉트, 인풋 : 포커스 설정 */
+    border-color: #555;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    outline: none;
+}
+
+/* 버튼 설정 */
+.members-btn {
+    font-size: 11pt;
+    font-weight:bold;
+
+    padding: 10px 40px;
+
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.members-btn:hover {
+    background-color: #555;
+}
+
+.members-btn:active {
+    transform: scale(0.95);
+}

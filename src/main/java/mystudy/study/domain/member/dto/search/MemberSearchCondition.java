@@ -1,4 +1,4 @@
-package mystudy.study.domain.member.dto;
+package mystudy.study.domain.member.dto.search;
 
 import lombok.Builder;
 import lombok.Getter;
