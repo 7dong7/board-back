@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="ko"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
 
 
 
@@ -26,6 +28,7 @@
 </head>
 
 <body>
+    <main class="main-content" layout:fragment="content">
     <!-- 검색창 -->
     <div class="members-search-container">
         <form id="searchForm" th:action="@{/members}" method="get">
@@ -68,7 +71,7 @@
         </thead>
         <!-- 테이블 바디-->
         <tbody>
-            <tr th:each="member : ${memberSearch.searchMembers.content}" th:classappend="${member.status.name() == 'ACTIVE'} ? 'active' : 'delete'"}>
+            <tr th:each="member : ${memberSearch.searchMembers.content}" th:classappend="${member.status.name() == 'ACTIVE'} ? 'active' : 'delete'">
                 <td th:text="${member.memberId}">회원번호</td>
                 <td>
                     <a th:href="@{/members/{id}(id=${member.memberId})}" th:text="${member.nickname}">닉네임</a>
@@ -114,6 +117,6 @@
         <a th:href="@{/members(page=${memberSearch.searchMembers.totalPages}, size=${memberSearch.searchMembers.size}, searchType=${memberSearch.searchType}, searchWord=${memberSearch.searchWord})}"
            th:if="${!memberSearch.searchMembers.last}">마지막</a>
     </div>
-
+    </main>
 </body>
 </html>

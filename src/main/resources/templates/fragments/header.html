@@ -24,22 +24,15 @@
                 </ul>
             </nav>
         </div>
+
         <div class="header-right">
             <!-- 로그인 상태에 따른 표시 -->
-<!--            <span th:if="${session.loginMemberId != null}">-->
-<!--                <span th:class="header-right-username" th:text="${session.loginMemberId.username}">회원명</span>-->
-<!--                <form th:action="@{/logout}" method="post">-->
-<!--                    <button th:class="logout-btn" type="submit">-->
-<!--                        로그아웃-->
-<!--                    </button>-->
-<!--                </form>-->
-<!--            </span>-->
-<!--            <span th:unless="${session.loginMemberId != null}">-->
-<!--                <a th:href="@{/login}">로그인</a>-->
-<!--            </span>-->
-
             <span sec:authorize="isAuthenticated()">
-                <span th:class="header-right-username" sec:authentication="principal.nickname">회원명</span>
+                <!-- 회원정보 조회 -->
+                <a th:class="header-right-username"
+                   th:href="@{/members/{id}(id=${currentMember.memberId})}"
+                   sec:authentication="principal.nickname">
+                </a>
                 <form th:action="@{/logout}" method="post">
                     <button th:class="logout-btn" type="submit">
                         로그아웃
