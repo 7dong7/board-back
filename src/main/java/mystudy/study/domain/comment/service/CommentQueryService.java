@@ -3,7 +3,6 @@ package mystudy.study.domain.comment.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mystudy.study.domain.comment.dto.CommentDto;
-import mystudy.study.domain.comment.dto.ParentCommentDto;
 import mystudy.study.domain.comment.dto.ViewCommentDto;
 import mystudy.study.domain.comment.dto.ViewReplyDto;
 import mystudy.study.domain.comment.entity.Comment;
@@ -43,11 +42,6 @@ public class CommentQueryService {
     public Page<CommentDto> getCommentByMemberId(Long id, Pageable pageable) {
         return commentRepository.getCommentByMemberId(id, pageable);
     };
-
-    // 게시글 id를 사용해서 댓글 조회 (페이징) ============ 삭제 예정 =============
-    public Page<ParentCommentDto> getCommentByPostId(Long postId, Pageable commentPageable) {
-        return commentRepository.getCommentByPostId(postId, commentPageable);
-    }
 
     public Page<ViewCommentDto> getViewComment(Long postId, Pageable commentPageable) {
 

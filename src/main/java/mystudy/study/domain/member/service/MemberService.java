@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import mystudy.study.domain.comment.dto.CommentDto;
 import mystudy.study.domain.comment.service.CommentQueryService;
 import mystudy.study.domain.member.dto.*;
-import mystudy.study.domain.member.dto.search.MemberSearchCondition;
 import mystudy.study.domain.member.entity.MemberStatus;
 import mystudy.study.domain.member.entity.RoleType;
 import mystudy.study.domain.post.dto.PostDto;
@@ -215,16 +214,4 @@ public class MemberService {
         SecurityContextHolder.clearContext(); // 현재 로컬 스레드 초기화
         new SecurityContextLogoutHandler().logout(request, response, currentAuth); // 세션 무효화
     }
-
-
-
-
-
-    // 회원 페이징 // ============ 삭제 예정 ============= //
-    public Page<SearchMemberDto> getMemberPage(MemberSearchCondition condition, Pageable pageable) {
-        return memberRepository.getMemberPage(condition, pageable);
-    }
-
-
-
 }

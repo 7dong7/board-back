@@ -5,16 +5,12 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import mystudy.study.domain.comment.dto.NewCommentDto;
-import mystudy.study.domain.comment.dto.ParentCommentDto;
 import mystudy.study.domain.comment.dto.ViewCommentDto;
 import mystudy.study.domain.comment.dto.WriteCommentForm;
 import mystudy.study.domain.comment.service.CommentQueryService;
-import mystudy.study.domain.member.dto.login.LoginSessionInfo;
 import mystudy.study.domain.post.dto.*;
 import mystudy.study.domain.post.service.PostQueryService;
 import mystudy.study.domain.post.service.PostService;
-import mystudy.study.session.SessionConst;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -62,6 +58,7 @@ public class PostController {
     @GetMapping("/posts/{id}")
     public String postViewPage(@PathVariable("id") Long postId,
                               @PageableDefault(size=15, page=0) Pageable clPageable,
+                              HttpSession session,
                               Model model) {
         // 댓글 Pageable 생성
         Pageable commentPageable = PageRequest.of(
@@ -70,7 +67,7 @@ public class PostController {
                 Sort.by("id").descending()); // pageSort
 
         // 게시글 조회 (postId 사용)
-        ViewPostDto viewPost = postService.getViewPost(postId);
+        ViewPostDto viewPost = postService.getViewPost(postId, session);
 
         model.addAttribute("post", viewPost);
 

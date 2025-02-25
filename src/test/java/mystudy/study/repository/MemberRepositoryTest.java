@@ -27,33 +27,6 @@ class MemberRepositoryTest {
     @Autowired
     PostRepository postRepository;
 
-    @BeforeEach
-    void setUp() {
-        // 데이터 입력
-        Member member1 = Member.builder()
-                .email("member1@naver.com")
-                .password("test!")
-                .nickname("memberi")
-                .age(1)
-                .build();
-        em.persist(member1);
-
-        for (int i = 2; i < 5; i++) {
-            Member member = Member.builder()
-                    .email("member" + i + "@naver.com")
-                    .password("test!")
-                    .nickname("member" + i)
-                    .age(i)
-                    .build();
-            em.persist(member);
-        }
-        // 회원 등록
-
-        // 글 작성
-        Post post1 = new Post("새로운 글작성", "새로운 글이 작성되었습니다.", member1);
-        postRepository.save(post1);
-    }
-
     // 기본 테스트
     @Test
     public void basicTest() throws Exception{

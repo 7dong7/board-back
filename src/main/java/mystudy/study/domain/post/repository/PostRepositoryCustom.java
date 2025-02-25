@@ -27,8 +27,4 @@ public interface PostRepositoryCustom {
 
     // 게시글 수정 - 게시글 조회 PostEditDto (postId 사용)
     PostEditDto getPostEditDtoByPostId(Long postId);
-
-    // ============= 삭제 예정 ================
-    // 게시글 보기 - 게시글 내용 조회
-    PostViewDto getPostView(Long postId);
 }

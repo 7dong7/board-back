@@ -148,68 +148,6 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
                 .fetch();
     }
 
-
-
-
-    // 게시글 조회 - 댓글 & 대댓글 조회 (페이징)  // ================= 삭제 예정 ================ //
-    @Override
-    public Page<ParentCommentDto> getCommentByPostId(Long postId, Pageable commentPageable) {
-
-        List<ParentCommentDto> content = queryFactory
-                .select(new QParentCommentDto(
-                        comment.id,
-                        comment.content,
-                        comment.member.nickname.as("author"),
-                        comment.createdAt)
-                )
-                .from(comment)
-                .leftJoin(comment.post, post)
-                .where(
-                        comment.post.id.eq(postId),
-                        comment.parent.isNull()
-                )
-                .orderBy(
-                        comment.id.asc() // 먼저 작성한 댓글 위로
-                )
-                .offset(commentPageable.getOffset()) // page number
-                .limit(commentPageable.getPageSize()) // page size
-                .fetch();
-
-        JPAQuery<Long> countQuery = queryFactory
-                .select(comment.count())
-                .from(comment)
-                .leftJoin(comment.member, member)
-                .where(
-                        comment.post.id.eq(postId),
-                        comment.parent.isNull()
-                );
-
-        return PageableExecutionUtils.getPage(content, commentPageable, countQuery::fetchOne);
-    }
-
-    // 댓글 id를 parentId 로 사용하는 댓글 조회 (대댓글 조회, where 절에서 in 사용해서 한번에 조회)
-    @Override
-    public List<ReplyCommentDto> getCommentByParentId(List<Long> parentIdList) {
-
-        return queryFactory
-                .select(new QReplyCommentDto(
-                        comment.id,
-                        comment.content,
-                        comment.member.nickname.as("author"),
-                        comment.createdAt,
-                        comment.parent.id)
-                )
-                .from(comment)
-                .leftJoin(comment.post, post)
-                .where(
-                        comment.parent.id.in(parentIdList)
-                )
-                .orderBy(
-                        comment.id.asc() // 최신 대댓글은 아래로
-                )
-                .fetch();
-    }
-
     // 정렬 조건 변환 (단일 조건)
     private OrderSpecifier<?> commentSort(Pageable pageable) {
 
