@@ -61,6 +61,13 @@ public class MemberController {
         } catch (DateTimeParseException e) {
             bindingResult.rejectValue("frontNum","frontNum.noMatch", "정상적인 날짜가 아닙니다.");
         }
+        
+        // 성별 검증
+        try {
+            memberForm.getGender();
+        } catch (IllegalArgumentException e) {
+            bindingResult.rejectValue("backNum","backNum.noMatchGender", "주민번호 뒷자리를 다시 확인해 주세요.");
+        }
 
         // 필드 에러가 담겨 있는 경우 다시 회원가입 페이지로
         if (bindingResult.hasErrors()) {

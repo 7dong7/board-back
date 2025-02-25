@@ -91,18 +91,26 @@ public class RegisterMemberForm {
 
     // 성별 반환
     public String getGender() {
-        if (backNum == null) {
-            return "알 수 없음";
-        }
-        switch (backNum) {
-            case "1":
-            case "3":
+        // 생년월일의 앞 4자리(연도)를 정수로 변환
+        int year = Integer.parseInt(frontNum.substring(0, 4));
+
+        if (year < 2000) { // 1900~1999년생
+            if ("1".equals(backNum)) {
                 return "남";
-            case "2":
-            case "4":
+            } else if ("2".equals(backNum)) {
                 return "여";
-            default:
-                return "알 수 없음";
+            } else {
+                throw new IllegalArgumentException("주민번호 뒷자리를 다시 확인해 주세요.");
+            }
+        } else { // 2000년 이후 생
+            if ("3".equals(backNum)) {
+                return "남";
+            } else if ("4".equals(backNum)) {
+                return "여";
+            } else {
+                throw new IllegalArgumentException("주민번호 뒷자리를 다시 확인해 주세요.");
+            }
         }
     }
+
 }
