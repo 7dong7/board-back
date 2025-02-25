@@ -43,8 +43,11 @@ public class Member extends BaseTimeEntity {
 
     private String name;        // 회원 본명
     private String nickname;    // 닉네임
-    private int age;            // 나이대 ( 20-30 )
     private String mobile;      // 번호
+
+    // 회원가입시 받은 생년월일을 변환해서 설정
+    private String residentNumber; // 생년월일
+    private String age;         // 나이 ( 20, oauth2 의 경우 20-30 연령대 )
     private String gender;      // 성볋 (남,여)
     private String birthday;    // 생일
 
@@ -71,7 +74,7 @@ public class Member extends BaseTimeEntity {
 
     // ---- 생성자 ----
     @Builder
-    public Member(String email, String password, String name, String nickname, int age, String mobile, String gender, String birthday, String providerId, String provider, RoleType role) {
+    public Member(String email, String password, String name, String nickname, String age, String mobile, String gender, String birthday, String providerId, String provider, RoleType role, String residentNumber) {
         this.email = email;
         this.password = password;
         this.name = name;
@@ -79,6 +82,7 @@ public class Member extends BaseTimeEntity {
         this.age = age;
         this.mobile = mobile;
         this.gender = gender;
+        this.residentNumber = residentNumber;
         this.birthday = birthday;
         this.providerId = providerId;
         this.provider = provider;
@@ -99,7 +103,7 @@ public class Member extends BaseTimeEntity {
     
     // age 변경 메소드 (사용하는거 아님 로그인 할때 최신 네이버 데이터로 업데이트)
     public void updateAge(String age) {
-        this.age = Integer.parseInt(age);
+        this.age = age;
     }
 
     // 글 작성

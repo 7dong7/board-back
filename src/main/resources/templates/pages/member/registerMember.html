@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>회원 가입</title>
+    <!-- css -->
+    <link rel="stylesheet" href="/css/pages/member/registerMember.css"/>
+    <script>
+        function autoSeparate(id) {
+            let input = document.getElementById('mobile');
+            let inputValue = input.value;
+
+            // 숫자가 아닌 문자 제거
+            inputValue = inputValue.replace(/[^0-9]/g, '');
+
+            // 올바른 위치에 대시 추가
+            if (inputValue.length > 3 && inputValue.charAt(3) !== '-') {
+                inputValue = inputValue.slice(0, 3) + '-' + inputValue.slice(3);
+            }
+            if (inputValue.length > 8 && inputValue.charAt(8) !== '-') {
+                inputValue = inputValue.slice(0, 8) + '-' + inputValue.slice(8);
+            }
+
+            // 입력값 업데이트
+            input.value = inputValue;
+        }
+    </script>
+</head>
+
+<body>
+    <div class="signup-container">
+        <h1>회원가입</h1>
+        <form class="signup-form" action="/members/new" method="POST" th:object="${memberForm}">
+            <div>
+                <label for="name">이름</label>
+                <input class="normal-input" type="text" id="name" th:field="*{name}" th:errorclass="field-error-input"
+                       placeholder="이름을 입력하세요" required />
+                <div class="field-error" th:errors="*{name}">이름 에러</div>
+            </div>
+            <div>
+                <label for="email">이메일</label>
+                <input class="normal-input" type="email" id="email" th:field="*{email}" th:errorclass="field-error-input"
+                       placeholder="예) example@domain.com" required />
+                <div class="field-error" th:errors="*{email}"></div>
+            </div>
+            <div>
+                <label for="password">비밀번호</label>
+                <input class="normal-input" type="password" id="password" th:field="*{password}" th:errorclass="field-error-input"
+                       placeholder="비밀번호를 입력하세요" required />
+                <div class="field-error" th:errors="*{password}"></div>
+            </div>
+            <div>
+                <label for="confirm-password">비밀번호 확인</label>
+                <input class="normal-input" type="password" id="confirm-password" th:field="*{confirmPassword}" th:errorclass="field-error-input"
+                       placeholder="비밀번호를 다시 입력하세요" required />
+                <div class="field-error" th:errors="*{confirmPassword}"></div>
+            </div>
+            <div>
+                <label for="nickname">닉네임</label>
+                <input class="normal-input" type="text" id="nickname" th:field="*{nickname}" th:errorclass="field-error-input"
+                       placeholder="닉네임" required />
+                <div class="field-error" th:errors="*{nickname}"></div>
+            </div>
+            <!-- 휴대폰 -->
+            <div>
+                <label for="mobile">휴대폰 번호</label>
+                <input class="normal-input" type="text" id="mobile" maxlength="13" th:field="*{mobile}" th:errorclass="field-error-input"
+                       placeholder="010-0000-0000" onkeyup="autoSeparate(this.id)" required />
+                <div class="field-error" th:errors="*{mobile}"></div>
+            </div>
+            <!-- 주민번호 -->
+            <div class="resident-number">
+                <label for="frontNum">생년월일</label>
+                <div class="resident-number-input">
+                    <input id="frontNum" th:field="*{frontNum}" type="text" pattern="[0-9]{8}" maxlength="8" placeholder="예) 19880321"
+                           oninput="this.value = this.value.replace(/[^0-9]/g, '');" required />
+                    <div class="hyphen">-</div>
+                    <input id="backNum" th:field="*{backNum}" type="text" pattern="[1-4]{1}"  maxlength="1" placeholder="예) 3"
+                           oninput="this.value = this.value.replace(/[^1-4]/g, '');" required />
+                    <input class="black-circle" value="●●●●●●" readonly>
+                </div>
+                <div class="field-error" th:errors="*{frontNum}"></div>
+                <div class="field-error" th:errors="*{backNum}"></div>
+            </div>
+
+            <br>
+            <button type="submit">가입하기</button>
+
+            <div class="extra-link">
+                이미 회원이신가요? <a href="/login">로그인</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

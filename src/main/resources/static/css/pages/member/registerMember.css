@@ -35,7 +35,6 @@ body {
     border-bottom:solid 0.13rem #2c3e50;
 }
 
-
 /* 입력폼 스타일 */
 .signup-form {
     display: flex;
@@ -64,6 +63,40 @@ body {
     outline: none;
     border-color: #36353d;
 }
+
+/* 입력폼 - 생년월일 스타일 */
+.resident-number {
+
+}
+
+.resident-number-input { /* input 생년월일 전체 */
+    display:grid;
+    grid-template-columns: 180px 10px 60px 100px;
+    column-gap:10px;
+}
+
+.frontNum { /* 19970325 */
+}
+
+.hyphen { /* - */
+    display:flex;
+    justify-content:center;
+    place-content:center;
+
+    color:#7e7e7e;
+    font-size:16pt;
+    font-weight:bold;
+}
+
+.backNum { /* 1,2,3,4 */
+}
+
+.black-circle {  /* ● */
+    color:#7e7e7e;
+    background-color: #eae9e9;
+}
+
+
 
 /* 가입 버튼 */
 .signup-form button {

@@ -8,7 +8,6 @@ import mystudy.study.domain.comment.dto.CommentDto;
 import mystudy.study.domain.member.dto.search.SearchMemberInfoDto;
 import mystudy.study.domain.member.dto.*;
 import mystudy.study.domain.member.dto.MemberSearch;
-import mystudy.study.domain.member.dto.search.MemberSearchCondition;
 import mystudy.study.domain.member.dto.search.MemberSearchType;
 import mystudy.study.domain.member.service.MemberQueryService;
 import mystudy.study.domain.member.service.MemberService;
@@ -24,6 +23,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Set;
 
 @Slf4j
@@ -38,7 +40,7 @@ public class MemberController {
     // 회원 가입 : 페이지
     @GetMapping("/members/new")
     public String newMemberForm(@ModelAttribute("memberForm") RegisterMemberForm memberForm) {
-        return "pages/member/memberRegister";
+        return "pages/member/registerMember";
     }
 
     // 회원 가입 : 기능
@@ -52,9 +54,17 @@ public class MemberController {
             bindingResult.rejectValue("confirmPassword","confirmPassword.noMatch", "비밀번호가 같지 않습니다.");
         }
 
+        // 날짜 검증
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        try {
+            LocalDate.parse(memberForm.getFrontNum(), formatter);
+        } catch (DateTimeParseException e) {
+            bindingResult.rejectValue("frontNum","frontNum.noMatch", "정상적인 날짜가 아닙니다.");
+        }
+
         // 필드 에러가 담겨 있는 경우 다시 회원가입 페이지로
         if (bindingResult.hasErrors()) {
-            return "pages/member/memberRegister";
+            return "pages/member/registerMember";
         }
 
         // 회원 가입 서비스
@@ -63,7 +73,7 @@ public class MemberController {
             return "redirect:/posts";
         } catch (IllegalArgumentException e) { // 이미 회원이 존재하는 경우
             bindingResult.reject("existMember","이미 사용중인 이메일입니다");
-            return "pages/member/memberRegister";
+            return "pages/member/registerMember";
         }
     }
 

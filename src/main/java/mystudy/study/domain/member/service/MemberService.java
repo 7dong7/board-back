@@ -62,14 +62,16 @@ public class MemberService {
 
         // 회원 생성
         Member member = Member.builder()
-                .email(memberForm.getEmail())
-                .password(bCryptPasswordEncoder.encode(memberForm.getPassword()))
-                .name(memberForm.getName())
-                .nickname(memberForm.getNickname())
-                .age(memberForm.getAge())
-                .mobile(memberForm.getMobile())
-                .gender(memberForm.getGender())
-                .birthday(memberForm.getBirthday())
+                .email(memberForm.getEmail())               // 이메일, 아이디
+                .password(bCryptPasswordEncoder.encode(memberForm.getPassword())) // 비번
+                .nickname(memberForm.getNickname())         // 닉네임
+                .name(memberForm.getName())                 // 이름
+                .mobile(memberForm.getMobile())             // 휴대폰
+                .residentNumber(memberForm.getResidentNumber()) // 생년월일
+                .age(memberForm.getAge())           // 나이
+                .birthday(memberForm.getBirthday()) // 생일
+                .gender(memberForm.getGender())     // 성별
+                .role(RoleType.ROLE_USER)           // 권한
                 .build();
 
         // 회원 등록
