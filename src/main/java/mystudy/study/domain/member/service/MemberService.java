@@ -3,6 +3,7 @@ package mystudy.study.domain.member.service;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import mystudy.study.domain.comment.dto.CommentDto;
 import mystudy.study.domain.comment.service.CommentQueryService;
 import mystudy.study.domain.member.dto.*;
@@ -28,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -213,5 +215,22 @@ public class MemberService {
         // 세션에서 로그인 사용자 삭제 (로그아웃)
         SecurityContextHolder.clearContext(); // 현재 로컬 스레드 초기화
         new SecurityContextLogoutHandler().logout(request, response, currentAuth); // 세션 무효화
+    }
+
+    // 회원 비밀번호 수정 : 처리 - 회원 비밀번호 수정
+    public void editMemberPassword(Long memberId, PasswordForm passwordForm) {
+
+    // 회원 조회
+        // 옵셔널 처리가 되어 있지만 값이 존재함 -> 컨트롤러에서 비정상적인 접근 처리
+        Member member = memberQueryService.findMemberById(memberId);
+
+    // 현재 사용중인 비밀번호가 form 에서 입력받은 비밀번호가 다른경우 (자기 비밀번호를 틀린 경우)
+        if ( !bCryptPasswordEncoder.matches(passwordForm.getCurrentPassword(), member.getPassword()) ) { // 같지 않은 경우
+            throw new IllegalArgumentException("비밀번호가 틀렸습니다.");
+        }
+
+        log.info("비밀번호 수정 완료");
+    // 비밀번호 변경 (암호화)
+        member.changePassword(bCryptPasswordEncoder.encode(passwordForm.getNewPassword()));
     }
 }

@@ -20,7 +20,7 @@ public class AccessURL {
 
 
             // 권한 변경 예정 role : ROLE_USER
-            "/members/*/edit", "/members/*/delete",
+            "/members/*/edit", "/members/*/delete", "/members/*/passwordEdit",
 
             "/image/upload",
             "/posts/new/post",

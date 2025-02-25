@@ -5,7 +5,6 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       layout:decorate="~{layout/layout}">
 
-
 <head>
     <meta charset="UTF-8">
     <title>회원 가입</title>
@@ -16,7 +15,6 @@
 <body>
     <main class="main-content" layout:fragment="content">
     <div class="edit-container">
-
         <div class="delete-header">
             <h1 class="delete-title">
                 회원 정보 수정
@@ -30,7 +28,11 @@
                 <button class="delete-btn" type="submit">회원 탈퇴</button>
             </form>
         </div>
-        <form class="edit-form" th:action="@{/members/{id}/edit(id=${member.memberId})}" method="POST" th:object="${member}">
+
+        <form class="edit-form" th:action="@{/members/{id}/edit(id=${member.memberId})}" method="post" th:object="${member}">
+            <div class="change-password-div">
+                <a class="change-password" th:href="@{/members/{id}/passwordEdit(id=${member.memberId})}">비밀번호 변경하기</a>
+            </div>
             <div>
                 <div th:class="member-attribute">회원번호</div>
                 <div th:class="member-detail" th:id="memberId" th:text="*{memberId}"></div>

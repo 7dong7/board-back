@@ -121,4 +121,9 @@ public class Member extends BaseTimeEntity {
         this.status = MemberStatus.DELETE;
     }
 
+    // 비밀번호 변경
+    public void changePassword(String newPassword) {
+        this.password = newPassword;
+    }
+
 }

@@ -31,7 +31,7 @@ main {
 .delete-header {
     border-bottom:solid 0.13rem #2c3e50;
     padding:0 0 2rem 0;
-    margin: 0 0 3rem 0;
+    margin: 0 0 2rem 0;
 
     /* grid */
     display:grid;
@@ -44,6 +44,7 @@ main {
 
     /* grid */
     grid-column:2;
+
 }
 
 .delete-form {
@@ -72,6 +73,30 @@ main {
     background-color:#d55c5c;
     color:#d4d3d3;
 }
+
+/* 비밀번호 변경하기 */
+.change-password-div {
+    margin: 0 0 20px 0;
+}
+
+.change-password {
+    all:unset;
+    font-size:11pt;
+    padding:10px 20px;
+    margin: 0 0 1rem 0;
+
+    background-color:#a49f9f;
+    color:#ffffff;
+    cursor:pointer;
+    font-weight:bold;
+    border-radius: 4px;
+    transition: 0.1s;
+}
+
+.change-password:hover {
+    background-color:#616060;
+}
+
 
 /* 입력폼 스타일 */
 .edit-form {

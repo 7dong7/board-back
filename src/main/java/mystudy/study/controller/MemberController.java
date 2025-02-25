@@ -12,11 +12,14 @@ import mystudy.study.domain.member.dto.search.MemberSearchType;
 import mystudy.study.domain.member.service.MemberQueryService;
 import mystudy.study.domain.member.service.MemberService;
 import mystudy.study.domain.post.dto.PostDto;
+import mystudy.study.security.CustomUserDetail;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -79,7 +82,7 @@ public class MemberController {
             memberService.registerMember(memberForm);
             return "redirect:/posts";
         } catch (IllegalArgumentException e) { // 이미 회원이 존재하는 경우
-            bindingResult.reject("existMember","이미 사용중인 이메일입니다");
+            bindingResult.rejectValue("email", "existMail","이미 사용중인 이메일입니다");
             return "pages/member/registerMember";
         }
     }
@@ -241,19 +244,64 @@ public class MemberController {
         // 검색결과를 모델에 넣을 dto 에 넣기
         memberSearch.addSearchMembers(memberListPage);
 
-        // 회원 검색 조건
-//        MemberSearchCondition condition = MemberSearchCondition.builder()
-//                .searchType(searchType)
-//                .searchWord(searchWord)
-//                .build();
-//         회원 검색
-//        Page<SearchMemberDto> memberList = memberService.getMemberPage(condition, pageable);
-//         model 속성 추가
-//        model.addAttribute("memberList", memberList);
-
         // 변경된 검색 조건과 페이징된 회원 리스트 전달
         model.addAttribute("memberSearch", memberSearch);
         return "pages/member/members";
     }
 
+    // 회원 비밀번호 수정 : 페이지
+    @GetMapping("/members/{id}/passwordEdit")
+    public String editPasswordPage(@ModelAttribute("passwordForm")PasswordForm passwordForm) {
+        return "/pages/member/passwordEdit";
+    }
+
+    // 회원 비밀번호 수정 : 처리
+    @PostMapping("/members/{id}/passwordEdit")
+    public String editPassword(@PathVariable("id") Long memberId,
+                               @Validated @ModelAttribute("passwordForm") PasswordForm passwordForm, BindingResult bindingResult) {
+        log.info("editPassword passwordForm: {}", passwordForm); // 값 확인
+        /**
+         * 회원 비밀번호를 수정한다
+         * 1. form 데이터 검증
+         *      - 현재 비밀번호 맞는지 확인
+         *      - 새 비밀번호 다시 입력 확인
+         * 2. 로그인한 회원과 비밀번호를 바꾸려는 회원의 id를 비교
+         *      - PathVariable 와 SecurityContextHolder 값
+         * 3. 회원 비밀번호 수정
+         */
+    // 비밀번호 확인
+        if (!passwordForm.getNewPassword().equals(passwordForm.getConfirmPassword())) {
+            // 새 비밀번호와 다시 입력한 비밀번호가 틀린 경우
+            bindingResult.rejectValue("confirmPassword", "confirmPassword.noMatch", "비밀번호를 다시 확해주세요.");
+        }
+
+    // 로그인 회원비교
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(principal instanceof CustomUserDetail customUserDetail) {
+        // 폼 로그인의 경우
+            if (!memberId.equals(customUserDetail.getMemberId())) {
+            // 정상적이짖 않은 경우 (비정상적인 접근)
+                // 글로벌 오류 처리
+                bindingResult.reject("accessError", "정상적인 접근이 아닙니다.");
+            }
+        } /*else if () {
+            // 다른 로그인의 경우 oauth2
+        } */
+
+    // 회원 비밀번호 수정
+        try {
+            memberService.editMemberPassword(memberId, passwordForm);
+        } catch (IllegalArgumentException e) {
+            // 현재 사용중인 비밀번호가 form 에서 입력받은 비밀번호가 다른경우 (자기 비밀번호를 틀린 경우)
+            bindingResult.rejectValue("currentPassword", "currentPassword.wrongPassword", "비밀번호를 다시 확인해주세요.");
+        }
+        
+    // 오류가 있는 경우 다시 페이지로
+        if(bindingResult.hasErrors()) {
+            return "pages/member/passwordEdit";
+        }
+
+        return "redirect:/posts";
+    }
+    
 }
