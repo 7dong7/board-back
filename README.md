@@ -16,5 +16,5 @@ mysql 8.0.39
 
 댓글 - 작성, 삭제, 조회
 
-로그인 - session, oauth2(네이버, 구글)
+로그인 - session, oauth2(네이버, 구글, 카카오)
 
