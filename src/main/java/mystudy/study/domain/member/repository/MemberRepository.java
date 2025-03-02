@@ -15,4 +15,7 @@ public interface MemberRepository extends JpaRepository<Member, Long>, MemberRep
     
     // OAuth2 회원 조회
     Member findByProviderId(String providerId);
+
+    // OAuth2 회원 조회 provider_providerId
+    Member findByLoginId(String loginId);
 }

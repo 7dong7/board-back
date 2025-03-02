@@ -37,6 +37,10 @@ public class MemberQueryService {
         return memberRepository.findByProviderId(providerId);
     }
 
+    public Member findByLoginId(String loginId) {
+        return memberRepository.findByLoginId(loginId);
+    }
+
     // 회원 정보 수정 (본인만) - 회원 정보 조회
     public EditMemberDto getEditMemberDto(Long memberId) {
         /**
@@ -64,4 +68,6 @@ public class MemberQueryService {
     public Page<SearchMemberInfoDto> getMemberList(String searchType, MemberSearch memberSearch, Pageable pageable) {
         return memberRepository.getSearchMemberPage(searchType, memberSearch, pageable);
     }
+
+
 }

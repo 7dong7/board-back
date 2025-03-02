@@ -9,6 +9,25 @@ public class NaverResponse implements OAuth2Response {
 
     private final Map<String, Object> attributes;
 
+    /**
+     *  {
+     *      resultcode=00,
+     *      message=success,
+     *      response={
+     *          id=네이버에서 사용하는 사용자 식별자,
+     *          nickname=박동빈,
+     *          age=20-29,
+     *          gender=M,
+     *          email=tmdkdl777@naver.com,
+     *          mobile=010-4224-0189,
+     *          mobile_e164=+821042240189,
+     *          name=박동빈,
+     *          birthday=03-25,
+     *          birthyear=1997
+     *          }
+     *  }
+     *
+     */
     public NaverResponse(Map<String, Object> attributes) {
         this.attributes = (Map<String, Object>) attributes.get("response");
     }
@@ -53,5 +72,8 @@ public class NaverResponse implements OAuth2Response {
         };
     }
 
-
+    @Override
+    public String getLoginId() {
+        return getProvider()+"_"+getProviderId();
+    }
 }

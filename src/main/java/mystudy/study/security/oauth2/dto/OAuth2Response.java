@@ -17,4 +17,6 @@ public interface OAuth2Response {
     String getMobile();
 
     String getGender();
+
+    String getLoginId();
 }

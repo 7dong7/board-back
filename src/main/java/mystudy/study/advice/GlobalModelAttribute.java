@@ -3,6 +3,7 @@ package mystudy.study.advice;
 import lombok.extern.slf4j.Slf4j;
 import mystudy.study.advice.dto.CurrentMemberDto;
 import mystudy.study.security.CustomUserDetail;
+import mystudy.study.security.oauth2.user.CustomOAuth2User;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,7 +26,10 @@ public class GlobalModelAttribute {
             // 폼 로그인의 경우
                 CurrentMemberDto currentMemberDto = new CurrentMemberDto(customUserDetail);
                 log.info("Current Member: {}", currentMemberDto);
+                return currentMemberDto;
 
+            } else if (principal instanceof CustomOAuth2User customOAuth2User) {
+                CurrentMemberDto currentMemberDto = new CurrentMemberDto(customOAuth2User);
                 return currentMemberDto;
             }
         }

@@ -14,20 +14,6 @@ public class AccessURL {
             "/posts", "/posts/*",       // 게시글
             "/oauth2/**",               // oauth2 로그인
 
-            
-            // 로그인한 사용자
-            "/comments/*/new", "/comments/*/new/*",
-
-
-            // 권한 변경 예정 role : ROLE_USER
-            "/members/*/edit", "/members/*/delete", "/members/*/passwordEdit",
-
-            "/image/upload",
-            "/posts/new/post",
-            "/posts/*/edit",
-
-            // 회원 변경 예정 role : ROLE_ADMIN
-            "/members" // 회원 검색 기능
     };
 
     public static final String[] BLACKLIST = { // 접근 불가
@@ -35,11 +21,23 @@ public class AccessURL {
 
     // 권한이 USER 인 회원만 가능
     public static final String[] USER_ROUTE = { // 유저 접근가능
+            // 로그인한 사용자
+            "/comments/*/new", "/comments/*/new/*",
+
+            // 권한 변경 예정 role : ROLE_USER
+            "/members/*/edit", "/members/*/delete", "/members/*/passwordEdit",
+
+            "/image/upload",
+            "/posts/new/post",
+            "/posts/*/edit",
     };
 
     // 권한이 ADMIN 인 회원만 가능
     public static final String[] ADMIN_ROUTE = { //
             "/admin", "/admin/**",
+
+            // 회원 변경 예정 role : ROLE_ADMIN
+            "/members" // 회원 검색 기능
     };
 
 }

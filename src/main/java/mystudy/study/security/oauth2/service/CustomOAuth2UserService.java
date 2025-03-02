@@ -8,6 +8,7 @@ import mystudy.study.domain.member.repository.MemberRepository;
 import mystudy.study.domain.member.service.MemberQueryService;
 import mystudy.study.domain.member.service.MemberService;
 import mystudy.study.security.oauth2.dto.GoogleResponse;
+import mystudy.study.security.oauth2.dto.KakaoResponse;
 import mystudy.study.security.oauth2.dto.NaverResponse;
 import mystudy.study.security.oauth2.dto.OAuth2Response;
 import mystudy.study.security.oauth2.user.CustomOAuth2User;
@@ -40,34 +41,40 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         * */
         
         
-        
         // 외부 서버 이름
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
 
         OAuth2Response oAuth2Response = null;
         if (registrationId.equals("naver")) { // 네이버 로그인의 경우
+            log.info("naver 로그인");
             oAuth2Response = new NaverResponse(oAuth2User.getAttributes());
 
         }
         else if (registrationId.equals("google")) { // 구글 로그인의 경우
+            log.info("google 로그인");
             oAuth2Response = new GoogleResponse(oAuth2User.getAttributes());
 
         }
-//        else if (registrationId.equals("kakao")) {
-//
-//        }
+        else if (registrationId.equals("kakao")) {
+            log.info("kakao 로그인");
+            oAuth2Response = new KakaoResponse(oAuth2User.getAttributes());
+        }
         else {
             return null;
         }
 
         
         // 로그인 회원가 기존의 회원인지 조회
-        Member findMember = memberQueryService.findByProviderId(oAuth2Response.getProviderId());
+        String loginId = oAuth2Response.getProvider() + "_" + oAuth2Response.getProviderId();
+        Member findMember = memberQueryService.findByLoginId(loginId);
+
+//        Member findMember = memberQueryService.findByProviderId(oAuth2Response.getProviderId());
         RoleType role = RoleType.ROLE_USER;
 
-        if( findMember == null ) { // 회원가 처음인 경우
+        if( findMember == null ) { // 회원이 처음인 경우
 
             Member newMember = Member.builder()
+                    .loginId(loginId)
                     .provider(oAuth2Response.getProvider())
                     .providerId(oAuth2Response.getProviderId())
                     .email(oAuth2Response.getEmail())
@@ -88,6 +95,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             role = findMember.getRole();
         }
 
-        return new CustomOAuth2User(oAuth2Response, role.name());
+        findMember = memberQueryService.findByLoginId(loginId);
+
+        return new CustomOAuth2User(oAuth2Response, role.name(), findMember.getId());
     }
 }

@@ -54,6 +54,7 @@ dependencies {
 	annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
 	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
 	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+	implementation "com.querydsl:querydsl-core:5.0.0" // 타입 안정성
 
 	// 타임 리프
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
@@ -68,16 +69,20 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	testImplementation 'org.springframework.security:spring-security-test'
 
-	// JWT 0.12.3 버전 (버전에 따라서 구현 방식이 다름)
-	implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
-	implementation 'io.jsonwebtoken:jjwt-impl:0.12.3'
-	implementation 'io.jsonwebtoken:jjwt-jackson:0.12.3'
-
 	// 스프링 시큐리티 + thymeleaf 연결 사용 (sec 네임 스페이스 사용가능)
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
 
 	// oauth2 사용
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
+
+	// === jwt 설정 === //
+
+	// JWT 0.12.3 버전 (버전에 따라서 구현 방식이 다름)
+	implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
+	implementation 'io.jsonwebtoken:jjwt-impl:0.12.3'
+	implementation 'io.jsonwebtoken:jjwt-jackson:0.12.3'
+
 }
 
 tasks.named('test') {

@@ -51,9 +51,9 @@ public class Member extends BaseTimeEntity {
     private String gender;      // 성볋 (남,여)
     private String birthday;    // 생일
 
-    @Column(name = "provider_id")
     private String providerId;  // OAuth2 로그인시 회원 식별자 값
     private String provider;    // OAuth2 로그인 서버
+    private String loginId; //
 
     @Enumerated(EnumType.STRING)
     private MemberStatus status = MemberStatus.ACTIVE; // 회원 탈퇴 여부
@@ -74,7 +74,7 @@ public class Member extends BaseTimeEntity {
 
     // ---- 생성자 ----
     @Builder
-    public Member(String email, String password, String name, String nickname, String age, String mobile, String gender, String birthday, String providerId, String provider, RoleType role, String residentNumber) {
+    public Member(String email, String password, String name, String nickname, String age, String mobile, String gender, String birthday, String providerId, String provider, RoleType role, String residentNumber, String loginId) {
         this.email = email;
         this.password = password;
         this.name = name;
@@ -87,6 +87,7 @@ public class Member extends BaseTimeEntity {
         this.providerId = providerId;
         this.provider = provider;
         this.role = role;
+        this.loginId = loginId;
     }
 
 
