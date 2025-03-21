@@ -1,5 +1,6 @@
 package mystudy.study.security.jwt;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -14,17 +15,17 @@ public class JWTUtil {
 
     private SecretKey secretKey;
 
-    // === 비밀키 ===
+// ========= 비밀키 =========
     public JWTUtil(@Value("${spring.jwt.secret}") String secret) {
         this.secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
     }
 
-    // === 토큰 생성 ===
+// ========= 토큰 생성 =========
     public String createJWT(String category, String username, String role, Long expiredMs) {
         // category -> "refresh", "access" 토큰 종류
         // username -> 회원이름
         // role -> 권한
-        // expiredMs -> 만료식나
+        // expiredMs -> 만료시간
 
         // JWT builder 값 설정하기
         return Jwts.builder()
@@ -41,13 +42,22 @@ public class JWTUtil {
     }
 
     
-    // === 토큰 검증 ===
+// ========= 토큰 검증 =========
+    // claims 추출 (토큰을 파싱하는 것만으로도 토크의 유효성을 체크할 수 있다)
+    public Claims validClaims(String token) {
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload();
+    }
 
-    // 토큰 회원 이름 추출
+    // 토큰 회원 이름 추출 & 이메일 추출
     public String getUsername(String token) {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("username", String.class);
     }
-
+    
+    // 토큰 닉네임 추출
+    public String getNickname(String token) {
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("nickname", String.class);
+    }
+    
     // 토큰 권한 추출
     public String getRole(String token) {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("role", String.class);

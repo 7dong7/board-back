@@ -1,6 +1,8 @@
 package mystudy.study.security.config;
 
 import lombok.RequiredArgsConstructor;
+import mystudy.study.security.jwt.JWTAuthFilter;
+import mystudy.study.security.jwt.LoginFilter;
 import mystudy.study.security.oauth2.service.CustomOAuth2UserService;
 import mystudy.study.security.jwt.JWTUtil;
 import org.springframework.context.annotation.Bean;
@@ -13,7 +15,14 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
 
 @Configuration
 @RequiredArgsConstructor
@@ -45,6 +54,25 @@ public class SecurityConfig {
         return web -> web.ignoring().requestMatchers(AccessURL.RESOURCE);
     }
 
+    // CORS 설정
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        // cors 설정 생성
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOrigins(Arrays.asList("http://localhost:5173")); // 허용 출처
+        config.setAllowedMethods(Arrays.asList("GET","POST")); // 허용 메소드
+        config.setAllowedHeaders(Arrays.asList("*")); // 모든 헤더 요청 허용 (받는거)
+
+        // 내가 작성한 Header 값이 노출되어야 프론트에서 사용할 수 있다
+        config.addExposedHeader("access"); // access header 값 노출 허용
+        config.setAllowCredentials(true); // 쿠키/인증 정보 허용
+        
+        // 적용 설정
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config); // 모든 경로에 요청
+        return source;
+    }
+    
     // 폼로그인 + JWT 필터 체인
     @Bean
     public SecurityFilterChain loginFilterChain(HttpSecurity http) throws Exception {
@@ -52,7 +80,11 @@ public class SecurityConfig {
         // csrf 비활성화 & basic 로그인 비활성화
         http.csrf(AbstractHttpConfigurer::disable);
         http.httpBasic(AbstractHttpConfigurer::disable);
-
+        // cors 설정
+        http
+                .cors(cors -> cors
+                        .configurationSource(corsConfigurationSource())
+                );
         // 인가 설정
         http
                 .authorizeHttpRequests( auth -> auth
@@ -68,7 +100,29 @@ public class SecurityConfig {
         http
                 .formLogin(form -> form
                         .loginPage("/login")
+//                        .loginProcessingUrl("/login") // 로그인 처리 URL
                 );
+
+        // ==== form login JWT 방식 ==== //
+        // 세션 statelsee 상태 설정
+        http
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                );
+        // 폼 로그인 방식으로 로그인을 진행하고 JWT 발급을 위해서는 필터의 successHandler 가 필요하기 때문에
+        // 필터를 커스텀해서 만들어야 한다 // UsernamePasswordAuthenticationFilter 를 LoginFilter 로 대체
+        http
+                .addFilterAt(
+                        new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil), UsernamePasswordAuthenticationFilter.class
+                );
+        // 토큰 검증 필터 추가 (LoginFilter 전에 추가)
+        http
+                .addFilterBefore(
+                        new JWTAuthFilter(jwtUtil), LoginFilter.class
+                );
+
+
+
 
         // oauth2 로그인 방식 사용
         http
@@ -89,25 +143,6 @@ public class SecurityConfig {
                         .deleteCookies("JSESSIONID")
                         .permitAll()
                 );
-
-    // ==== form login JWT 방식 ==== //
-//        // 세션 statelsee
-//        http
-//                .sessionManagement(session -> session
-//                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//                );
-//
-//        // 폼 로그인 방식으로 로그인을 진행하고 JWT 발급을 위해서는 필터의 successHandler 가 필요하기 때문에
-//        // 필터를 커스텀해서 만들어야 한다 // UsernamePasswordAuthenticationFilter 를 LoginFilter 로 대체
-//        http
-//                .addFilterAt(
-//                        new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil), UsernamePasswordAuthenticationFilter.class
-//                );
-//        // 토큰 검증 필터 추가 (LoginFilter 전에 추가)
-//        http
-//                .addFilterBefore(
-//                        new JWTAuthFilter(jwtUtil), LoginFilter.class
-//                );
 
         return http.build();
     }

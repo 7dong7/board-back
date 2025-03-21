@@ -14,6 +14,8 @@ public class AccessURL {
             "/posts", "/posts/*",       // 게시글
             "/oauth2/**",               // oauth2 로그인
 
+
+
     };
 
     public static final String[] BLACKLIST = { // 접근 불가
@@ -30,6 +32,9 @@ public class AccessURL {
             "/image/upload",
             "/posts/new/post",
             "/posts/*/edit",
+
+            // 테스트
+            "/api/test"
     };
 
     // 권한이 ADMIN 인 회원만 가능

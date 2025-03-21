@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class LoginController {
 
     // 로그인 : 페이지
-    @GetMapping("/login")
-    public String loginForm() {
-        return "pages/login/login";
-    }
+//    @GetMapping("/login")
+//    public String loginForm() {
+//        return "pages/login/login";
+//    }
 
 }
