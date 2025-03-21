@@ -117,7 +117,7 @@ public class SecurityConfig {
                 );
         // 토큰 검증 필터 추가 (LoginFilter 전에 추가)
         http
-                .addFilterBefore(
+                .addFilterAfter(
                         new JWTAuthFilter(jwtUtil), LoginFilter.class
                 );
 

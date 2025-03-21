@@ -21,9 +21,10 @@ public class JWTUtil {
     }
 
 // ========= 토큰 생성 =========
-    public String createJWT(String category, String username, String role, Long expiredMs) {
+    public String createJWT(String category, String username, String role, String nickname, Long expiredMs) {
         // category -> "refresh", "access" 토큰 종류
-        // username -> 회원이름
+        // username -> 회원이름 // email
+        // nickname -> 닉네임
         // role -> 권한
         // expiredMs -> 만료시간
 
@@ -31,6 +32,7 @@ public class JWTUtil {
         return Jwts.builder()
                 .claim("category", category)
                 .claim("username", username)
+                .claim("nickname", nickname)
                 .claim("role", role)
                 .issuedAt(new Date(System.currentTimeMillis())) // 발급일
                 .expiration(new Date(System.currentTimeMillis() + expiredMs))

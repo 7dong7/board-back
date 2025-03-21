@@ -7,6 +7,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import mystudy.study.security.CustomUserDetail;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -75,6 +76,10 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         // 회원 정보
         String username = authentication.getName();
+        String nickname = null;
+        if (authentication.getPrincipal() instanceof CustomUserDetail customUserDetail) {
+            nickname = customUserDetail.getNickname();
+        }
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
@@ -82,8 +87,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String role = auth.getAuthority(); // 권한
 
         // 토큰 생성
-        String access = jwtUtil.createJWT("access", username, role, 15 * 60 * 1000L); // 15분
-        String refresh = jwtUtil.createJWT("refresh", username, role, 24 * 60 * 60 * 1000L); // 24시간
+        String access = jwtUtil.createJWT("access", username, role, nickname, 15 * 60 * 1000L); // 15분
+        String refresh = jwtUtil.createJWT("refresh", username, role, nickname, 24 * 60 * 60 * 1000L); // 24시간
         
         // 응답 설정
         response.setHeader("access", access); // access token 헤더에 추가
