@@ -216,6 +216,10 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
     // 검색 조건 변환
     private BooleanExpression transformPostSearchCondition(PostSearchCondition condition) {
 
+        if (!hasText(condition.getSearchWord())) { // 검색 조건은 있을 수 있으나 검색어가 없다면 조건 무시
+            return null;
+        }
+            
         if (hasText(condition.getSearchType())) { // 검색 조건이 존재하면
             String searchType = condition.getSearchType(); // 검색 조건
             String searchWord = condition.getSearchWord(); // 검색어

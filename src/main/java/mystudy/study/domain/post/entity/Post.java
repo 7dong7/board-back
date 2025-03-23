@@ -20,7 +20,7 @@ public class Post extends BaseEntity {
     private Long id;
     private String title;
 
-    @Lob
+    @Column(columnDefinition = "TEXT")
     private String content;
     private Integer viewCount = 0;
 
