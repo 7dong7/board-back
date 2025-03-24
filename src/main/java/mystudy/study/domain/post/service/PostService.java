@@ -93,6 +93,15 @@ public class PostService {
         return postRepository.getViewPostDto(postId);
     }
 
+    // 게시글 조회 api (postId 사용)
+    public ViewPostDto getPostDetail(Long postId) {
+        // 게시글 조회 ( 조회수 증가를 위해 )
+        Post post = postQueryService.findById(postId); // optional 처리됨
+        post.increaseViewCount(); // 조회수 증가
+
+        return postRepository.getViewPostDto(postId);
+    }
+
     // 게시글 수정 : 페이지 - 게시글 조회 (postId 사용)
     public PostEditDto viewPostEdit(Long postId) {
         /**

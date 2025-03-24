@@ -15,7 +15,8 @@ public class AccessURL {
             "/oauth2/**",               // oauth2 로그인
 
             // 게시글 목록 보기
-            "/api/posts"
+            "/api/posts",
+            "/api/posts/*"
     };
 
     public static final String[] BLACKLIST = { // 접근 불가
