@@ -2,6 +2,8 @@ package mystudy.study.api.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import mystudy.study.domain.comment.dto.ViewCommentDto;
+import mystudy.study.domain.comment.service.CommentQueryService;
 import mystudy.study.domain.post.dto.PostDto;
 import mystudy.study.domain.post.dto.PostSearchCondition;
 import mystudy.study.domain.post.dto.ViewPostDto;
@@ -27,6 +29,7 @@ import java.util.Map;
 public class PostApiController {
 
     private final PostService postService;
+    private final CommentQueryService commentQueryService;
 
     // 게시글 목록 조회 - 페이지
     @GetMapping("/api/posts")
@@ -57,10 +60,24 @@ public class PostApiController {
 
     // 게시글 내용 조회 - 페이지
     @GetMapping("/api/posts/{id}")
-    public ResponseEntity<ViewPostDto> getPostDetail(@PathVariable("id") Long postId) {
+    public ResponseEntity<ViewPostDto> getPostDetail(@PathVariable("id") Long postId,
+                                                     @PageableDefault(size=15, page=1) Pageable clPageable) {
         log.info("PostApiController getPostDetail postId: {}", postId);
+        log.info("PostApiController getPostDetail clPageable: {}", clPageable);
 
+        // 댓글 Pageable 생성
+        Pageable commentPageable = PageRequest.of(
+                Math.max(clPageable.getPageNumber() - 1, 0),
+                15, // pageSize
+                Sort.by("id").descending()); // pageSort
+
+        // 게시글 조회
         ViewPostDto viewPost = postService.getPostDetail(postId);
+
+        // 댓글 & 대댓글 조회 (페이징)
+        Page<ViewCommentDto> viewComment = commentQueryService.getViewComment(postId, commentPageable);
+        
+        viewPost.setViewComment(viewComment); // 댓글 담기
 
         return new ResponseEntity<>(viewPost, HttpStatus.OK);
     }

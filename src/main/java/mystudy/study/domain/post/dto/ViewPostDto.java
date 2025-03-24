@@ -3,6 +3,8 @@ package mystudy.study.domain.post.dto;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import mystudy.study.domain.comment.dto.ViewCommentDto;
+import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
 
@@ -22,6 +24,8 @@ public class ViewPostDto {
     // member
     private Long memberId;              // 게시자 id
     private String nickname;            // 게시자 닉네임
+
+    private Page<ViewCommentDto> viewComment; // 댓글
 
     @QueryProjection
     public ViewPostDto(Long postId, String title, String content, LocalDateTime createdAt, Integer viewCount, Long memberId, String nickname) {
