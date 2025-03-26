@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mystudy.study.domain.comment.dto.ViewCommentDto;
 import mystudy.study.domain.comment.service.CommentQueryService;
+import mystudy.study.domain.post.dto.NewPostDto;
 import mystudy.study.domain.post.dto.PostDto;
 import mystudy.study.domain.post.dto.PostSearchCondition;
 import mystudy.study.domain.post.dto.ViewPostDto;
@@ -15,10 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,7 +39,7 @@ public class PostApiController {
         log.info("입력받은 clPageable: {}", clPageable);
         // pageable 생성
         Pageable pageable = PageRequest.of(
-                Math.max(clPageable.getPageNumber()-1, 0), // 페이지 번호
+                Math.max(clPageable.getPageNumber() - 1, 0), // 페이지 번호
                 Math.max(1, Math.min(clPageable.getPageSize(), 50)), // 1 이상, 50 이하로 페이지 크기 제한
                 clPageable.getSort()
         );
@@ -61,7 +59,7 @@ public class PostApiController {
     // 게시글 내용 조회 - 페이지
     @GetMapping("/api/posts/{id}")
     public ResponseEntity<ViewPostDto> getPostDetail(@PathVariable("id") Long postId,
-                                                     @PageableDefault(size=15, page=1) Pageable clPageable) {
+                                                     @PageableDefault(size = 15, page = 1) Pageable clPageable) {
         log.info("PostApiController getPostDetail postId: {}", postId);
         log.info("PostApiController getPostDetail clPageable: {}", clPageable);
 
@@ -76,10 +74,19 @@ public class PostApiController {
 
         // 댓글 & 대댓글 조회 (페이징)
         Page<ViewCommentDto> viewComment = commentQueryService.getViewComment(postId, commentPageable);
-        
+
         viewPost.setViewComment(viewComment); // 댓글 담기
 
         return new ResponseEntity<>(viewPost, HttpStatus.OK);
     }
 
+    // 게시글 작성 - 처리
+    @PostMapping("/api/posts/new")
+    public ResponseEntity<NewPostDto> createPost(@RequestBody NewPostDto newPostDto) {
+        log.info("PostApiController createPost 게시글 작성처리 postDto: {}", newPostDto);
+
+        postService.createPost(newPostDto);
+
+        return new ResponseEntity<>(newPostDto, HttpStatus.CREATED);
+    }
 }

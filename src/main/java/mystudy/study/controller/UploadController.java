@@ -23,8 +23,8 @@ public class UploadController {
     @PostMapping("/image/upload")
     public Map<String, Object> uploadImage(MultipartRequest multiRequest,
                                            HttpServletRequest request) {
-        log.info("uploadImage: {}", multiRequest);
-        log.info("ContextPath: {}", request.getContextPath());
+        log.info("uploadImage uploadImage: {}", multiRequest);
+        log.info("uploadImage ContextPath: {}", request.getContextPath());
         // 반환할 값
         Map<String, Object> response = new HashMap<>();
 

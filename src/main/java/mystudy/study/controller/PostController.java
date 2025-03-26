@@ -40,7 +40,6 @@ public class PostController {
     public String createPostPage(@ModelAttribute("newPost") NewPostDto newPostDto) {
         return "pages/post/newPost";
     }
-
     // 게시글 작성 : 처리
     @PostMapping("/posts/new/post")
     public String createPost(@ModelAttribute("newPost") NewPostDto newPostDto,
