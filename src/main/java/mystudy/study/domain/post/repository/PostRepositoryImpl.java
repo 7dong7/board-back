@@ -41,7 +41,8 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                         post.createdAt,
                         post.viewCount,
                         member.id.as("memberId"),
-                        member.nickname)) // 검색 결과 Dto 변환
+                        member.nickname,
+                        member.email)) // 검색 결과 Dto 변환
                 .from(post)
                 .leftJoin(post.member, member)
                 .where(
@@ -84,7 +85,8 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                         post.createdAt,
                         post.viewCount,
                         member.id.as("memberId"),
-                        member.nickname)) // 검색 결과 Dto 변환
+                        member.nickname,
+                        member.email)) // 검색 결과 Dto 변환
                 .from(post)
                 .leftJoin(post.member, member)
                 .where(
@@ -122,7 +124,8 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                         post.createdAt,
                         post.viewCount,
                         member.id.as("memberId"),
-                        member.nickname)
+                        member.nickname,
+                        member.email)
                 )
                 .from(post)
                 .leftJoin(post.member, member)

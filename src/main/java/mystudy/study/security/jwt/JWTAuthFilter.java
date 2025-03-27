@@ -36,7 +36,7 @@ public class JWTAuthFilter extends OncePerRequestFilter {
     // == 다중 토큰 검증 == //
         // access Token 받기
         String authorization = request.getHeader("Authorization");
-        log.info("JWTAuthFilter doFilterInternal authorization: {}", authorization);
+        log.info("토큰 유효성 검사 실행 JWTAuthFilter doFilterInternal authorization: {}", authorization);
         
         // access token 확인
         if (authorization == null || !authorization.startsWith("Bearer ")) { // 내가 원하는게 아닌 경우
@@ -49,17 +49,19 @@ public class JWTAuthFilter extends OncePerRequestFilter {
 
         // Bearer 토큰값
         String accessToken = authorization.split(" ")[1];
+
         // 토큰 카테고리 (access, refresh)
-        String category = jwtUtil.getCategory(accessToken);
-        if (!"access".equals(category)) {// 받은 토큰이 access 토큰이 아님
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            filterChain.doFilter(request, response); // 다음 필터에 넘겨주기
-            return;
-        }
+//        String category = jwtUtil.getCategory(accessToken);
+//        if (!"access".equals(category)) {// 받은 토큰이 access 토큰이 아님
+//            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+//            filterChain.doFilter(request, response); // 다음 필터에 넘겨주기
+//            return;
+//        }
 
         // == 토큰 검증 ==
         try {
             // 정상적이지 않은 토큰의 경우 여기서 exception 을 발생함
+            response.setContentType("application/json; charset=utf-8");
             Claims claims = jwtUtil.validClaims(accessToken);
             log.info("claims 검증 통과");
             
@@ -84,7 +86,7 @@ public class JWTAuthFilter extends OncePerRequestFilter {
             Authentication authentication = new UsernamePasswordAuthenticationToken(authMember, null, authMember.getAuthorities());
 
             boolean authenticated = authentication.isAuthenticated();
-            log.info("인증된 객체 생성 isAuthenticated(): {}", authenticated);
+            log.info("인증된 객체 생성 [isAuthenticated(): {}, role: {}]", authenticated, authMember.getAuthorities());
 
             // 인증 객체 저장
             // SecurityContextHolder 에 인증객체를 저장하면 일시적으로 세션생성, 로그인된 상태로 변경된다
@@ -100,22 +102,25 @@ public class JWTAuthFilter extends OncePerRequestFilter {
             // 토큰의 검증이 모두 완료된 경우
             filterChain.doFilter(request, response);
         } catch (IllegalArgumentException e) { // 토큰 존재 유무 - null => IllegalArgumentException
+            log.info("토큰 값이 없음");
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().write("token is null or empty");
+            response.getWriter().write("{\"error\": \"token is null\", \"message\": \"토큰이 없습니다.\"}");
+            return;
         } catch (MalformedJwtException e) { // 토큰 형식 ( header.payloaad.signature 아님 ) - MalformedJwtException
+            log.info("토큰의 형식이 정상이 아님");
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("malformed token");
+            response.getWriter().write("{\"error\": \"The format is incorrect\", \"message\": \"토큰 형식이 유효하지 않습니다.\"}");
             return;
         } catch (SignatureException e) { // 서명 유효(secretKey 일치 여부) - SignatureException
+            log.info("토큰의 서명이 유효하지 않음");
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("invalid token signature");
+            response.getWriter().write("{\"error\": \"The signature is invalid\", \"message\": \"유효하지 않은 서명입니다.\"}");
             return;
         } catch (ExpiredJwtException e) { // 토큰 만료 여부: expired => ExpiredJwtException
+            log.info("토큰이 만료됨");
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("access token expired"); // access 토큰이 만료되었다는 응답
+            response.getWriter().write("{\"error\": \"access token expired\", \"message\": \"액세스 토큰이 만료되었습니다.\"}");
             return;
         }
-
-
     }
 }

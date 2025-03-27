@@ -22,13 +22,14 @@ public class ViewPostDto {
     private Integer viewCount;          // 조회수
 
     // member
-    private Long memberId;              // 게시자 id
-    private String nickname;            // 게시자 닉네임
+    private Long memberId;              // 작성자 id
+    private String nickname;            // 작성자 닉네임
+    private String email;
 
     private Page<ViewCommentDto> viewComment; // 댓글
 
     @QueryProjection
-    public ViewPostDto(Long postId, String title, String content, LocalDateTime createdAt, Integer viewCount, Long memberId, String nickname) {
+    public ViewPostDto(Long postId, String title, String content, LocalDateTime createdAt, Integer viewCount, Long memberId, String nickname, String email) {
         this.postId = postId;
         this.title = title;
         this.content = content;
@@ -36,5 +37,6 @@ public class ViewPostDto {
         this.viewCount = viewCount;
         this.memberId = memberId;
         this.nickname = nickname;
+        this.email = email;
     }
 }

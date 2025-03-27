@@ -1,7 +1,10 @@
 package mystudy.study.security.jwt;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -46,7 +49,7 @@ public class JWTUtil {
     
 // ========= 토큰 검증 =========
     // claims 추출 (토큰을 파싱하는 것만으로도 토크의 유효성을 체크할 수 있다)
-    public Claims validClaims(String token) {
+    public Claims validClaims(String token) throws ExpiredJwtException, SignatureException, MalformedJwtException, IllegalArgumentException {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload();
     }
 

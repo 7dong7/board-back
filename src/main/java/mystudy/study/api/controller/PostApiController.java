@@ -89,4 +89,18 @@ public class PostApiController {
 
         return new ResponseEntity<>(newPostDto, HttpStatus.CREATED);
     }
+
+
+
+    // 게시글 수정 - 요청
+
+
+    // 게시글 수정 - 처리
+    @PostMapping("/api/posts/{id}/edit")
+    public ResponseEntity<String> editPost(@RequestParam("id") Long postId,
+                                           @RequestBody NewPostDto newPostDto) {
+        log.info("editPost: [postId: {}, newPostDto: {}]", postId, newPostDto);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

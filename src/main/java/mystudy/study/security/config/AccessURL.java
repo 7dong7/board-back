@@ -15,16 +15,21 @@ public class AccessURL {
     };
 
     public static final String[] WHITELIST = { // 권한이 없어도 접근 가능한
+            // 타임리프 경로
             "/",        // 메인 페이지
             "/login", "/logout",        // 로그인 & 로그아웃
             "/members/*",               // 회원 정보 보기
             "/posts", "/posts/*",       // 게시글
             "/oauth2/**",               // oauth2 로그인
 
+            
+            // api 요청 경로
+            
+            
+            
             // 게시글 목록 보기
             "/api/posts", // 게시글 목록 보기
             "/api/posts/*", // 게시글 디테일 보기
-
             "/api/image/upload", // 게시글 작성 중 이미지 등록 (react) - USER_ROUTE
     };
 
@@ -33,6 +38,7 @@ public class AccessURL {
 
     // 권한이 USER 인 회원만 가능
     public static final String[] USER_ROUTE = { // 유저 접근가능
+        // ====== 타임 리프 경로 ========
             // 로그인한 사용자
             "/comments/*/new", "/comments/*/new/*",
 
@@ -42,9 +48,13 @@ public class AccessURL {
             "/posts/new/post",
             "/posts/*/edit", // 게시글 수정
 
+
+        // ====== api 요청 경로 ========
+
             "/image/upload", // 게시글 작성 중 이미지 등록 - USER_ROUTE => 이미지 등록 또한 jwt 검증을 해서 업로드 권한을 확인 해야도미 (경로가 다르기 때문에)
 
             "/api/posts/new", // 게시글 작성하기 - USER_ROUTE
+            "/api/posts/{id}/edit", // 게시글 수정하기
 
             // 테스트
             "/api/test",
