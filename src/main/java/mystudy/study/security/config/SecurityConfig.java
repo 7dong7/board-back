@@ -99,6 +99,7 @@ public class SecurityConfig {
                         .requestMatchers(
                                 HttpMethod.POST,
                                 "/login", // 로그인 요청
+                                // ckEditor 에서 요청하는 경우 jwt 토큰을 같이 보낼 수 있나?
                                 "/api/image/upload", // 이미지 업로드 요청
                                 "/api/refresh" // access 토큰 재발급 요청
                         ).permitAll() // 모두
@@ -106,6 +107,10 @@ public class SecurityConfig {
                                 HttpMethod.POST,
                                 "/api/posts/new" // 게시글 작성
                         ).authenticated() // 인증된 사용자
+                        .requestMatchers(
+                                HttpMethod.PATCH,
+                                "/api/posts/*" // 게시글 수정
+                        ).authenticated()
                         .anyRequest().authenticated()
                 );
 //        http

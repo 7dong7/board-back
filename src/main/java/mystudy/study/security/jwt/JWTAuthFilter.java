@@ -34,6 +34,16 @@ public class JWTAuthFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
     // == 다중 토큰 검증 == //
+//        StringBuffer requestURL = request.getRequestURL(); // "http://localhost:8080/login"
+        // 토큰 검증을 하지않는 경로 설정
+        String requestURI = request.getRequestURI(); // "/login"
+        if (requestURI.equals("/login")) {
+            log.info("/login 요청시 토큰 검증 뛰어넘기");
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+    // ===== 토큰 유효성 검증 ===== //
         // access Token 받기
         String authorization = request.getHeader("Authorization");
         log.info("토큰 유효성 검사 실행 JWTAuthFilter doFilterInternal authorization: {}", authorization);

@@ -90,6 +90,9 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String access = jwtUtil.createJWT("access", username, role, nickname, 15 * 60 * 1000L); // 15분
         String refresh = jwtUtil.createJWT("refresh", username, role, nickname, 24 * 60 * 60 * 1000L); // 24시간
         
+        // 기존 쿠키 삭제 // refresh 재발급시 중복 쿠키가 생기는 문제가 있음
+        response.addCookie(deleteCookie("refresh"));
+
         // 응답 설정
         response.setHeader("access", access); // access token 헤더에 추가
         response.setHeader("username", username);
@@ -113,6 +116,15 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         //cookie.setPath("/");  // 애플리케이션내의 모든 경로에서 쿠키가 유효하게 설정
         cookie.setHttpOnly(true); // HttpOnly 쿠키가 클라이언트 측 스크립트에서 접근할 수 없게 된다 (XSS) 공격 보호 설정
 
+        return cookie;
+    }
+
+    // == 기존 쿠키 삭제 ==
+    private Cookie deleteCookie(String name) {
+        Cookie cookie = new Cookie(name, null); // 값은 null로 설정
+        cookie.setHttpOnly(true); // 기존 쿠키와 동일한 속성 유지
+        cookie.setPath("/"); // 동일한 경로 지정
+        cookie.setMaxAge(0); // 즉시 만료
         return cookie;
     }
 }

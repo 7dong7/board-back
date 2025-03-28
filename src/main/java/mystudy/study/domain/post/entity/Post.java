@@ -48,6 +48,11 @@ public class Post extends BaseEntity {
         viewCount++;
     }
 
+    // 게시글 제목 수정
+    public void updateTitle(String title) {
+        this.title = title;
+    }
+
     // 게시글 내용 수정
     public void updateContent(String content) {
         this.content = content;

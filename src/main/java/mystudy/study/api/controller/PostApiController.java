@@ -4,11 +4,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mystudy.study.domain.comment.dto.ViewCommentDto;
 import mystudy.study.domain.comment.service.CommentQueryService;
-import mystudy.study.domain.post.dto.NewPostDto;
-import mystudy.study.domain.post.dto.PostDto;
-import mystudy.study.domain.post.dto.PostSearchCondition;
-import mystudy.study.domain.post.dto.ViewPostDto;
+import mystudy.study.domain.post.dto.*;
 import mystudy.study.domain.post.service.PostService;
+import mystudy.study.security.CustomUserDetail;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -16,10 +14,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.nio.file.AccessDeniedException;
 
 @Slf4j
 @RestController
@@ -90,17 +88,18 @@ public class PostApiController {
         return new ResponseEntity<>(newPostDto, HttpStatus.CREATED);
     }
 
-
-
-    // 게시글 수정 - 요청
-
-
     // 게시글 수정 - 처리
-    @PostMapping("/api/posts/{id}/edit")
-    public ResponseEntity<String> editPost(@RequestParam("id") Long postId,
-                                           @RequestBody NewPostDto newPostDto) {
-        log.info("editPost: [postId: {}, newPostDto: {}]", postId, newPostDto);
+    @PatchMapping("/api/posts/{id}")
+    public ResponseEntity<String> editPost(@PathVariable("id") Long postId,
+                                           @RequestBody EditPostApiDto editPostDto) {
+        log.info("editPost: [postId: {}, newPostDto: {}]", postId, editPostDto);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        try {
+            postService.postEdit(postId,editPostDto);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (AccessDeniedException e) {
+            // 비정상 적인 접근 & 수정 권한이 없는 경우 & 다른 사람의 게시물 수정
+            throw new RuntimeException(e);
+        }
     }
 }

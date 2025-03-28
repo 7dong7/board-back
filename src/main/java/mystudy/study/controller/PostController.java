@@ -11,6 +11,7 @@ import mystudy.study.domain.comment.service.CommentQueryService;
 import mystudy.study.domain.post.dto.*;
 import mystudy.study.domain.post.service.PostQueryService;
 import mystudy.study.domain.post.service.PostService;
+import mystudy.study.security.CustomUserDetail;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -105,13 +106,14 @@ public class PostController {
 
     // 게시글 수정 : 처리
     @PostMapping("/posts/{id}/edit")
-    public String postEdit(@PathVariable("id") Long postId,
-                           @ModelAttribute("postEditDto") PostEditDto postEditDto) throws AccessDeniedException {
+    public String postEditReg(@PathVariable("id") Long postId,
+                              @ModelAttribute("postEditDto") PostEditDto postEditDto) throws AccessDeniedException {
         log.info("postEdit postEditDto: {}", postEditDto);
+
 
         // 게시글 수정
         try {
-            postService.postEdit(postEditDto);
+            postService.postEditReg(postEditDto);
         } catch (AccessDeniedException e) { // 로그인 회원와 게시글 주인이 다른 경우
             return "redirect:/posts";
         }

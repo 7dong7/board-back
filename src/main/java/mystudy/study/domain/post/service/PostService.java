@@ -112,8 +112,8 @@ public class PostService {
         return postRepository.getPostEditDtoByPostId(postId);
     }
 
-    // 게시글 수정 : 처리 - 게시글 수정하기
-    public void postEdit(PostEditDto postEditDto) throws AccessDeniedException {
+    // 게시글 수정 : 처리 - 게시글 수정하기 ==== 타임리프 ====
+    public void postEditReg(PostEditDto postEditDto) throws AccessDeniedException {
         // 게시글 조회
         Post post = postQueryService.findByPostId(postEditDto.getPostId());
 
@@ -132,8 +132,26 @@ public class PostService {
         } else { // 작성자가 일치하지 않음
             throw new AccessDeniedException("수정 권한이 없습니다.");
         }
-
     }
+
+    // 게시글 수정 : 처리 ===== api & 프론트 요청 =====
+    public void postEdit(Long postId, EditPostApiDto editPostDto) throws AccessDeniedException {
+        // 게시글 조회
+        Post post = postQueryService.findByPostId(postId);
+
+        // 로그인 Member 확인
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        log.info("memberid: {}, post.getMemberId: {}", username, post.getMember().getEmail());
+        // 게시글의 주인과 로그인 회원 비교
+        if (post.getMember().getEmail().equals(username)) {// 같은 경우 (정상)
+            post.updateTitle(editPostDto.getTitle()); // 제목 변경
+            post.updateContent(editPostDto.getContent()); // 내용 변경
+        } else { // 작성자가 일치하지 않음
+            throw new AccessDeniedException("수정 권한이 없습니다.");
+        }
+    }
+
 
     // 게시글 삭제
     public void deletePost(Long postId) throws AccessDeniedException {
