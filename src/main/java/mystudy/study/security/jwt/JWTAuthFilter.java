@@ -37,6 +37,7 @@ public class JWTAuthFilter extends OncePerRequestFilter {
 //        StringBuffer requestURL = request.getRequestURL(); // "http://localhost:8080/login"
         // 토큰 검증을 하지않는 경로 설정
         String requestURI = request.getRequestURI(); // "/login"
+        log.info("JWTAuthFilter requestURI: {}", requestURI);
         if (requestURI.equals("/login")) {
             log.info("/login 요청시 토큰 검증 뛰어넘기");
             filterChain.doFilter(request, response);

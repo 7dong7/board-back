@@ -9,6 +9,7 @@ import mystudy.study.security.jwt.JWTUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -94,7 +95,8 @@ public class SecurityConfig {
                         .requestMatchers(
                                 HttpMethod.GET, 
                                 "/api/posts", // 게시글 목록 조회
-                                "/api/posts/*" // 게시글 내용 조회
+                                "/api/posts/*", // 게시글 내용 조회
+                                "/logout" // 로그아웃 경로
                         ).permitAll() // 모두
                         .requestMatchers(
                                 HttpMethod.POST,
@@ -162,7 +164,7 @@ public class SecurityConfig {
 //                        // 회원의 프로필 정보를 조회할 때 사용
 //                );
         
-        // 로그아웃
+        // 로그아웃 === session ===
 //        http
 //                .logout(logout -> logout
 //                        .logoutUrl("/logout")           // 로그아웃 경로
@@ -171,6 +173,21 @@ public class SecurityConfig {
 //                        .deleteCookies("JSESSIONID")
 //                        .permitAll()
 //                );
+
+        // 로그아웃 === jwt ===
+        http
+                .logout(logout -> logout
+                        .logoutUrl("/logout") // 로그아웃 경로
+                        .deleteCookies("refresh") // refresh 쿠키 삭제
+                        .invalidateHttpSession(true) // 세션 무효화
+                        .logoutSuccessHandler((request, response, authentication) -> {
+                            response.setStatus(HttpStatus.OK.value());
+                        })
+                        .permitAll()
+                );
+        /**
+         *  로그아웃으로 요청을 보낸다음에 바로 기본 url "/login" 경로로 보낸다
+         */
 
         return http.build();
     }

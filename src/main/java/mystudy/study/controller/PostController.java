@@ -174,14 +174,4 @@ public class PostController {
         model.addAttribute("searchParam", map);
         return "pages/post/posts";
     }
-
-
-
-
-
-
-
-
-
-
 }
