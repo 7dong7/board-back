@@ -59,6 +59,35 @@ public class CommentService {
         commentRepository.save(comment);
     }
 
+    // 댓글 작성(comment) api 요청
+    public void createComment(CreateCommentForm createCommentForm) {
+        /**
+         *  1. 로그인 여부 확인 -> jwt 확인
+         *  2. 게시글 존재 여부 확인 -> 존재하지 않는 게시글에 임의적으로 댓글을 작성하려고 하는 경우 (정상적이지 않은 경우 - postId 조작)
+         *  3. 댓글 작성
+         */
+        // 게시글 조회
+        Post post = postQueryService.findByPostId(createCommentForm.getPostId()); // 정상적이지 않은 경우 예외 발생
+
+        // 로그인 회원 DB 에서 조회
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Member member = memberQueryService.findByEmail(email);
+
+        // 댓글 작성 처리
+        // 댓글 생성
+        Comment comment = Comment.builder()
+                .content(createCommentForm.getComment())
+                .build();
+
+        // 댓글 연관관계 매핑
+        comment.addPost(post); // 양방향 설정 -> DB와 entity 객체의 동기화
+        comment.addMember(member); // 양방향 설정
+
+        // 댓글 저장
+        commentRepository.save(comment);
+    }
+    
+
     // 대댓글 작성(reply)
     public void writeReply(Long postId, Long commentId, WriteCommentForm writeCommentForm) {
 

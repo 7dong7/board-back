@@ -51,7 +51,18 @@ public class JWTAuthFilter extends OncePerRequestFilter {
         
         // access token 확인
         if (authorization == null || !authorization.startsWith("Bearer ")) { // 내가 원하는게 아닌 경우
-            log.info("인증 필터 access token 이 없습니다"); // 로그인 요청을 다시 해야됨
+            /**
+             *  토큰의 경우 있는 경우와 없는 경우
+             *      - 토큰이 없는 경우
+             *      로그인을 하지 않은 경우  이후의 필터 "AuthorizationFilter" 에서 
+             *      security filter chain 에 있는 authorizeHttpRequests 에 등록된 경로와 권한을 확인한다
+             *          그냥 permitAll() 인 경우는 통과
+             *          그렇지 않으면 "에러" 발생
+             *      
+             *      - 토큰이 있는 경우
+             *          아래의 유효성 검증을 진행
+             */
+            log.info("인증 필터 access token 이 없습니다"); 
             // 응답 상태 코드
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             filterChain.doFilter(request, response); // 다음 필터에 넘겨주기
@@ -60,14 +71,6 @@ public class JWTAuthFilter extends OncePerRequestFilter {
 
         // Bearer 토큰값
         String accessToken = authorization.split(" ")[1];
-
-        // 토큰 카테고리 (access, refresh)
-//        String category = jwtUtil.getCategory(accessToken);
-//        if (!"access".equals(category)) {// 받은 토큰이 access 토큰이 아님
-//            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-//            filterChain.doFilter(request, response); // 다음 필터에 넘겨주기
-//            return;
-//        }
 
         // == 토큰 검증 ==
         try {
