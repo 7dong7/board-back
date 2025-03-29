@@ -108,7 +108,8 @@ public class SecurityConfig {
                         .requestMatchers(
                                 HttpMethod.POST,
                                 "/api/posts/new", // 게시글 작성
-                                "/api/comments/new" //  댓글 작성
+                                "/api/comments/new", //  댓글 작성
+                                "/api/replies/new" // 대댓글 작성
                         ).authenticated() // 인증된 사용자
                         .requestMatchers(
                                 HttpMethod.PATCH,

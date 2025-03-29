@@ -116,6 +116,34 @@ public class CommentService {
         commentRepository.save(reply);
     }
 
+    // 대댓글 작성(reply) - api 요청 처리
+    public void createReply(CreateCommentForm createReplyForm) {
+
+        // 게시글 조회
+        Post post = postQueryService.findByPostId(createReplyForm.getPostId()); // 정상적이지 않은 경우 예외 발생
+
+        // 부모 댓글 조회
+        Comment parentComment = commentQueryService.findCommentById(createReplyForm.getParentId());
+
+        // 로그인 회원 DB 에서 조회
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Member member = memberQueryService.findByEmail(email);
+
+        // 대댓글 작성 처리
+        // 대댓글 생성
+        Comment reply = Comment.builder()
+                .content(createReplyForm.getComment())
+                .build();
+
+        // 대댓글 연관관계 매핑
+        reply.addPost(post); // 양방향 설정 -> DB와 entity 객체의 동기화
+        reply.addMember(member); // 양방향 설정
+        reply.addComment(parentComment); // 부모댓글 자식댓글 설정
+
+        // 댓글 저장
+        commentRepository.save(reply);
+    }
+
     // 댓글 삭제(comment)
     public void deleteComment(Long commentId) {
         /**

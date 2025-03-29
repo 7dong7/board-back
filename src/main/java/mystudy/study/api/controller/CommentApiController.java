@@ -17,10 +17,10 @@ public class CommentApiController {
 
     private final CommentService commentService;
 
-    // 댓글 작성 이벤트
+    // 댓글 작성 - 처리 (comment)
     @PostMapping("/api/comments/new")
     public ResponseEntity<String> createComment(@RequestBody CreateCommentForm createCommentForm) {
-        log.info("CommentApiController createCommentForm: {}", createCommentForm);
+        log.info("CommentApiController createComment createCommentForm: {}", createCommentForm);
 
         // 게시글에 대한 댓글 작성
         try {
@@ -28,8 +28,23 @@ public class CommentApiController {
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // 잘못된 접근 & 악의적 접근
         }
-        
+
         return new ResponseEntity<>("댓글이 성공적으로 작성되었습니다.", HttpStatus.OK);
+    }
+
+    // 대댓글 작성 - 처리 (reply)
+    @PostMapping("/api/replies/new")
+    public ResponseEntity<String> createReply(@RequestBody CreateCommentForm createReplyForm) {
+        log.info("CommentApiController createReply createReplyForm: {}", createReplyForm);
+
+        // 댓글에 대한 대댓글 작성 (reply)
+        try {
+            commentService.createReply(createReplyForm);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // 잘못된 접근 & 악의적 접근
+        }
+
+        return new ResponseEntity<>("대댓글이 성공적으로 작성되었습니다.", HttpStatus.OK);
     }
 
 }
