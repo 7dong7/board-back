@@ -63,7 +63,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             return null;
         }
 
-        
         // 로그인 회원가 기존의 회원인지 조회
         String loginId = oAuth2Response.getProvider() + "_" + oAuth2Response.getProviderId();
         Member findMember = memberQueryService.findByLoginId(loginId);

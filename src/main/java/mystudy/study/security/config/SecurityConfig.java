@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import mystudy.study.security.jwt.JWTAuthFilter;
 import mystudy.study.security.jwt.LoginFilter;
+import mystudy.study.security.oauth2.CustomSuccessHandler;
 import mystudy.study.security.oauth2.service.CustomOAuth2UserService;
 import mystudy.study.security.jwt.JWTUtil;
 import org.springframework.context.annotation.Bean;
@@ -35,6 +36,7 @@ public class SecurityConfig {
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JWTUtil jwtUtil;
     private final CustomOAuth2UserService customOAuth2UserService;
+    private final CustomSuccessHandler customSuccessHandler;
 
     // 인증 매니저
     @Bean
@@ -96,7 +98,8 @@ public class SecurityConfig {
                                 HttpMethod.GET, 
                                 "/api/posts", // 게시글 목록 조회
                                 "/api/posts/*", // 게시글 내용 조회
-                                "/logout" // 로그아웃 경로
+                                "/logout", // 로그아웃 경로
+                                "/oauth2/authorization/google" // OAuth2 google 경로
                         ).permitAll() // 모두
                         .requestMatchers(
                                 HttpMethod.POST,
@@ -145,26 +148,16 @@ public class SecurityConfig {
                         new JWTAuthFilter(jwtUtil), LoginFilter.class
                 );
 
-        // exception handler
-//        http
-//                .exceptionHandling(exception -> exception
-//                        .authenticationEntryPoint((request, response, authException) -> {
-//                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-//                            response.setContentType("application/json; charset=utf-8");
-//                            response.getWriter().write("{\"error\":\"" + authException.getMessage() + "\"}");
-//                        })
-//                );
-
-
-        // oauth2 로그인 방식 사용
-//        http
-//                .oauth2Login(oauth2 -> oauth2
-//                        .loginPage("/login") // 로그인 페이지
-//                        .userInfoEndpoint( userInfoEndpointConfig -> userInfoEndpointConfig
-//                                .userService(customOAuth2UserService))
-//                        // 외부 인증 제공자 엔드포인트 지정
-//                        // 회원의 프로필 정보를 조회할 때 사용
-//                );
+        // ==== oauth2 로그인 ==== //
+        http
+                .oauth2Login(oauth2 -> oauth2
+                        .loginPage("/login") // 로그인 페이지
+                        .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
+                                .userService(customOAuth2UserService))
+                        // 외부 인증 제공자 엔드포인트 지정
+                        // 회원의 프로필 정보를 조회할 때 사용
+                        .successHandler(customSuccessHandler)
+                );
         
         // 로그아웃 === session ===
 //        http
@@ -175,7 +168,6 @@ public class SecurityConfig {
 //                        .deleteCookies("JSESSIONID")
 //                        .permitAll()
 //                );
-
         // 로그아웃 === jwt ===
         http
                 .logout(logout -> logout
