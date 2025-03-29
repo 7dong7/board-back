@@ -51,6 +51,13 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         response.addCookie(deleteCookie("username"));
         response.addCookie(deleteCookie("access"));
 
+        /**
+         *  프론트에스 location.href 방식으로 요청을 진행했기 때문에
+         *  서버에서는 쿠키에 밖에 담아서 응답할 수 없다
+         *      따라서, 프론트에서 SDK(앱) 을 이용해서 header 담아서 사용
+         *      혹은, 프론트의 특정 경로로 응답하고 특정 경로의 프론트에서 다시 특정 서버의 경로로 요청
+         *          -> 쿠키의 값을 response header 에 담아서 localStorage 에 담아서 사용하는 방식으로 구현해야 한다
+         */
         // 응답 설정
 //        response.setHeader("access", access); // access token 헤더에 추가
 //        response.setHeader("username", username);
@@ -61,10 +68,8 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         // JWT 쿠기에 보내기
 //        response.addCookie(createCookie("Authentication", token)); // 토큰 쿠키에 담기
-        response.sendRedirect("http://localhost:5173/"); // 쿠키를 보낼 곳
+        response.sendRedirect("http://localhost:5173/oauth2/setting/handler"); // 쿠키를 보낼 곳
     }
-
-
 
     // == 쿠키 생성 ==
     private Cookie createCookie(String key, String value) {

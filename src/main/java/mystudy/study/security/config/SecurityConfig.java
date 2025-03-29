@@ -99,7 +99,7 @@ public class SecurityConfig {
                                 "/api/posts", // 게시글 목록 조회
                                 "/api/posts/*", // 게시글 내용 조회
                                 "/logout", // 로그아웃 경로
-                                "/oauth2/authorization/google" // OAuth2 google 경로
+                                "/api/OAuth2/handler" // OAuth2 요청 시 localStorage 에 대한 응답을 처리
                         ).permitAll() // 모두
                         .requestMatchers(
                                 HttpMethod.POST,
@@ -148,7 +148,7 @@ public class SecurityConfig {
                         new JWTAuthFilter(jwtUtil), LoginFilter.class
                 );
 
-        // ==== oauth2 로그인 ==== //
+        // ==== oauth2 로그인 ==== // OAuth2 로그인 방식을 활성화한다는 의미와 세부 설정
         http
                 .oauth2Login(oauth2 -> oauth2
                         .loginPage("/login") // 로그인 페이지
