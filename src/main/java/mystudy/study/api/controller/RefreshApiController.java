@@ -54,6 +54,7 @@ public class RefreshApiController {
             Claims claims = jwtUtil.validClaims(requestRefresh);
             // 파싱이 성공하면 유효한 토큰
             String email = jwtUtil.getUsername(requestRefresh);
+            Long memberId = jwtUtil.getMemberId(requestRefresh);
 
             CustomUserDetail userDetails = (CustomUserDetail) customUserDetailsService.loadUserByUsername(email);
             String username = userDetails.getUsername(); // email
@@ -67,15 +68,14 @@ public class RefreshApiController {
             log.info("jwt 생성 전 정보 [username: {}, nickname: {}, role: {}]", username, nickname, role);
 
             // 토큰 생성
-            String access = jwtUtil.createJWT("access", username, role, nickname, 15 * 60 * 1000L); // 15분
-            String refresh = jwtUtil.createJWT("refresh", username, role, nickname, 24 * 60 * 60 * 1000L); // 24시간
+            String access = jwtUtil.createJWT("access", memberId, username, role, nickname, 15 * 60 * 1000L); // 15분
+            String refresh = jwtUtil.createJWT("refresh", memberId, username, role, nickname, 24 * 60 * 60 * 1000L); // 24시간
 
             // 기존 쿠키 삭제
             response.addCookie(deleteCookie("refresh"));
 
             // 응답 설정
             response.setHeader("access", access); // access token 헤더에 추가
-            response.setHeader("username", username);
             response.addCookie(createCookie("refresh", refresh));
             response.setStatus(HttpStatus.OK.value());
 

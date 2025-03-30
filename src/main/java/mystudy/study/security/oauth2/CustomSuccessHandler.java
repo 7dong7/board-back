@@ -36,6 +36,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         // JWT 토큰 재료
         String username = customOAuth2User.getEmail();
         String nickname = customOAuth2User.getNickname();
+        Long memberId = customOAuth2User.getMemberId();
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
@@ -43,14 +44,12 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         String role = auth.getAuthority(); // 권한
 
         // 토큰 생성
-        String access = jwtUtil.createJWT("access", username, role, nickname, 15 * 60 * 1000L); // 15분
-        String refresh = jwtUtil.createJWT("refresh", username, role, nickname, 24 * 60 * 60 * 1000L); // 24시간
+        String access = jwtUtil.createJWT("access", memberId, username, role, nickname, 15 * 60 * 1000L); // 15분
+        String refresh = jwtUtil.createJWT("refresh", memberId, username, role, nickname, 24 * 60 * 60 * 1000L); // 24시간
 
         // 기존 쿠키 삭제 // refresh 재발급시 중복 쿠키가 생기는 문제가 있음
         response.addCookie(deleteCookie("refresh"));
-        response.addCookie(deleteCookie("username"));
         response.addCookie(deleteCookie("access"));
-
         /**
          *  프론트에스 location.href 방식으로 요청을 진행했기 때문에
          *  서버에서는 쿠키에 밖에 담아서 응답할 수 없다
@@ -59,9 +58,6 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
          *          -> 쿠키의 값을 response header 에 담아서 localStorage 에 담아서 사용하는 방식으로 구현해야 한다
          */
         // 응답 설정
-//        response.setHeader("access", access); // access token 헤더에 추가
-//        response.setHeader("username", username);
-        response.addCookie(createCookie("username", username));
         response.addCookie(createCookie("access", access));
         response.addCookie(createCookie("refresh", refresh));
         response.setStatus(HttpStatus.OK.value());

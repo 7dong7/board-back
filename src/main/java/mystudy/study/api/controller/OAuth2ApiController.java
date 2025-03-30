@@ -18,7 +18,7 @@ public class OAuth2ApiController {
 
     @GetMapping("/api/OAuth2/handler")
     public ResponseEntity<String> OAuth2Handler(HttpServletRequest request, HttpServletResponse response) {
-        log.info("OAuth2Handler localStorage에 담기");
+        log.info("OAuth2Handler localStorage 에 담기");
 
         // 쿠키에서 access 토큰값 추출
         String access = Arrays.stream(request.getCookies())
@@ -26,20 +26,12 @@ public class OAuth2ApiController {
                 .findFirst()
                 .map(Cookie::getValue)
                 .orElse(null);
-
-        String username = Arrays.stream(request.getCookies())
-                .filter(cookie -> "username".equals(cookie.getName()))
-                .findFirst()
-                .map(Cookie::getValue)
-                .orElse(null);
-        log.info("cookies info [access: {}, username: {}]", access, username);
+        log.info("cookies info access: {}", access);
 
         response.addCookie(deleteCookie("access"));
-        response.addCookie(deleteCookie("username"));
+
 
         response.setHeader("access", access);
-        response.setHeader("username", username);
-
         return new ResponseEntity<>("응답 성공", HttpStatus.OK);
     }
 

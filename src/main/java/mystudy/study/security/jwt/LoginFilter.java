@@ -77,8 +77,10 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         // 회원 정보
         String username = authentication.getName();
         String nickname = null;
+        Long memberId = null;
         if (authentication.getPrincipal() instanceof CustomUserDetail customUserDetail) {
             nickname = customUserDetail.getNickname();
+            memberId = customUserDetail.getMemberId();
         }
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
@@ -87,15 +89,15 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String role = auth.getAuthority(); // 권한
 
         // 토큰 생성
-        String access = jwtUtil.createJWT("access", username, role, nickname, 15 * 60 * 1000L); // 15분
-        String refresh = jwtUtil.createJWT("refresh", username, role, nickname, 24 * 60 * 60 * 1000L); // 24시간
+        String access = jwtUtil.createJWT("access", memberId, username, role, nickname, 15 * 60 * 1000L); // 15분
+        String refresh = jwtUtil.createJWT("refresh", memberId, username, role, nickname, 24 * 60 * 60 * 1000L); // 24시간
+        // String category, Long memberId, String username, String role, String nickname, Long expiredMs
         
         // 기존 쿠키 삭제 // refresh 재발급시 중복 쿠키가 생기는 문제가 있음
         response.addCookie(deleteCookie("refresh"));
 
         // 응답 설정
         response.setHeader("access", access); // access token 헤더에 추가
-        response.setHeader("username", username);
         response.addCookie(createCookie("refresh", refresh));
         response.setStatus(HttpStatus.OK.value());
     }

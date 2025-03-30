@@ -24,7 +24,7 @@ public class JWTUtil {
     }
 
 // ========= 토큰 생성 =========
-    public String createJWT(String category, String username, String role, String nickname, Long expiredMs) {
+    public String createJWT(String category, Long memberId, String username, String role, String nickname, Long expiredMs) {
         // category -> "refresh", "access" 토큰 종류
         // username -> 회원이름 // email
         // nickname -> 닉네임
@@ -35,6 +35,7 @@ public class JWTUtil {
         return Jwts.builder()
                 .claim("category", category)
                 .claim("username", username)
+                .claim("id", memberId)
                 .claim("nickname", nickname)
                 .claim("role", role)
                 .issuedAt(new Date(System.currentTimeMillis())) // 발급일
@@ -53,6 +54,11 @@ public class JWTUtil {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload();
     }
 
+    // 회원 번호 추출
+    public Long getMemberId(String token) {
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("id", Long.class);
+    }
+    
     // 토큰 회원 이름 추출 & 이메일 추출
     public String getUsername(String token) {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("username", String.class);

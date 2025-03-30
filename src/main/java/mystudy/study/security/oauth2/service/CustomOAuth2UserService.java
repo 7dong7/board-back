@@ -39,8 +39,60 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         /*현재 naver 에서 받아온 데이터 중 age, birthday, birthyear 은 아직 처리하지 않음
         * 현재 google name 과 email 만 처리했다
         * */
-        
-        
+
+        /**
+         *  구글 응답 형태
+         *      {
+         *          sub=101963555048079144128,
+         *          name=박동빈,
+         *          given_name=동빈,
+         *          family_name=박,
+         *          picture=https://lh3.googleusercontent.com/a/ACg8ocI8tMspxsKrAVG54rRPyvWAgxb065yPIbe_tiInCQQ42WLu1A=s96-c,
+         *          email=spino0514@gmail.com,
+         *          email_verified=true
+         *      }
+         *
+         *  네이버 응답 형태
+         *      {
+         *          resultcode=00,
+         *          message=success,
+         *          response={
+         *                  id=o3s0N7P8hmRDfCa6abDKMWFv5xma11f2Xr-EBy9Uqa0,
+         *                  nickname=박동빈,
+         *                  age=20-29,
+         *                  gender=M,
+         *                  email=tmdkdl777@naver.com,
+         *                  mobile=010-4224-0189,
+         *                  mobile_e164=+821042240189,
+         *                  name=박동빈,
+         *                  birthday=03-25,
+         *                  birthyear=1997
+         *                  }
+         *      }
+         *
+         *  카카오 응답 형태
+         *      {
+         *          id=4004255088,
+         *          connected_at=2025-03-29T16:16:58Z,
+         *          properties={
+         *                  nickname=박동빈
+         *                  },
+         *          kakao_account={
+         *                  profile_nickname_needs_agreement=false,
+         *                  profile_image_needs_agreement=true,
+         *                  profile={
+         *                          nickname=박동빈,
+         *                          is_default_nickname=false
+         *                          },
+         *                  has_email=true,
+         *                  email_needs_agreement=false,
+         *                  is_email_valid=true,
+         *                  is_email_verified=true,
+         *                  email=saky011@naver.com
+         *                  }
+         *       }
+         */
+
         // 외부 서버 이름
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
 
@@ -48,12 +100,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         if (registrationId.equals("naver")) { // 네이버 로그인의 경우
             log.info("naver 로그인");
             oAuth2Response = new NaverResponse(oAuth2User.getAttributes());
-
         }
         else if (registrationId.equals("google")) { // 구글 로그인의 경우
             log.info("google 로그인");
             oAuth2Response = new GoogleResponse(oAuth2User.getAttributes());
-
         }
         else if (registrationId.equals("kakao")) {
             log.info("kakao 로그인");
