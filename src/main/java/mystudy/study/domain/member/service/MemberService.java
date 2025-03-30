@@ -138,6 +138,49 @@ public class MemberService {
         return commentQueryService.getCommentByMemberId(memberId, commentPageable);
     }
 
+
+
+// ====== 회원 정보 조회 api ======= //
+    // 회원 정보조회
+    public GetMemberDetail getMemberDetail(Long memberId) {
+        Member member = memberQueryService.findMemberById(memberId);
+
+        // 탈퇴한 회원 조회 불가
+
+
+
+
+        // 작성한 게시글 수
+        Long postCount = postService.getPostCountByMemberId(memberId);
+        // 작성한 댓글 수
+        Long commentCount = commentQueryService.getCommentCountByMemberId(memberId);
+        
+
+        
+        // 작성한 게시글 목록
+        // 작성한 댓글 목록
+
+
+
+        // 반환 객체 생성
+        GetMemberDetail getMemberDetail = new GetMemberDetail();
+        getMemberDetail.setMemberId(member.getId());
+        getMemberDetail.setEmail(member.getEmail());
+        getMemberDetail.setNickname(member.getNickname());
+        getMemberDetail.setCreatedAt(member.getCreatedAt());
+        getMemberDetail.setName(member.getName());
+            // 게시글 설정
+        getMemberDetail.setPostCount(postCount);
+            // 댓글 설정
+        getMemberDetail.setCommentCount(commentCount);
+
+        // 객체 반환
+        return getMemberDetail;
+    }
+
+
+
+
     // 회원 정보 수정
     public void editMember(Long memberId, EditMemberDto memberDto) {
 

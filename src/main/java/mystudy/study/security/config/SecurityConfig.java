@@ -98,6 +98,7 @@ public class SecurityConfig {
                                 HttpMethod.GET, 
                                 "/api/posts", // 게시글 목록 조회
                                 "/api/posts/*", // 게시글 내용 조회
+                                "/api/members/*", // 사용자 정보 조회
                                 "/logout", // 로그아웃 경로
                                 "/api/OAuth2/handler" // OAuth2 요청 시 localStorage 에 대한 응답을 처리
                         ).permitAll() // 모두

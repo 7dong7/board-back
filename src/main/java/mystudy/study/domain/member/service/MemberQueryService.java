@@ -37,9 +37,13 @@ public class MemberQueryService {
         return memberRepository.findByProviderId(providerId);
     }
 
+    // 로그인 아이디로 조회
     public Member findByLoginId(String loginId) {
         return memberRepository.findByLoginId(loginId);
     }
+    
+    // api 회원 정보 조회
+    
 
     // 회원 정보 수정 (본인만) - 회원 정보 조회
     public EditMemberDto getEditMemberDto(Long memberId) {
