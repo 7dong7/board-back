@@ -119,7 +119,7 @@ public class MemberService {
         return infoMemberDto;
     }
 
-    // 회원 정보 조회 - 회원가 작성한 게시글 조회 (페이징)
+    // 회원 정보 조회 - 회원이 작성한 게시글 조회 (페이징)
     public Page<PostDto> getMemberPosts(Long memberId, Pageable postPageable) {
         /**
          *  회원 정보 조회시 회원의 게시글을 같이 볼 수 있게 만든다
@@ -155,13 +155,6 @@ public class MemberService {
         // 작성한 댓글 수
         Long commentCount = commentQueryService.getCommentCountByMemberId(memberId);
         
-
-        
-        // 작성한 게시글 목록
-        // 작성한 댓글 목록
-
-
-
         // 반환 객체 생성
         GetMemberDetail getMemberDetail = new GetMemberDetail();
         getMemberDetail.setMemberId(member.getId());

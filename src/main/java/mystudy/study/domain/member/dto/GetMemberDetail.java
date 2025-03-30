@@ -1,6 +1,9 @@
 package mystudy.study.domain.member.dto;
 
 import lombok.Data;
+import mystudy.study.domain.comment.dto.CommentDto;
+import mystudy.study.domain.post.dto.PostDto;
+import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
 
@@ -16,7 +19,9 @@ public class GetMemberDetail { // api 요청에서 사용
 
     // post
     private Long postCount;     // 작성한 게시글 수
+    private Page<PostDto> pagePost; // post 페이징
 
     // comment
     private Long commentCount;  // 작성한 댓글 수
+    private Page<CommentDto> PageComment;
 }
