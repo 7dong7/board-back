@@ -25,6 +25,13 @@ public class MemberApiController {
 
     private final MemberService memberService;
 
+
+    /**
+     *  회원 정보 조회 api
+     *      회원 정보 조회
+     *      회원이 작성한 게시글 목록 조회
+     *      회원이 작성한 댓글 목록 조회
+     */
     @GetMapping("/api/members/{id}")
     public ResponseEntity<GetMemberDetail> getMemberDetail(@PathVariable("id") Long memberId,
                                                            @ModelAttribute MemberDetailSearchCondition searchCondition,
@@ -79,4 +86,6 @@ public class MemberApiController {
 
         return new ResponseEntity<>(memberDetail, HttpStatus.OK);
     }
+
+
 }

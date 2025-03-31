@@ -102,7 +102,7 @@ public class InitMember implements CommandLineRunner {
             }
 
             // 게시글 작성
-            for ( int i = 1; i < 103; i++ ) {
+            for ( int i = 1; i < 500; i++ ) {
                 Post post = new Post("새로운 글작성"+i, "새로운 글이 작성되었습니다. 오늘은 날씨가 좋네요"+i, member1);
                 member1.addPost(post);
             }

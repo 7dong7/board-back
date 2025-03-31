@@ -95,7 +95,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                HttpMethod.GET, 
+                                HttpMethod.GET,
                                 "/api/posts", // 게시글 목록 조회
                                 "/api/posts/*", // 게시글 내용 조회
                                 "/api/members/*", // 사용자 정보 조회
@@ -113,7 +113,8 @@ public class SecurityConfig {
                                 HttpMethod.POST,
                                 "/api/posts/new", // 게시글 작성
                                 "/api/comments/new", //  댓글 작성
-                                "/api/replies/new" // 대댓글 작성
+                                "/api/replies/new", // 대댓글 작성
+                                "/api/auth/verify-password" // 사용자 정보 수정시 비밀번호 확인
                         ).authenticated() // 인증된 사용자
                         .requestMatchers(
                                 HttpMethod.PATCH,

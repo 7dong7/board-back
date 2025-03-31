@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import mystudy.study.api.dto.AuthPasswordForm;
 import mystudy.study.domain.comment.dto.CommentDto;
 import mystudy.study.domain.comment.service.CommentQueryService;
 import mystudy.study.domain.member.dto.*;
@@ -149,7 +150,6 @@ public class MemberService {
 
 
 
-
         // 작성한 게시글 수
         Long postCount = postService.getPostCountByMemberId(memberId);
         // 작성한 댓글 수
@@ -170,8 +170,6 @@ public class MemberService {
         // 객체 반환
         return getMemberDetail;
     }
-
-
 
 
     // 회원 정보 수정
@@ -268,5 +266,15 @@ public class MemberService {
         log.info("비밀번호 수정 완료");
     // 비밀번호 변경 (암호화)
         member.changePassword(bCryptPasswordEncoder.encode(passwordForm.getNewPassword()));
+    }
+
+    
+    // 회원정보 수정시 비밀번호를 먼저 확인
+    public Boolean memberVerify(AuthPasswordForm authPassword) {
+
+        Member member = memberQueryService.findMemberById(authPassword.getMemberId());
+        
+        // 비밀번호 확인
+        return bCryptPasswordEncoder.matches(authPassword.getPassword(), member.getPassword());
     }
 }
