@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mystudy.study.domain.comment.dto.CommentDto;
 import mystudy.study.domain.member.dto.GetMemberDetail;
+import mystudy.study.domain.member.dto.MemberProfile;
 import mystudy.study.domain.member.dto.search.MemberDetailSearchCondition;
+import mystudy.study.domain.member.service.MemberQueryService;
 import mystudy.study.domain.member.service.MemberService;
 import mystudy.study.domain.post.dto.PostDto;
 import org.springframework.data.domain.Page;
@@ -24,13 +26,13 @@ import java.util.Set;
 public class MemberApiController {
 
     private final MemberService memberService;
-
+    private final MemberQueryService memberQueryService;
 
     /**
-     *  회원 정보 조회 api
-     *      회원 정보 조회
-     *      회원이 작성한 게시글 목록 조회
-     *      회원이 작성한 댓글 목록 조회
+     * 회원 정보 조회 api
+     * 회원 정보 조회
+     * 회원이 작성한 게시글 목록 조회
+     * 회원이 작성한 댓글 목록 조회
      */
     @GetMapping("/api/members/{id}")
     public ResponseEntity<GetMemberDetail> getMemberDetail(@PathVariable("id") Long memberId,
@@ -52,10 +54,10 @@ public class MemberApiController {
         Set<String> ALLOWED_POST = Set.of("id", "title", "viewCount", "nickname", "createdAt");
         Set<String> ALLOWED_COMMENT = Set.of("id", "content", "nickname", "createdAt");
 
-        if(!ALLOWED_POST.contains(searchCondition.getPostSort())) { // 적합하지 않은 검색 조건
+        if (!ALLOWED_POST.contains(searchCondition.getPostSort())) { // 적합하지 않은 검색 조건
             searchCondition.setPostSort("id");
         }
-        if(!ALLOWED_COMMENT.contains(searchCondition.getCommentSort())) {
+        if (!ALLOWED_COMMENT.contains(searchCondition.getCommentSort())) {
             searchCondition.setCommentSort("id");
         }
 
@@ -74,7 +76,7 @@ public class MemberApiController {
         // 댓글 페이징
         // comment Pageable 생성
         Pageable commentPageable = PageRequest.of(
-                Math.max(searchCondition.getCommentPageNumber()-1, 0),
+                Math.max(searchCondition.getCommentPageNumber() - 1, 0),
                 10,
                 searchCondition.getCommentDirection().equals("ASC")
                         ? Sort.by(searchCondition.getCommentSort()).ascending()
@@ -87,5 +89,39 @@ public class MemberApiController {
         return new ResponseEntity<>(memberDetail, HttpStatus.OK);
     }
 
+    /**
+     * 수정 목적의 사용자 정보 조회
+     */
+    @GetMapping("/api/members/profile")
+    public ResponseEntity<MemberProfile> getMemberProfile(@RequestParam("id") Long memberId) {
+        log.info("getMemberProfile memberId: {}", memberId);
 
+        MemberProfile memberProfile = memberQueryService.getMemberProfile(memberId);
+        log.info("getMemberProfile memberProfile: {}", memberProfile);
+
+        return new ResponseEntity<>(memberProfile, HttpStatus.OK);
+    }
+
+    /**
+     * 사용자 정보 수정 요청
+     *      수정하려는 정보에 대해서 valid 적용
+     *
+     */
+    @PatchMapping("/api/members/{id}")
+    public ResponseEntity<String> editMemberProfile(@PathVariable("id") Long MemberId,
+                                                    @RequestBody MemberProfile memberProfile) {
+        log.info("MemberId: {}, memberProfile: {}", MemberId, memberProfile);
+
+        return new ResponseEntity<>("성공", HttpStatus.OK);
+    }
+
+    /**
+     *  사용자 탈퇴 요청
+     */
+    @DeleteMapping("/api/members/{id}")
+    public ResponseEntity<String> deleteMember(@PathVariable("id") Long MemberId) {
+        log.info("회원 탈퇴 처리중 ... MemberId: {}", MemberId);
+
+        return new ResponseEntity<>("성공", HttpStatus.OK);
+    }
 }

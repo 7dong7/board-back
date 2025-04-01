@@ -2,11 +2,13 @@ package mystudy.study.domain.member.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import mystudy.study.domain.member.dto.MemberProfile;
 import mystudy.study.domain.member.dto.search.SearchMemberInfoDto;
 import mystudy.study.domain.member.dto.EditMemberDto;
 import mystudy.study.domain.member.dto.MemberSearch;
 import mystudy.study.domain.member.entity.Member;
 import mystudy.study.domain.member.repository.MemberRepository;
+import org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberQueryService {
 
     private final MemberRepository memberRepository;
+    private final WebMvcAutoConfiguration.EnableWebMvcConfiguration enableWebMvcConfiguration;
 
     // id로 회원 조회
     public Member findMemberById(Long memberId) {
@@ -74,4 +77,15 @@ public class MemberQueryService {
     }
 
 
+    // 사용자의 정보를 수정하기위한 수정 가능한 정보 보여주기
+    public MemberProfile getMemberProfile(Long memberId) {
+        Member member = findMemberById(memberId);
+
+        MemberProfile memberProfile = new MemberProfile();
+        memberProfile.setNickname(member.getNickname());
+        memberProfile.setMobile(member.getMobile());
+        memberProfile.setStatus(member.getStatus());
+
+        return memberProfile;
+    }
 }

@@ -110,6 +110,10 @@ public class SecurityConfig {
                                 "/api/refresh" // access 토큰 재발급 요청
                         ).permitAll() // 모두
                         .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/members/profile" // 사용자가 정보를 수정하려느 경우의 조회
+                        ).authenticated()
+                        .requestMatchers(
                                 HttpMethod.POST,
                                 "/api/posts/new", // 게시글 작성
                                 "/api/comments/new", //  댓글 작성
@@ -118,7 +122,12 @@ public class SecurityConfig {
                         ).authenticated() // 인증된 사용자
                         .requestMatchers(
                                 HttpMethod.PATCH,
-                                "/api/posts/*" // 게시글 수정
+                                "/api/posts/*", // 게시글 수정
+                                "/api/members/*" // 사용자 수정
+                        ).authenticated()
+                        .requestMatchers(
+                                HttpMethod.DELETE,
+                                "/api/members/*" // 사용자 계정 탈퇴
                         ).authenticated()
                         .anyRequest().authenticated()
                 );

@@ -277,4 +277,5 @@ public class MemberService {
         // 비밀번호 확인
         return bCryptPasswordEncoder.matches(authPassword.getPassword(), member.getPassword());
     }
+
 }
