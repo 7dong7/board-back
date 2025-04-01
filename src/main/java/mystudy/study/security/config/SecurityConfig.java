@@ -104,6 +104,7 @@ public class SecurityConfig {
                         ).permitAll() // 모두
                         .requestMatchers(
                                 HttpMethod.POST,
+                                "/api/members", // 회원가입 요청
                                 "/login", // 로그인 요청
                                 // ckEditor 에서 요청하는 경우 jwt 토큰을 같이 보낼 수 있나?
                                 "/api/image/upload", // 이미지 업로드 요청

@@ -1,10 +1,12 @@
 package mystudy.study.api.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mystudy.study.domain.comment.dto.CommentDto;
 import mystudy.study.domain.member.dto.GetMemberDetail;
 import mystudy.study.domain.member.dto.MemberProfile;
+import mystudy.study.domain.member.dto.NewMemberForm;
 import mystudy.study.domain.member.dto.search.MemberDetailSearchCondition;
 import mystudy.study.domain.member.service.MemberQueryService;
 import mystudy.study.domain.member.service.MemberService;
@@ -16,6 +18,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
@@ -27,6 +30,19 @@ public class MemberApiController {
 
     private final MemberService memberService;
     private final MemberQueryService memberQueryService;
+
+
+    /**
+     *  회원 가입
+     */
+    @PostMapping("/api/members")
+    public ResponseEntity<String> newMember(@Valid @RequestBody NewMemberForm newMember, BindingResult bindingResult) {
+        log.info("회원 가입 로직 실행중 .... newMember: {}", newMember);
+
+        return new ResponseEntity<>("Ok", HttpStatus.OK);
+    }
+
+
 
     /**
      * 회원 정보 조회 api
@@ -104,13 +120,15 @@ public class MemberApiController {
 
     /**
      * 사용자 정보 수정 요청
-     *      수정하려는 정보에 대해서 valid 적용
-     *
+     *      수정하려는 정보에 대해서 valid 적용 (검증)
+     *      member 정보 수정 (처리)
      */
     @PatchMapping("/api/members/{id}")
-    public ResponseEntity<String> editMemberProfile(@PathVariable("id") Long MemberId,
+    public ResponseEntity<String> editMemberProfile(@PathVariable("id") Long memberId,
                                                     @RequestBody MemberProfile memberProfile) {
-        log.info("MemberId: {}, memberProfile: {}", MemberId, memberProfile);
+        log.info("MemberId: {}, memberProfile: {}", memberId, memberProfile);
+
+        memberService.editMemberApi(memberId, memberProfile);
 
         return new ResponseEntity<>("성공", HttpStatus.OK);
     }

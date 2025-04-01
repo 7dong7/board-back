@@ -268,14 +268,31 @@ public class MemberService {
         member.changePassword(bCryptPasswordEncoder.encode(passwordForm.getNewPassword()));
     }
 
-    
+    // api
     // 회원정보 수정시 비밀번호를 먼저 확인
     public Boolean memberVerify(AuthPasswordForm authPassword) {
-
         Member member = memberQueryService.findMemberById(authPassword.getMemberId());
-        
         // 비밀번호 확인
         return bCryptPasswordEncoder.matches(authPassword.getPassword(), member.getPassword());
+    }
+
+    // api
+    // 회원 정보 수정 처리 
+    public void editMemberApi(Long memberId, MemberProfile memberProfile) {
+        
+        // 사용자 조회
+        Member member = memberQueryService.findMemberById(memberId);
+
+        // 닉네임 검증
+        if (!"".equals(memberProfile.getNickname()) && memberProfile.getNickname() != null) {
+            member.updateNickname(memberProfile.getNickname());
+        }
+        // 모바일 검증
+        if (!"".equals(memberProfile.getMobile()) && memberProfile.getMobile() != null) {
+            member.updateMobile(memberProfile.getMobile());
+        }
+
+
     }
 
 }
