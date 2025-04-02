@@ -3,7 +3,7 @@ package mystudy.study.api.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import mystudy.study.advice.dto.ErrorResponse;
+import mystudy.study.api.dto.ApiResponse;
 import mystudy.study.domain.comment.dto.CommentDto;
 import mystudy.study.domain.member.dto.GetMemberDetail;
 import mystudy.study.domain.member.dto.MemberProfile;
@@ -19,11 +19,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
 @RestController
@@ -40,22 +37,20 @@ public class MemberApiController {
      *      @Valid 검증 실패시 => 오류발생 => GlobalExceptionHandler 가 처리
      */
     @PostMapping("/api/members")
-    public ResponseEntity<Object> newMember(@Valid @RequestBody NewMemberForm newMember) {
+    public ResponseEntity<ApiResponse<String>> newMember(@Valid @RequestBody NewMemberForm newMember) {
         log.info("회원 가입 로직 실행중 .... newMember: {}", newMember);
-        HashMap<String, String> map = new HashMap<>();
-
+        /**
+         *  memberService.newMember(newMember) 의 경우 이메일에 해당하는 사용자가 존재하는 경우
+         *      throw new DuplicateEmailException("이미 존재하는 회원입니다.")
+         *      exception 이 발생한다
+         *
+         *      해당 exception 은 GlobalExceptionHandler 가 처리하도록 구현했다
+         *      따라서 exception 을 처리하기 위한 try-catch 문은 작성하지 않는다
+         */
         // 회원 가입 서비스
-        try {
-            memberService.newMember(newMember);
-        } catch (IllegalArgumentException e) { // 이미 회원이 존재하는 경우
-            map.put("email", "이미 사용중인 아이디입니다.");
-            ErrorResponse errorResponse = new ErrorResponse("VALIDATION_ERROR","유효성 검증 실패", map);
-            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-//            bindingResult.rejectValue("email", "existMail","이미 사용중인 이메일입니다");
-        }
+        memberService.newMember(newMember);
 
-        map.put("message", "가입 성공");
-        return new ResponseEntity<>(map, HttpStatus.OK);
+        return new ResponseEntity<>(new ApiResponse<>("회원가입에 성공했습니다.", "성공"), HttpStatus.OK);
     }
 
     /**

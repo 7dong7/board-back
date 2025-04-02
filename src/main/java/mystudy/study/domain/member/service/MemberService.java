@@ -280,7 +280,6 @@ public class MemberService {
     // api
     // 회원 정보 수정 처리 
     public void editMemberApi(Long memberId, MemberProfile memberProfile) {
-        
         // 사용자 조회
         Member member = memberQueryService.findMemberById(memberId);
 
@@ -298,7 +297,6 @@ public class MemberService {
     // api
     // 회원가입
     public void newMember(NewMemberForm newMember) {
-
         // 중복 회원 검증
         Member findMember = memberQueryService.findByEmail(newMember.getEmail());
 
