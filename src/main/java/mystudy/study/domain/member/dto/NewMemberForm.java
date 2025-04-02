@@ -30,13 +30,13 @@ public class NewMemberForm {
     private String confirmPassword; // 비밀번호 재입력
 
     @NotBlank(message = "공백은 사용할 수 없습니다.")
-    @Length(min = 4,max = 20,
-            message = "이름은 4글자 이상 20글자 이하로 작성해주세요.")
+    @Length(min = 2,max = 20,
+            message = "이름은 2글자 이상 20글자 이하로 작성해주세요.")
     private String name;        // 회원 본명
 
     @NotBlank(message = "공백은 사용할 수 없습니다.")
-    @Length(min = 4,max = 20,
-            message = "닉네임은 4글자 이상 20글자 이하로 작성해주세요.")
+    @Length(min = 2,max = 20,
+            message = "닉네임은 2글자 이상 20글자 이하로 작성해주세요.")
     private String nickname;    // 닉네임
 
     @Pattern(regexp = "^(010|011)-\\d{4}-\\d{4}$",
@@ -52,7 +52,7 @@ public class NewMemberForm {
 
     @Pattern(regexp = "[1-4]{1}",
             message = "해당값은 사용할 수 없습니다.")
-    @NotBlank(message = "공백은 사용할 수 없습니다.")
+    @NotBlank(message = "올바른 값이 아닙니다")
     private String backNum; // 1 -> 성별 구별용
 
 

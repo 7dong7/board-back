@@ -15,6 +15,7 @@ import mystudy.study.domain.member.entity.Member;
 import mystudy.study.domain.member.repository.MemberRepository;
 import mystudy.study.domain.post.service.PostService;
 import mystudy.study.domain.comment.service.CommentService;
+import mystudy.study.exception.DuplicateEmailException;
 import mystudy.study.security.CustomUserDetail;
 import mystudy.study.security.CustomUserDetailsService;
 import org.springframework.data.domain.Page;
@@ -294,5 +295,33 @@ public class MemberService {
 
 
     }
+    // api
+    // 회원가입
+    public void newMember(NewMemberForm newMember) {
 
+        // 중복 회원 검증
+        Member findMember = memberQueryService.findByEmail(newMember.getEmail());
+
+        if(findMember != null) { // 해당 email 로 이미 회원가입이 되어있는 상태
+            throw new DuplicateEmailException("이미 존재하는 회원입니다.");
+        }
+
+        // 회원 생성
+        Member member = Member.builder()
+                .email(newMember.getEmail())               // 이메일, 아이디
+                .password(bCryptPasswordEncoder.encode(newMember.getPassword())) // 비번
+                .nickname(newMember.getNickname())         // 닉네임
+                .name(newMember.getName())                 // 이름
+                .mobile(newMember.getMobile())             // 휴대폰
+                .residentNumber(newMember.getResidentNumber()) // 생년월일
+                .age(newMember.getAge())           // 나이
+                .birthday(newMember.getBirthday()) // 생일
+                .gender(newMember.getGender())     // 성별
+                .role(RoleType.ROLE_USER)           // 권한
+                .build();
+
+        // 회원 등록
+        saveMember(member);
+
+    }
 }

@@ -3,6 +3,7 @@ package mystudy.study.api.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import mystudy.study.advice.dto.ErrorResponse;
 import mystudy.study.domain.comment.dto.CommentDto;
 import mystudy.study.domain.member.dto.GetMemberDetail;
 import mystudy.study.domain.member.dto.MemberProfile;
@@ -21,6 +22,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 @RestController
@@ -34,16 +37,26 @@ public class MemberApiController {
 
     /**
      *  회원 가입
-     *      @Valid 검증 실패시 => 오류발생 => GlobalExceptionHandler 가 처리 
+     *      @Valid 검증 실패시 => 오류발생 => GlobalExceptionHandler 가 처리
      */
     @PostMapping("/api/members")
-    public ResponseEntity<String> newMember(@Valid @RequestBody NewMemberForm newMember) {
+    public ResponseEntity<Object> newMember(@Valid @RequestBody NewMemberForm newMember) {
         log.info("회원 가입 로직 실행중 .... newMember: {}", newMember);
+        HashMap<String, String> map = new HashMap<>();
 
-        return new ResponseEntity<>("Ok", HttpStatus.OK);
+        // 회원 가입 서비스
+        try {
+            memberService.newMember(newMember);
+        } catch (IllegalArgumentException e) { // 이미 회원이 존재하는 경우
+            map.put("email", "이미 사용중인 아이디입니다.");
+            ErrorResponse errorResponse = new ErrorResponse("VALIDATION_ERROR","유효성 검증 실패", map);
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+//            bindingResult.rejectValue("email", "existMail","이미 사용중인 이메일입니다");
+        }
+
+        map.put("message", "가입 성공");
+        return new ResponseEntity<>(map, HttpStatus.OK);
     }
-
-
 
     /**
      * 회원 정보 조회 api
