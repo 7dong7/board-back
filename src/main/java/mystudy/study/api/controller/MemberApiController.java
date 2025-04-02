@@ -34,9 +34,10 @@ public class MemberApiController {
 
     /**
      *  회원 가입
+     *      @Valid 검증 실패시 => 오류발생 => GlobalExceptionHandler 가 처리 
      */
     @PostMapping("/api/members")
-    public ResponseEntity<String> newMember(@Valid @RequestBody NewMemberForm newMember, BindingResult bindingResult) {
+    public ResponseEntity<String> newMember(@Valid @RequestBody NewMemberForm newMember) {
         log.info("회원 가입 로직 실행중 .... newMember: {}", newMember);
 
         return new ResponseEntity<>("Ok", HttpStatus.OK);

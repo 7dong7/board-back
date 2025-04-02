@@ -3,6 +3,7 @@ package mystudy.study.domain.member.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
+import mystudy.study.validation.PasswordMatch;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -11,18 +12,21 @@ import java.time.Period;
 import java.time.format.DateTimeFormatter;
 
 @Data
+@PasswordMatch
 public class NewMemberForm {
 
-    @Pattern(regexp = "^[^\\s]+$",
-            message = "공백 문자를 포함할 수 없습니다.")
-    @NotBlank(message = "공백은 사용할 수 없습니다.")
+    @Pattern(regexp = "^[^\\s]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
+            message = "유효한 이메일 형식이 아닙니다.")
+    @NotBlank(message = "이메일은 필수입니다.")
     private String email;       // 아이디
 
+    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$",
+            message = "영문+숫자 조합이어야 합니다.")
     @NotBlank(message = "공백은 사용할 수 없습니다.")
-    @Length(min = 4,max = 12, message = "비밀번호는 4글자 이상 12글자 이하로 작성해주세요.")
+    @Length(min = 8,max = 20, message = "비밀번호는 8자 이상이어야 합니다")
     private String password;    // 비밀번호
 
-    @NotBlank(message = "공백은 사용할 수 없습니다.")
+    @NotBlank(message = "비밀번호 확인을 필수 입니다.")
     private String confirmPassword; // 비밀번호 재입력
 
     @NotBlank(message = "공백은 사용할 수 없습니다.")
@@ -52,11 +56,10 @@ public class NewMemberForm {
     private String backNum; // 1 -> 성별 구별용
 
 
-    // == 메소드 == //
-
+    // ====== 메소드 ====== //
     // 생년월일 반환
     public String getResidentNumber() {
-        return frontNum +"-"+backNum;
+        return frontNum + "-" + backNum;
     }
 
     // 나이 반환
