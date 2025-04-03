@@ -1,6 +1,8 @@
 package mystudy.study.api.controller;
 
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -137,7 +139,7 @@ public class MemberApiController {
                 .body(new ApiResponse<>("member profile",memberProfile));
     }
     /**
-     * 사용자 정보 수정 요청
+     *  == 사용자 정보 수정 요청 ==
      *      수정하려는 정보에 대해서 valid 적용 (검증)
      *      member 정보 수정 (처리)
      */
@@ -160,12 +162,38 @@ public class MemberApiController {
                 .body(new ApiResponse<>("BAD_REQUEST", "실패", "잘못된 요청입니다."));
     }
     /**
-     *  사용자 탈퇴 요청
+     *  == 사용자 탈퇴 요청 ==
+     *      jwt 사용자 검증
+     *      탈퇴 성공시 refresh 토큰 삭제
+     *
      */
     @DeleteMapping("/api/members/{id}")
-    public ResponseEntity<String> deleteMember(@PathVariable("id") Long MemberId) {
-        log.info("회원 탈퇴 처리중 ... MemberId: {}", MemberId);
+    public ResponseEntity<ApiResponse<String>> deleteMember(@PathVariable("id") Long memberId,
+                                                            HttpServletRequest request, HttpServletResponse response) {
+        log.info("회원 탈퇴 처리중 ... MemberId: {}", memberId);
+        String access = request.getHeader("Authorization").split(" ")[1];
 
-        return new ResponseEntity<>("성공", HttpStatus.OK);
+        // 수정하려는 Id와 로그인한 사용자의 Id 가 같은 경우
+        if (memberId.equals(jwtUtil.getMemberId(access))) {
+            memberService.deleteMember(memberId, request, response);
+            response.addCookie(deleteCookie("refresh")); // refresh 토큰 삭제
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(new ApiResponse<>("성공", "성공적으로 탈퇴했습니다."));
+        }
+        // 잘못된 요청
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ApiResponse<>("BAD_REQUEST", "실패", "잘못된 요청입니다."));
+    }
+
+
+
+    
+    // == 기존 쿠키 삭제 ==
+    private Cookie deleteCookie(String name) {
+        Cookie cookie = new Cookie(name, null); // 값은 null로 설정
+        cookie.setHttpOnly(true); // 기존 쿠키와 동일한 속성 유지
+        cookie.setPath("/"); // 동일한 경로 지정
+        cookie.setMaxAge(0); // 즉시 만료
+        return cookie;
     }
 }
