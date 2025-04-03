@@ -19,4 +19,8 @@ public @interface PasswordMatch {
     String message() default "비밀번호가 일치하지 않습니다."; // 기본에러 메시지
     Class<?>[] groups() default {}; // 검증 그룹 (필요시사용)
     Class<? extends Payload>[] payload() default {}; // 추가 메타데이터 (필요 시 사용)
+
+    // 검증 필드 지정
+    String passwordField();
+    String confirmPasswordField();
 }

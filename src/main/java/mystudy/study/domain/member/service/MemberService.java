@@ -282,17 +282,19 @@ public class MemberService {
     public void editMemberApi(Long memberId, MemberProfile memberProfile) {
         // 사용자 조회
         Member member = memberQueryService.findMemberById(memberId);
+        /**
+         *  검증은 @Valid 를 통해서 검증했음
+         */
+        // 비밀번호 수정
+        member.updateNickname(memberProfile.getNickname());
 
-        // 닉네임 검증
-        if (!"".equals(memberProfile.getNickname()) && memberProfile.getNickname() != null) {
-            member.updateNickname(memberProfile.getNickname());
-        }
-        // 모바일 검증
-        if (!"".equals(memberProfile.getMobile()) && memberProfile.getMobile() != null) {
-            member.updateMobile(memberProfile.getMobile());
-        }
+        // 휴대폰 수정
+        member.updateMobile(memberProfile.getMobile());
 
-
+        // 비밀번호 수정
+        String password = bCryptPasswordEncoder.encode(memberProfile.getPassword());
+        log.info("password: {}", password);
+        member.changePassword(password);
     }
     // api
     // 회원가입

@@ -13,26 +13,25 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 @ControllerAdvice
 @Slf4j
 public class GlobalModelAttribute {
-
-    @ModelAttribute("currentMember")
-    public CurrentMemberDto getCurrentMember() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-        // 로그인 한 상태 검증
-        if (auth != null && auth.isAuthenticated() && !(auth instanceof AnonymousAuthenticationToken)) {
-            Object principal = auth.getPrincipal();
-
-            if (principal instanceof CustomUserDetail customUserDetail) {
-            // 폼 로그인의 경우
-                CurrentMemberDto currentMemberDto = new CurrentMemberDto(customUserDetail);
-                log.info("Current Member: {}", currentMemberDto);
-                return currentMemberDto;
-
-            } else if (principal instanceof CustomOAuth2User customOAuth2User) {
-                CurrentMemberDto currentMemberDto = new CurrentMemberDto(customOAuth2User);
-                return currentMemberDto;
-            }
-        }
-        return null;
-    }
+//    @ModelAttribute("currentMember")
+//    public CurrentMemberDto getCurrentMember() {
+//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//
+//        // 로그인 한 상태 검증
+//        if (auth != null && auth.isAuthenticated() && !(auth instanceof AnonymousAuthenticationToken)) {
+//            Object principal = auth.getPrincipal();
+//
+//            if (principal instanceof CustomUserDetail customUserDetail) {
+//            // 폼 로그인의 경우
+//                CurrentMemberDto currentMemberDto = new CurrentMemberDto(customUserDetail);
+//                log.info("Current Member: {}", currentMemberDto);
+//                return currentMemberDto;
+//
+//            } else if (principal instanceof CustomOAuth2User customOAuth2User) {
+//                CurrentMemberDto currentMemberDto = new CurrentMemberDto(customOAuth2User);
+//                return currentMemberDto;
+//            }
+//        }
+//        return null;
+//    }
 }

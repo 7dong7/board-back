@@ -12,7 +12,7 @@ import java.time.Period;
 import java.time.format.DateTimeFormatter;
 
 @Data
-@PasswordMatch
+@PasswordMatch(passwordField = "password", confirmPasswordField = "confirmPassword")
 public class NewMemberForm {
 
     @Pattern(regexp = "^[^\\s]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
@@ -23,20 +23,20 @@ public class NewMemberForm {
     @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$",
             message = "영문+숫자 조합이어야 합니다.")
     @NotBlank(message = "공백은 사용할 수 없습니다.")
-    @Length(min = 8,max = 20, message = "비밀번호는 8자 이상이어야 합니다")
+    @Length(min = 8, max = 20, message = "비밀번호는 8자 이상이어야 합니다")
     private String password;    // 비밀번호
 
     @NotBlank(message = "비밀번호 확인을 필수 입니다.")
     private String confirmPassword; // 비밀번호 재입력
 
     @NotBlank(message = "공백은 사용할 수 없습니다.")
-    @Length(min = 2,max = 20,
+    @Length(min = 2, max = 12,
             message = "이름은 2글자 이상 20글자 이하로 작성해주세요.")
     private String name;        // 회원 본명
 
     @NotBlank(message = "공백은 사용할 수 없습니다.")
-    @Length(min = 2,max = 20,
-            message = "닉네임은 2글자 이상 20글자 이하로 작성해주세요.")
+    @Length(min = 2, max = 12,
+            message = "닉네임은 2글자 이상 12글자 이하로 작성해주세요.")
     private String nickname;    // 닉네임
 
     @Pattern(regexp = "^(010|011)-\\d{4}-\\d{4}$",
