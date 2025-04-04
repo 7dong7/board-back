@@ -10,6 +10,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.nio.file.AccessDeniedException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -72,5 +73,18 @@ public class GlobalExceptionHandler {
                 new ApiResponse<>("VALIDATION_ERROR", "유효성 검증 실패", errors),
                 HttpStatus.BAD_REQUEST
         );
+    }
+
+
+    // 리소스에 대한 요청 및 접근이 올바르지 않은 경우
+        // 다른 사용자의 정보를 수정하려는 경우
+        // 삭제된 게시물에 접근하려는 경우
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ApiResponse<String>> handleAccessDeniedException(AccessDeniedException ex) {
+        // exception response 생성 및 응답
+        String message = ex.getMessage();
+        log.info("AccessDeniedException message: {}", message);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(new ApiResponse<>("BAD_REQUEST", message, "잘못된 접근"));
     }
 }

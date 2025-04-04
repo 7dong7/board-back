@@ -84,9 +84,11 @@ public class JWTAuthFilter extends OncePerRequestFilter {
             String username = jwtUtil.getUsername(accessToken); // username & email
             String nickname = jwtUtil.getNickname(accessToken);
             String role = jwtUtil.getRole(accessToken);
+            Long id = jwtUtil.getMemberId(accessToken);
 
             // authentication 객체 생성
             Member member = Member.builder()
+                    .id(id)
                     .email(username)
                     .role(RoleType.valueOf(role))
                     .nickname(nickname)

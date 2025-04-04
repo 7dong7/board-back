@@ -1,5 +1,6 @@
 package mystudy.study.api.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mystudy.study.domain.comment.dto.ViewCommentDto;
@@ -7,6 +8,7 @@ import mystudy.study.domain.comment.service.CommentQueryService;
 import mystudy.study.domain.post.dto.*;
 import mystudy.study.domain.post.service.PostService;
 import mystudy.study.security.CustomUserDetail;
+import mystudy.study.security.jwt.JWTUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +28,9 @@ public class PostApiController {
 
     private final PostService postService;
     private final CommentQueryService commentQueryService;
+
+    private final JWTUtil jwtUtil;
+
 
     // 게시글 목록 조회 - 페이지
     @GetMapping("/api/posts")
@@ -57,7 +62,7 @@ public class PostApiController {
     // 게시글 내용 조회 - 페이지
     @GetMapping("/api/posts/{id}")
     public ResponseEntity<ViewPostDto> getPostDetail(@PathVariable("id") Long postId,
-                                                     @PageableDefault(size = 15, page = 1) Pageable clPageable) {
+                                                     @PageableDefault(size = 15, page = 1) Pageable clPageable) throws AccessDeniedException {
         log.info("PostApiController getPostDetail postId: {}", postId);
         log.info("PostApiController getPostDetail clPageable: {}", clPageable);
 
@@ -95,11 +100,24 @@ public class PostApiController {
         log.info("editPost: [postId: {}, newPostDto: {}]", postId, editPostDto);
 
         try {
-            postService.postEdit(postId,editPostDto);
+            postService.postEdit(postId, editPostDto);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (AccessDeniedException e) {
             // 비정상 적인 접근 & 수정 권한이 없는 경우 & 다른 사람의 게시물 수정
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     *  == 게시글 삭제 == soft delete
+     */
+    @DeleteMapping("/api/posts/{id}")
+    public ResponseEntity<String> deletePost(@PathVariable("id") Long postId,
+                                             HttpServletRequest request) throws AccessDeniedException {
+        log.info("게시글 삭제를 위한 핸들러 작동 [삭제할 게시글 번호: {}]", postId);
+
+        postService.deletePost(postId);
+
+        return new ResponseEntity<>("성공적인 삭제", HttpStatus.OK);
     }
 }

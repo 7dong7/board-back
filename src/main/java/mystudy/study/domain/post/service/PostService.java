@@ -7,6 +7,7 @@ import mystudy.study.domain.comment.service.CommentQueryService;
 import mystudy.study.domain.member.entity.Member;
 import mystudy.study.domain.post.entity.Post;
 import mystudy.study.domain.post.dto.*;
+import mystudy.study.domain.post.entity.PostStatus;
 import mystudy.study.domain.post.repository.PostRepository;
 import mystudy.study.domain.comment.service.CommentService;
 import mystudy.study.domain.member.service.MemberQueryService;
@@ -94,9 +95,16 @@ public class PostService {
     }
 
     // 게시글 조회 api (postId 사용)
-    public ViewPostDto getPostDetail(Long postId) {
+    public ViewPostDto getPostDetail(Long postId) throws AccessDeniedException {
         // 게시글 조회 ( 조회수 증가를 위해 )
         Post post = postQueryService.findById(postId); // optional 처리됨
+
+        log.info("post: {}", post.getStatus());
+
+        if (post.getStatus() == PostStatus.DELETE) {
+            throw new AccessDeniedException("삭제된 게시물입니다.");
+        }
+
         post.increaseViewCount(); // 조회수 증가
 
         return postRepository.getViewPostDto(postId);
@@ -152,7 +160,6 @@ public class PostService {
         }
     }
 
-
     // 게시글 삭제
     public void deletePost(Long postId) throws AccessDeniedException {
         // 게시글 조회
@@ -168,20 +175,17 @@ public class PostService {
         }
 
         // 게시글 주인 로그인 회원 비교
-        if (post.getMember().getId().equals(memberId)) {// 같은 경우 (정상)
-            // 게시글 삭제 (소프트 삭제)
-            post.deletePost();
-        } else { // 작성자가 일치하지 않음
-            throw new AccessDeniedException("삭제 권한이 없습니다.");
+        if (!post.getMember().getId().equals(memberId)) { // 같지 않은 경우
+            throw new AccessDeniedException("삭제 권한이 없습니다");
         }
+
+        post.deletePost(); // 게시글 삭제 (소프트 삭제)
     }
 
     // 회원 정보 조회 - 회원가 작성한 게시글 조회 (페이징)
     public Page<PostDto> getPostByMemberId(Long id, Pageable pageable) {
         return postRepository.getPostByMemberId(id, pageable);
     }
-
-
 
 
     // 게시글 검색해서 가져오기

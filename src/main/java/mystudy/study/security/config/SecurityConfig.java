@@ -117,6 +117,7 @@ public class SecurityConfig {
                         .requestMatchers(
                                 HttpMethod.POST,
                                 "/api/posts/new", // 게시글 작성
+                                "/api/post/*", // 게시글 삭제
                                 "/api/comments/new", //  댓글 작성
                                 "/api/replies/new", // 대댓글 작성
                                 "/api/auth/verify-password" // 사용자 정보 수정시 비밀번호 확인
