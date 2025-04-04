@@ -7,11 +7,10 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import mystudy.study.exception.AccountDeletedException;
 import mystudy.study.security.CustomUserDetail;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationServiceException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
@@ -19,6 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -105,7 +105,51 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     // 로그인 실패시 응답
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
-        response.setStatus(401);
+        /**
+         *  로그인을 실패했다
+         *      1. 탈퇴한 회원
+         *          member5@naver.com
+         *          test!
+         *          
+         *      2. 비밀번호를 틀린 회원
+         *          member1@naver.com
+         *          아무값
+         *      
+         *      3. 존재하지 않는 회원
+         *          아무값
+         *          아무값
+         */
+        log.info(" 로그인 실패시에 나타내는 응답입니다. ");
+        log.info("\nmessage: {}, \nsimpleName: {}", failed.getMessage(), failed.getClass().getSimpleName());
+
+        // 어떤 경우의 로그인 실패인가?
+            // 응답 설정 기본 설정
+        response.setContentType("application/json;charset=UTF-8");
+        String message; // 응답 메시지 설정
+        // 1. 탈퇴한 회원의 경우
+        if (failed.getCause() instanceof AccountDeletedException) {
+            log.info("탈퇴한 계정의 경우 AccountDeletedException ");
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN); // 응답 상태
+            message = "탈퇴한 계정은 사용할 수 없습니다."; // 응답 메시지
+        } else if (failed instanceof BadCredentialsException) {
+        // 2. 비밀번호를 틀린 회원의 경우
+            // BadCredentialsException 의 경우 자격증명중 비밀번호(password) 가 올바르지 않은 경우
+            log.info("비밀번호를 틀린 경우 BadCredentialsException");
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 응답 상태
+            message = "아이디 또는 비밀번호가 잘못되었습니다.";  // 응답 메시지
+        } else {
+        // 3. 그냥 잘못된 경우
+            log.info("아이디를 틀린 경우");
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 응답 상태
+            message = "아이디 또는 비밀번호가 잘못되었습니다.";  // 응답 메시지
+        }
+
+        // 응답 형태 설정
+        Map<String, Object> error = new HashMap<>();
+        error.put("message", message);
+
+        // 응답
+        response.getWriter().write(new ObjectMapper().writeValueAsString(error));
     }
 
 
