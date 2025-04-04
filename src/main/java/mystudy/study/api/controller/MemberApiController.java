@@ -45,9 +45,10 @@ public class MemberApiController {
      *      작성한 댓글 목록 조회
      */
     @GetMapping("/api/members/{id}")
-    public ResponseEntity<GetMemberDetail> getMemberDetail(@PathVariable("id") Long memberId,
+    public ResponseEntity<ApiResponse<GetMemberDetail>> getMemberDetail(@PathVariable("id") Long memberId,
                                                            @ModelAttribute MemberDetailSearchCondition searchCondition,
                                                            @PageableDefault(size = 10, page = 1, sort = "id", direction = Sort.Direction.DESC) Pageable clPageable) {
+        // ResponseEntity<GetMemberDetail>
         log.info("getMemberDetail searchCondition: {}", searchCondition);
         /**
          *  사용자의 정보를 먼저 조회하고 적합한 사용자가 아닌 경우에 그냥 종료시키면 된다
@@ -56,6 +57,11 @@ public class MemberApiController {
 
         // 사용자 정보 조회
         GetMemberDetail memberDetail = memberService.getMemberDetail(memberId);
+        // 탈퇴한 회원은 조회 금지
+        if(memberDetail == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse<>("NOT_FOUND_MEMBER", "해당하는 사용자를 찾을 수 없습니다.", null));
+        }
         /**
          *  찾은 사용자가 적합한지 확인하는 로직 ....
          */
@@ -95,7 +101,10 @@ public class MemberApiController {
         Page<CommentDto> PageComment = memberService.getMemberComments(memberId, commentPageable);
         memberDetail.setPageComment(PageComment);
 
-        return new ResponseEntity<>(memberDetail, HttpStatus.OK);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new ApiResponse<>("사용자 정보 조회", memberDetail));
+
+//        return new ResponseEntity<>(memberDetail, HttpStatus.OK);
     }
 
     /**
@@ -120,7 +129,9 @@ public class MemberApiController {
         // 회원 가입 서비스
         memberService.newMember(newMember);
 
-        return new ResponseEntity<>(new ApiResponse<>("회원가입에 성공했습니다.", "성공"), HttpStatus.OK);
+        return new ResponseEntity<>(
+                new ApiResponse<>("회원가입에 성공했습니다.", "성공"),
+                HttpStatus.OK);
     }
     /**
      *  == 사용자 조회 (수정 목적) ==

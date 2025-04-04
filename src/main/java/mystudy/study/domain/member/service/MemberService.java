@@ -148,8 +148,9 @@ public class MemberService {
         Member member = memberQueryService.findMemberById(memberId);
 
         // 탈퇴한 회원 조회 불가
-
-
+        if (member.getStatus() == MemberStatus.DELETE) { // 탈퇴한 회원의 경우 조회할 수 없게 한다
+            return null;
+        }
 
         // 작성한 게시글 수
         Long postCount = postService.getPostCountByMemberId(memberId);
